@@ -1,4 +1,4 @@
-namespace AdventOfCode2015CS;
+namespace AdventOfCode;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class DescriptionAttribute : Attribute

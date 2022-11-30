@@ -1,7 +1,7 @@
-﻿namespace AdventOfCode2015CS;
+namespace AdventOfCode.Year2022;
 
 [Description("First puzzle")]
-public class Day01 : IPuzzleBase
+public class Day01 : IPuzzle
 {
     public object Part1(string input)
     {

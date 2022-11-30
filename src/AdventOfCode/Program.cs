@@ -1,22 +1,23 @@
 ﻿using System.Reflection;
 using System.Text.RegularExpressions;
 
-using AdventOfCode2015CS;
+using AdventOfCode;
 
-var dayRegex = new Regex(@"(?<name>[A-Za-z]+)(?<index>\d+)");
+var dayRegex = new Regex(@"Day(?<day>\d+)");
 
 var types = typeof(Program).Assembly
     .GetTypes();
 
 var puzzles = types
-    .Where(t => typeof(IPuzzleBase).IsAssignableFrom(t))
+    .Where(t => typeof(IPuzzle).IsAssignableFrom(t))
     .Where(t => !t.IsInterface)
     .Where(t => !t.IsAbstract)
-    .OrderBy(t => t.Name);
+    .Where(t => t.FullName.Split('.')[^2] == "Year2015")
+    .OrderBy(t => t.FullName);
 
 foreach (var puzzleType in puzzles)
 {
-    if (Activator.CreateInstance(puzzleType) is not IPuzzleBase puzzle)
+    if (Activator.CreateInstance(puzzleType) is not IPuzzle puzzle)
         continue;
 
     string name = ToDisplay(puzzleType.Name);
@@ -33,14 +34,15 @@ foreach (var puzzleType in puzzles)
 string ToDisplay(string puzzleTypeName)
 {
     return dayRegex.Match(puzzleTypeName) is { Success: true } match
-        ? $@"{match.Groups["name"].Value} {match.Groups["index"].Value}"
+        ? $@"Day {match.Groups["day"].Value}"
         : puzzleTypeName;
 }
 
-string ResourceString(MemberInfo puzzleType)
+string ResourceString(Type puzzleType)
 {
     var assembly = typeof(Program).GetTypeInfo().Assembly;
-    using Stream manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode2022.Input.{puzzleType.Name}.txt")!;
+    var year = puzzleType.Namespace.Split('.')[^1];
+    using Stream manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.{year}.{puzzleType.Name}.txt")!;
     using StreamReader reader = new(manifestResourceStream);
 
     return reader.ReadToEnd();
