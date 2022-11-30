@@ -5,11 +5,9 @@ namespace AdventOfCode.Year2015;
 
 [Description("Knights of the Dinner Table")]
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class Day13 : IPuzzle
+public partial class Day13 : IPuzzle
 {
-    private readonly Regex _regex =
-        new(@"^(?<Name>\w+)\swould\s(?<LoseOrGain>lose|gain)\s(?<Units>\d+).*\s(?<Neighbour>\w+)\.$",
-            RegexOptions.Compiled);
+    private readonly Regex _regex = LineRegex();
     
     public object Part1(string input)
     {
@@ -93,4 +91,7 @@ public class Day13 : IPuzzle
             yield return line;
         }
     }
+
+    [GeneratedRegex(@"^(?<Name>\w+)\swould\s(?<LoseOrGain>lose|gain)\s(?<Units>\d+).*\s(?<Neighbour>\w+)\.$", RegexOptions.Compiled)]
+    private static partial Regex LineRegex();
 }

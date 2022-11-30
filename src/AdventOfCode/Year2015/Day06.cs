@@ -3,10 +3,9 @@
 namespace AdventOfCode.Year2015;
 
 [Description("Probably a Fire Hazard")]
-public class Day06 : IPuzzle
+public partial class Day06 : IPuzzle
 {
-    private static readonly Regex Regex = new(@"(turn off|turn on|toggle)\s(\d+),(\d+)\sthrough\s(\d+),(\d+)",
-        RegexOptions.Compiled);
+    private static readonly Regex Regex = MyRegex();
 
     public object Part1(string input)
     {
@@ -93,4 +92,7 @@ public class Day06 : IPuzzle
             }
         }
     };
+
+    [GeneratedRegex(@"(turn off|turn on|toggle)\s(\d+),(\d+)\sthrough\s(\d+),(\d+)", RegexOptions.Compiled)]
+    private static partial Regex MyRegex();
 }

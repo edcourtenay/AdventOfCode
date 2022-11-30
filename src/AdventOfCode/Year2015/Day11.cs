@@ -10,7 +10,7 @@ public class Day11 : IPuzzle
 
     public object Part2(string input)
     {
-        return SearchForNextPassword(Part1(input).ToString().ToCharArray());
+        return SearchForNextPassword(Part1(input).ToString()!.ToCharArray());
     }
 
     private string SearchForNextPassword(char[] input)

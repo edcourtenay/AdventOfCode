@@ -6,13 +6,13 @@ namespace AdventOfCode.Year2015;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 [Description("Some Assembly Required")]
-public class Day07 : IPuzzle
+public partial class Day07 : IPuzzle
 {
-    private readonly Regex _lineRegex = new(@"(?<expression>.+)\s->\s(?<output>\w+)", RegexOptions.Compiled);
-    private readonly Regex _constantRegex = new(@"^(?<constant>\d+)$", RegexOptions.Compiled);
-    private readonly Regex _variableRegex = new(@"^(?<variable>\w+)$", RegexOptions.Compiled);
-    private readonly Regex _notRegex = new(@"^NOT\s(?<left>\w+)$", RegexOptions.Compiled);
-    private readonly Regex _binaryRegex = new(@"^(?<left>[a-z]+|\d+)\s(?<operation>[A-Z]+)\s(?<right>[a-z]+|\d+)$", RegexOptions.Compiled);
+    private readonly Regex _lineRegex = LineRegex();
+    private readonly Regex _constantRegex = ConstantRegex();
+    private readonly Regex _variableRegex = VariableRegex();
+    private readonly Regex _notRegex = NotRegex();
+    private readonly Regex _binaryRegex = BinaryRegex();
 
     public object Part1(string input)
     {
@@ -47,7 +47,7 @@ public class Day07 : IPuzzle
 
     private static int ExecuteExpression(Expression expression)
     {
-        var le = Expression.Lambda<Func<Int32>>(expression);
+        var le = Expression.Lambda<Func<int>>(expression);
         var compile = le.Compile();
         return compile();
     }
@@ -88,7 +88,7 @@ public class Day07 : IPuzzle
             {
                 case { Success: true } constantMatch:
                     {
-                        var value = Int32.Parse(constantMatch.Groups["constant"].Value);
+                        var value = int.Parse(constantMatch.Groups["constant"].Value);
                         return Expression.Constant(value);
                     }
                 default:
@@ -127,4 +127,15 @@ public class Day07 : IPuzzle
                 throw new Exception("Failed");
         }
     }
+
+    [GeneratedRegex("(?<expression>.+)\\s->\\s(?<output>\\w+)", RegexOptions.Compiled)]
+    private static partial Regex LineRegex();
+    [GeneratedRegex(@"^(?<constant>\d+)$", RegexOptions.Compiled)]
+    private static partial Regex ConstantRegex();
+    [GeneratedRegex(@"^(?<variable>\w+)$", RegexOptions.Compiled)]
+    private static partial Regex VariableRegex();
+    [GeneratedRegex(@"^NOT\s(?<left>\w+)$", RegexOptions.Compiled)]
+    private static partial Regex NotRegex();
+    [GeneratedRegex(@"^(?<left>[a-z]+|\d+)\s(?<operation>[A-Z]+)\s(?<right>[a-z]+|\d+)$", RegexOptions.Compiled)]
+    private static partial Regex BinaryRegex();
 }

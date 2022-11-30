@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 using AdventOfCode;
 
-var dayRegex = new Regex(@"Day(?<day>\d+)");
+var dayRegex = MyRegex();
 
 var types = typeof(Program).Assembly
     .GetTypes();
@@ -12,7 +12,7 @@ var puzzles = types
     .Where(t => typeof(IPuzzle).IsAssignableFrom(t))
     .Where(t => !t.IsInterface)
     .Where(t => !t.IsAbstract)
-    .Where(t => t.FullName.Split('.')[^2] == "Year2016")
+    .Where(t => t.FullName!.Split('.')[^2] == "Year2016")
     .OrderBy(t => t.FullName);
 
 foreach (var puzzleType in puzzles)
@@ -41,9 +41,15 @@ string ToDisplay(string puzzleTypeName)
 string ResourceString(Type puzzleType)
 {
     var assembly = typeof(Program).GetTypeInfo().Assembly;
-    var year = puzzleType.Namespace.Split('.')[^1];
+    var year = puzzleType.Namespace?.Split('.')[^1];
     using Stream manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.{year}.{puzzleType.Name}.txt")!;
     using StreamReader reader = new(manifestResourceStream);
 
     return reader.ReadToEnd();
+}
+
+partial class Program
+{
+    [GeneratedRegex(@"Day(?<day>\d+)")]
+    private static partial Regex MyRegex();
 }

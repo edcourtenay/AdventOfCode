@@ -3,9 +3,9 @@
 namespace AdventOfCode.Year2015;
 
 [Description("Science for Hungry People")]
-public class Day15 : IPuzzle
+public partial class Day15 : IPuzzle
 {
-    private readonly Regex _regex = new(@"^(?<ingredient>\w+):\scapacity\s(?<capacity>-?\d+),\sdurability\s(?<durability>-?\d+),\sflavor\s(?<flavour>-?\d+),\stexture\s(?<texture>-?\d+),\scalories\s(?<calories>-?\d+)$", RegexOptions.Compiled);
+    private readonly Regex _regex = LineRegex();
     
     public object Part1(string input)
     {
@@ -67,9 +67,12 @@ public class Day15 : IPuzzle
         public required int Calories { get; init; }
 
         public int TotalScore(int teaspoons) =>
-            (Capacity * teaspoons) + (Durability * teaspoons) + (Flavour * teaspoons) + (Texture * teaspoons) +
-            (Calories * teaspoons);
+            Capacity * teaspoons + Durability * teaspoons + Flavour * teaspoons + Texture * teaspoons +
+            Calories * teaspoons;
 
         public int[] Properties => new[] { Capacity, Durability, Flavour, Texture, Calories };
     }
+
+    [GeneratedRegex(@"^(?<ingredient>\w+):\scapacity\s(?<capacity>-?\d+),\sdurability\s(?<durability>-?\d+),\sflavor\s(?<flavour>-?\d+),\stexture\s(?<texture>-?\d+),\scalories\s(?<calories>-?\d+)$", RegexOptions.Compiled)]
+    private static partial Regex LineRegex();
 }

@@ -3,9 +3,9 @@
 namespace AdventOfCode.Year2015;
 
 [Description("Aunt Sue")]
-public class Day16 : IPuzzle
+public partial class Day16 : IPuzzle
 {
-    private readonly Regex _regexPair = new(@"(?<attribute>\w+):\s(?<value>\d+)", RegexOptions.Compiled);
+    private readonly Regex _regexPair = PairRegex();
 
     private static readonly Dictionary<string, int> Target = new Dictionary<string, int>
     {
@@ -53,4 +53,7 @@ public class Day16 : IPuzzle
                 m => int.Parse(m.Groups["value"].Value)))
             .ToList();
     }
+
+    [GeneratedRegex(@"(?<attribute>\w+):\s(?<value>\d+)", RegexOptions.Compiled)]
+    private static partial Regex PairRegex();
 }

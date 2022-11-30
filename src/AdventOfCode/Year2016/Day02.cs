@@ -42,7 +42,8 @@ public class Day02 : IPuzzle
                 'U' => (col, row - 1),
                 'D' => (col, row + 1),
                 'L' => (col - 1, row),
-                'R' => (col + 1, row)
+                'R' => (col + 1, row),
+                _ => throw new ArgumentOutOfRangeException()
             };
 
             if (isKeyValid((newCol, newRow)))

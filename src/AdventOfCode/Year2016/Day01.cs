@@ -50,7 +50,8 @@ public partial class Day01 : IPuzzle
             direction = match.Groups["turn"].Value switch
             {
                 "L" => (-direction.y, direction.x), 
-                "R" => (direction.y, -direction.x)
+                "R" => (direction.y, -direction.x),
+                _ => throw new ArgumentOutOfRangeException()
             };
 
             int distance = int.Parse(match.Groups["distance"].Value);

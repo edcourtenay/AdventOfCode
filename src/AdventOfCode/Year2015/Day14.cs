@@ -5,9 +5,9 @@ namespace AdventOfCode.Year2015;
 
 [Description("Reindeer Olympics")]
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class Day14 : IPuzzle
+public partial class Day14 : IPuzzle
 {
-    private static readonly Regex ParseRegex = new(@"^(?<reindeer>\w+) can fly (?<speed>\d+) km\/s for (?<flyTime>\d+) seconds, but then must rest for (?<restTime>\d+) seconds\.$", RegexOptions.Compiled);
+    private readonly Regex _parseRegex = ParseRegex();
     
     public object Part1(string input)
     {
@@ -50,7 +50,7 @@ public class Day14 : IPuzzle
         var reader = new StringReader(input);
         while (reader.ReadLine() is { } line)
         {
-            if (ParseRegex.Match(line) is { Success: true } match)
+            if (_parseRegex.Match(line) is { Success: true } match)
             {
                 var name = match.Groups["reindeer"].Value;
                 var speed = int.Parse(match.Groups["speed"].Value);
@@ -107,4 +107,7 @@ public class Day14 : IPuzzle
         Flying,
         Resting
     }
+
+    [GeneratedRegex(@"^(?<reindeer>\w+) can fly (?<speed>\d+) km\/s for (?<flyTime>\d+) seconds, but then must rest for (?<restTime>\d+) seconds\.$", RegexOptions.Compiled)]
+    private static partial Regex ParseRegex();
 }
