@@ -11,18 +11,25 @@ var dayRegex = MyRegex();
 var types = typeof(Program).Assembly
     .GetTypes();
 
+bool LatestAdventOfCode((Type type, int year, int day) t) =>
+    t.year == (DateTime.Today switch
+    {
+        { Month: >= 1 and <= 11 } d => d.Year - 1,
+        { Month: 12 } d => d.Year,
+        _ => throw new ArgumentOutOfRangeException(nameof(DateTime.Today))
+    });
+
 var puzzles = types
     .Where(t => typeof(IPuzzle).IsAssignableFrom(t))
-    .Where(t => !t.IsInterface)
-    .Where(t => !t.IsAbstract)
-    .Select(t => (type: t, match: dayRegex.Match(t.FullName)))
+    .Where(t => t is { IsInterface: false, IsAbstract: false })
+    .Select(t => (type: t, match: dayRegex.Match(t.FullName!)))
     .Where(t => t.match.Success)
-    .Select(t => (type: t.type, year: int.Parse(t.match.Groups["year"].Value), day: int.Parse(t.match.Groups["day"].Value)))
+    .Select(t => (t.type, year: int.Parse(t.match.Groups["year"].Value), day: int.Parse(t.match.Groups["day"].Value)))
     .OrderBy(t => t.year)
     .ThenBy(t => t.day)
-    .Where(t => t.year == 2022);
+    .Where(LatestAdventOfCode);
 
-foreach (var (puzzleType, year, day) in puzzles)
+foreach ((Type puzzleType, int year, int day) in puzzles)
 {
     if (Activator.CreateInstance(puzzleType) is not IPuzzle puzzle)
         continue;
@@ -32,7 +39,7 @@ foreach (var (puzzleType, year, day) in puzzles)
         : "Unknown";
     string input = ResourceString(year, day);
     
-    AnsiConsole.MarkupLine($"[bold]{year:0000} Day {day:00}[/]: [dim]{description}[/]");
+    AnsiConsole.MarkupLine($"[bold]{year:0000} Day {day:00}[/]: [link=https://adventofcode.com/{year}/day/{day}][dim]{description}[/][/]");
     AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s)));
     AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s)));
 }
