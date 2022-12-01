@@ -15,7 +15,7 @@ public class Day01 : IPuzzle
 
     private static int Solve(string input, int topCount)
     {
-        return ToSequences(input.ToLines(), s => !string.IsNullOrEmpty(s))
+        return ToSequences(input.ToLines(), string.IsNullOrEmpty)
             .Select(set => set.Select(int.Parse).Sum())
             .OrderDescending().Take(topCount).Sum();
     }
@@ -27,7 +27,7 @@ public class Day01 : IPuzzle
             do
             {
                 yield return enumerator.Current;
-            } while (enumerator.MoveNext() && func(enumerator.Current));
+            } while (enumerator.MoveNext() && !func(enumerator.Current));
         }
 
         IEnumerable<IEnumerable<string>> ToSequencesInternal(IEnumerable<string> enumerable, Func<string,bool> func)

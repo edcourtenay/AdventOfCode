@@ -4,6 +4,8 @@ using System.Text.RegularExpressions;
 
 using AdventOfCode;
 
+using Spectre.Console;
+
 var dayRegex = MyRegex();
 
 var types = typeof(Program).Assembly
@@ -27,9 +29,9 @@ foreach (var puzzleType in puzzles)
         : "Unknown";
     string input = ResourceString(puzzleType);
     
-    Console.WriteLine($"{name}: {description}");
-    Console.WriteLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s)));
-    Console.WriteLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s)));
+    AnsiConsole.MarkupLine($"[bold]{name}[/]: [dim]{description}[/]");
+    AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s)));
+    AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s)));
 }
 
 string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, string, object> func)
@@ -37,7 +39,13 @@ string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, string, obje
     var sw = Stopwatch.StartNew();
     var obj = func(puzzle, input);
     sw.Stop();
-    return $"\t{part}: [{sw.Elapsed:mm\\:ss\\.fff}] {obj}";
+    string timeColour = sw.ElapsedMilliseconds switch
+    {
+        > 1000 => "red",
+        > 500 => "yellow",
+        _ => "green"
+    };
+    return $"\t[bold]{part}[/]: [[[{timeColour}]{sw.Elapsed:mm\\:ss\\.fff}[/]]] {obj}";
 }
     
 string ToDisplay(string puzzleTypeName)
