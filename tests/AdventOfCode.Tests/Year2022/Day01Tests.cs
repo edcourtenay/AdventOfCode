@@ -4,7 +4,7 @@ using FluentAssertions;
 
 namespace AdventOfCode.Tests.Year2022;
 
-public class Year2022Tests
+public class Day01Tests
 {
     private const string TestData = """
     1000
