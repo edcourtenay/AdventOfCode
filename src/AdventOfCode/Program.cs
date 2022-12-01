@@ -15,21 +15,24 @@ var puzzles = types
     .Where(t => typeof(IPuzzle).IsAssignableFrom(t))
     .Where(t => !t.IsInterface)
     .Where(t => !t.IsAbstract)
-    .Where(t => t.FullName!.Split('.')[^2] == "Year2022")
-    .OrderBy(t => t.FullName);
+    .Select(t => (type: t, match: dayRegex.Match(t.FullName)))
+    .Where(t => t.match.Success)
+    .Select(t => (type: t.type, year: int.Parse(t.match.Groups["year"].Value), day: int.Parse(t.match.Groups["day"].Value)))
+    .OrderBy(t => t.year)
+    .ThenBy(t => t.day)
+    .Where(t => t.year == 2022);
 
-foreach (var puzzleType in puzzles)
+foreach (var (puzzleType, year, day) in puzzles)
 {
     if (Activator.CreateInstance(puzzleType) is not IPuzzle puzzle)
         continue;
 
-    string name = ToDisplay(puzzleType.Name);
     string description = puzzleType.GetCustomAttribute<DescriptionAttribute>() is { } descriptionAttribute
         ? descriptionAttribute.Description
         : "Unknown";
-    string input = ResourceString(puzzleType);
+    string input = ResourceString(year, day);
     
-    AnsiConsole.MarkupLine($"[bold]{name}[/]: [dim]{description}[/]");
+    AnsiConsole.MarkupLine($"[bold]{year:0000} Day {day:00}[/]: [dim]{description}[/]");
     AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s)));
     AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s)));
 }
@@ -47,19 +50,11 @@ string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, string, obje
     };
     return $"\t[bold]{part}[/]: [[[{timeColour}]{sw.Elapsed:mm\\:ss\\.fff}[/]]] {obj}";
 }
-    
-string ToDisplay(string puzzleTypeName)
-{
-    return dayRegex.Match(puzzleTypeName) is { Success: true } match
-        ? $@"Day {match.Groups["day"].Value}"
-        : puzzleTypeName;
-}
 
-string ResourceString(Type puzzleType)
+string ResourceString(int year, int day)
 {
     var assembly = typeof(Program).GetTypeInfo().Assembly;
-    var year = puzzleType.Namespace?.Split('.')[^1];
-    using Stream manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.{year}.{puzzleType.Name}.txt")!;
+    using Stream manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.Day{day:00}.txt")!;
     using StreamReader reader = new(manifestResourceStream);
 
     return reader.ReadToEnd();
@@ -67,6 +62,6 @@ string ResourceString(Type puzzleType)
 
 partial class Program
 {
-    [GeneratedRegex(@"Day(?<day>\d+)")]
+    [GeneratedRegex(@"Year(?<year>\d+)\.Day(?<day>\d+)")]
     private static partial Regex MyRegex();
 }
