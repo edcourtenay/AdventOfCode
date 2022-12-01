@@ -14,7 +14,8 @@ public class Day02 : IPuzzle
         {
             "forward" => (current.horizontal + command.Unit, current.depth),
             "down" => (current.horizontal, current.depth + command.Unit),
-            "up" => (current.horizontal, current.depth - command.Unit)
+            "up" => (current.horizontal, current.depth - command.Unit),
+            _ => throw new ArgumentOutOfRangeException()
         });
 
         return pos.horizontal * pos.depth;
@@ -31,7 +32,8 @@ public class Day02 : IPuzzle
         {
             "forward" => current with { horizontal = current.horizontal + command.Unit, depth = current.depth + current.aim * command.Unit },
             "down" => current with { aim = current.aim + command.Unit },
-            "up" => current with { aim = current.aim - command.Unit }
+            "up" => current with { aim = current.aim - command.Unit },
+            _ => throw new ArgumentOutOfRangeException()
         });
 
         return pos.horizontal * pos.depth;

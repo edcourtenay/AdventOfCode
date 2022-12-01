@@ -4,20 +4,26 @@ using FluentAssertions;
 
 namespace AdventOfCode.Tests.Year2021;
 
-public class Day02Tests : IClassFixture<Day02>
+public class Day03Tests : IClassFixture<Day03>
 {
-    private readonly Day02 _sut;
+    private readonly Day03 _sut;
 
     private const string TestData = """
-    forward 5
-    down 5
-    forward 8
-    up 3
-    down 8
-    forward 2
+    00100
+    11110
+    10110
+    10111
+    10101
+    01111
+    00111
+    11100
+    10000
+    11001
+    00010
+    01010
     """;
 
-    public Day02Tests(Day02 sut)
+    public Day03Tests(Day03 sut)
     {
         _sut = sut;
     }
@@ -25,12 +31,12 @@ public class Day02Tests : IClassFixture<Day02>
     [Fact(DisplayName = "Part1 should return expected results from example data")]
     public void Part1Example()
     {
-        _sut.Part1(TestData).As<int>().Should().Be(150);
+        _sut.Part1(TestData).As<int>().Should().Be(198);
     }
 
     [Fact(DisplayName = "Part2 should return expected results from example data")]
     public void Part2Example()
     {
-        _sut.Part2(TestData).As<int>().Should().Be(900);
+        _sut.Part2(TestData).As<int>().Should().Be(230);
     }
 }
