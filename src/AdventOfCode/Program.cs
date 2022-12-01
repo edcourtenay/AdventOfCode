@@ -12,7 +12,7 @@ var puzzles = types
     .Where(t => typeof(IPuzzle).IsAssignableFrom(t))
     .Where(t => !t.IsInterface)
     .Where(t => !t.IsAbstract)
-    .Where(t => t.FullName!.Split('.')[^2] == "Year2016")
+    .Where(t => t.FullName!.Split('.')[^2] == "Year2022")
     .OrderBy(t => t.FullName);
 
 foreach (var puzzleType in puzzles)
