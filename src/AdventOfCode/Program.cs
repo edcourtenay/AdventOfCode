@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 using AdventOfCode;
@@ -27,8 +28,16 @@ foreach (var puzzleType in puzzles)
     string input = ResourceString(puzzleType);
     
     Console.WriteLine($"{name}: {description}");
-    Console.WriteLine($"\tPart 01: {puzzle.Part1(input)}");
-    Console.WriteLine($"\tPart 02: {puzzle.Part2(input)}");
+    Console.WriteLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s)));
+    Console.WriteLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s)));
+}
+
+string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, string, object> func)
+{
+    var sw = Stopwatch.StartNew();
+    var obj = func(puzzle, input);
+    sw.Stop();
+    return $"\t{part}: [{sw.Elapsed:mm\\:ss\\.fff}] {obj}";
 }
     
 string ToDisplay(string puzzleTypeName)
