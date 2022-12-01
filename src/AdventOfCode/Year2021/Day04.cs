@@ -28,13 +28,7 @@ public class Day04 : IPuzzle
 
     public object Part2(string input)
     {
-        IEnumerable<string> data = input.ToLines();
-        var (balls, boards) = ParseData(data);
-        var (lastBall, winningBoard) = Play(balls, boards);
-
-        var sum = winningBoard.Cells.Where(cell => cell.Marked == false).Sum(cell => cell.Number);
-
-        return sum * lastBall;
+        return string.Empty;
     }
 
     private bool IsWinningBoard(Board board)

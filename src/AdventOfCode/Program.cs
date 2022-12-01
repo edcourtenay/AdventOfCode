@@ -49,7 +49,7 @@ static void ExecutePuzzles(int selectedYear, int? selectedDay)
             ? descriptionAttribute.Description
             : "Unknown";
         string input = ResourceString(year, day);
-    
+
         AnsiConsole.MarkupLine($"[bold]{year:0000} Day {day:00}[/]: [link=https://adventofcode.com/{year}/day/{day}][dim]{description}[/][/]");
         AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s)));
         AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s)));
@@ -67,7 +67,12 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
         > 500 => "yellow",
         _ => "green"
     };
-    return $"\t[bold]{part}[/]: [[[{timeColour}]{sw.Elapsed:mm\\:ss\\.fff}[/]]] {obj}";
+    (string resultColour, object result) = obj switch
+    {
+        string s when string.IsNullOrEmpty(s) => ("red", "Incomplete"),
+        _ => ("cyan", obj)
+    };
+    return $"\t[bold]{part}[/]: [[[{timeColour}]{sw.Elapsed:mm\\:ss\\.fff}[/]]] [{resultColour}]{result}[/]";
 }
 
 static string ResourceString(int year, int day)
