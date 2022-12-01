@@ -19,7 +19,7 @@ public static class EnumerableExtensions
 
         return PermutationsRec(0);
     }
-    
+
     public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunkSize)
     {
         IEnumerable<IEnumerable<T>> ChunkInternal(IEnumerable<T> source, int chunkSize)
@@ -33,7 +33,7 @@ public static class EnumerableExtensions
                 yield return ChunkSequence(enumerator, chunkSize);
             } while (true);
         }
-        
+
         IEnumerable<T> ChunkSequence(IEnumerator<T> enumerator, int chunkSize)
         {
             var count = 0;
@@ -43,10 +43,10 @@ public static class EnumerableExtensions
                 yield return enumerator.Current;
             } while (++count < chunkSize && enumerator.MoveNext());
         }
-        
+
         return ChunkInternal(source, chunkSize);
     }
-    
+
     public static IEnumerable<IEnumerable<T>> Window<T>(this IEnumerable<T> source, int size, bool allowPartialWindow = false)
     {
         using var enumerator = source.GetEnumerator();
@@ -55,10 +55,10 @@ public static class EnumerableExtensions
         while (enumerator.MoveNext())
         {
             queue.Enqueue(enumerator.Current);
-            
+
             if (queue.Count != size)
                 continue;
-            
+
             yield return queue;
             queue = new Queue<T>();
         }
@@ -71,13 +71,13 @@ public static class EnumerableExtensions
     {
         using var enumerator = source.GetEnumerator();
         var queue = new Queue<T>();
-        
+
         while (enumerator.MoveNext())
         {
             queue.Enqueue(enumerator.Current);
             if (queue.Count < size)
                 continue;
-            
+
             if (queue.Count > size)
                 queue.Dequeue();
 
@@ -93,7 +93,7 @@ public static class EnumerableExtensions
             yield return line;
         }
     }
-    
+
     public static IEnumerable<IEnumerable<T>> Pivot<T>(this IEnumerable<IEnumerable<T>> source)
     {
         var enumerators = source.Select(e => e.GetEnumerator()).ToArray();
@@ -107,6 +107,22 @@ public static class EnumerableExtensions
         finally
         {
             Array.ForEach(enumerators, e => e.Dispose());
+        }
+    }
+
+    public static IEnumerable<(T first, T second)> Pairwise<T>(this IEnumerable<T> source)
+    {
+        var previous = default(T);
+        using var enumerator = source.GetEnumerator();
+
+        if (enumerator.MoveNext())
+        {
+            previous = enumerator.Current;
+        }
+
+        while (enumerator.MoveNext())
+        {
+            yield return (previous, previous = enumerator.Current);
         }
     }
 }
