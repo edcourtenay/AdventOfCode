@@ -5,8 +5,8 @@ namespace AdventOfCode.Year2016;
 [Description("Security Through Obscurity")]
 public partial class Day04 : IPuzzle
 {
-    private readonly Regex _lineRegex = LineRegex(); 
-    
+    private readonly Regex _lineRegex = LineRegex();
+
     public object Part1(string input)
     {
         return GetValidRooms(input)

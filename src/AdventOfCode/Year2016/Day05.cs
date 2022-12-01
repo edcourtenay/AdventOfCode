@@ -7,7 +7,7 @@ namespace AdventOfCode.Year2016;
 public class Day05 : IPuzzle
 {
     private readonly MD5 _md5 = MD5.Create();
-    
+
     public object Part1(string input)
     {
         int i = 0;
@@ -38,7 +38,7 @@ public class Day05 : IPuzzle
         {
             byte[] hash;
             byte pos;
-            do 
+            do
             {
                 string chars = $"{input}{i++}";
                 hash = _md5.ComputeHash(Encoding.UTF8.GetBytes(chars));

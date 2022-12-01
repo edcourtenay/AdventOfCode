@@ -25,7 +25,7 @@ public class Day02 : IPuzzle
             yield return ParseLine(line);
         }
     }
-    
+
     public int CalculatePaper(Box box)
     {
         var sides = new[]
@@ -43,7 +43,7 @@ public class Day02 : IPuzzle
         var split = input.Split('x').Select(int.Parse).ToArray();
         return new Box(split[0], split[1], split[2]);
     }
-    
+
     public record Box(int Width, int Length, int Height);
 
     public int CalculateRibbon(Box box)
