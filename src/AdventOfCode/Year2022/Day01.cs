@@ -5,21 +5,22 @@ public class Day01 : IPuzzle
 {
     public object Part1(string input)
     {
-        return SplitByBlankLine(input).Max();
+        return Solve(input, 1);
     }
 
     public object Part2(string input)
     {
-        return SplitByBlankLine(input).OrderDescending().Take(3).Sum();
+        return Solve(input, 3);
     }
 
-    private static IEnumerable<int> SplitByBlankLine(string input)
+    private static int Solve(string input, int topCount)
     {
-        return ToGroups(input.ToLines(), s => !string.IsNullOrEmpty(s))
-            .Select(set => set.Select(int.Parse).Sum());
+        return ToSequences(input.ToLines(), s => !string.IsNullOrEmpty(s))
+            .Select(set => set.Select(int.Parse).Sum())
+            .OrderDescending().Take(topCount).Sum();
     }
     
-    private static IEnumerable<IEnumerable<string>> ToGroups(IEnumerable<string> source, Func<string, bool> predicate)
+    private static IEnumerable<IEnumerable<string>> ToSequences(IEnumerable<string> source, Func<string, bool> predicate)
     {
         IEnumerable<string> GroupSequence(IEnumerator<string> enumerator, Func<string, bool> func)
         {
@@ -29,7 +30,7 @@ public class Day01 : IPuzzle
             } while (enumerator.MoveNext() && func(enumerator.Current));
         }
 
-        IEnumerable<IEnumerable<string>> ToGroupsInternal(IEnumerable<string> enumerable, Func<string,bool> func)
+        IEnumerable<IEnumerable<string>> ToSequencesInternal(IEnumerable<string> enumerable, Func<string,bool> func)
         {
             IEnumerator<string> enumerator = enumerable.GetEnumerator();
 
@@ -42,6 +43,6 @@ public class Day01 : IPuzzle
             } while (true);
         }
 
-        return ToGroupsInternal(source, predicate);
+        return ToSequencesInternal(source, predicate);
     }
 }
