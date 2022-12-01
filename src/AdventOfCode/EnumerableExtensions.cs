@@ -94,6 +94,11 @@ public static class EnumerableExtensions
         }
     }
 
+    public static IEnumerable<T> ToLines<T>(this string input, Func<string, T> convert)
+    {
+        return input.ToLines().Select(convert);
+    }
+
     public static IEnumerable<IEnumerable<T>> Pivot<T>(this IEnumerable<IEnumerable<T>> source)
     {
         var enumerators = source.Select(e => e.GetEnumerator()).ToArray();
@@ -110,7 +115,7 @@ public static class EnumerableExtensions
         }
     }
 
-    public static IEnumerable<(T first, T second)> Pairwise<T>(this IEnumerable<T> source)
+    public static IEnumerable<(T First, T Second)> Pairwise<T>(this IEnumerable<T> source)
     {
         var previous = default(T);
         using var enumerator = source.GetEnumerator();
@@ -122,7 +127,7 @@ public static class EnumerableExtensions
 
         while (enumerator.MoveNext())
         {
-            yield return (previous, previous = enumerator.Current);
+            yield return (previous, previous = enumerator.Current)!;
         }
     }
 }

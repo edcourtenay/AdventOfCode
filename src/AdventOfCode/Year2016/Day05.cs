@@ -46,7 +46,7 @@ public class Day05 : IPuzzle
             } while (!FiveZeroes(hash) || seen.Contains(pos));
 
             byte val = (byte)((hash[3] >> 4) & 0x0F);
-            result |= (ulong)(val << (4 * (8 - (pos + 1))));
+            result |= (uint)(val << (4 * (8 - (pos + 1))));
             result = result & 0xFFFFFFFF;
             seen.Add(pos);
         }
