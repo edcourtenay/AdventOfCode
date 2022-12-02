@@ -30,19 +30,13 @@ public class Day01 : IPuzzle
             } while (enumerator.MoveNext() && !func(enumerator.Current));
         }
 
-        IEnumerable<IEnumerable<string>> ToSequencesInternal(IEnumerable<string> enumerable, Func<string,bool> func)
+        using IEnumerator<string> enumerator = source.GetEnumerator();
+        do
         {
-            IEnumerator<string> enumerator = enumerable.GetEnumerator();
+            if (!enumerator.MoveNext())
+                yield break;
 
-            do
-            {
-                if (!enumerator.MoveNext())
-                    yield break;
-
-                yield return GroupSequence(enumerator, func);
-            } while (true);
-        }
-
-        return ToSequencesInternal(source, predicate);
+            yield return GroupSequence(enumerator, predicate);
+        } while (true);
     }
 }

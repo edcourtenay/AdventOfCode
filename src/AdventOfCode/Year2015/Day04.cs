@@ -37,8 +37,8 @@ public class Day04 : IPuzzle
 
         return func(hash);
     }
-    
+
     public static readonly Func<byte[], bool> Part1Test = bytes => bytes[0] == 0 && bytes[1] == 0 && (bytes[2] & 0xF0) == 0;
     public static readonly Func<byte[], bool> Part2Test = bytes => bytes[0] == 0 && bytes[1] == 0 && bytes[2] == 0;
-    private int? _findSeed = null;
+    private int? _findSeed;
 }

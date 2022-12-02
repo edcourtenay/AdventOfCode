@@ -17,7 +17,7 @@ public partial class Day04 : IPuzzle
     public object Part2(string input)
     {
         return GetValidRooms(input)
-            .Select(tuple => (room: Decrypt(tuple.room, tuple.sectorid), sectorid: tuple.sectorid))
+            .Select(tuple => (room: Decrypt(tuple.room, tuple.sectorid), tuple.sectorid))
             .First(tuple => tuple.room == "northpole object storage").sectorid;
     }
 

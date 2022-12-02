@@ -59,21 +59,6 @@ public class Day04 : IPuzzle
         }
     }
 
-    private (int lastBall, Board? winningBoard) Play(Queue<int> balls, Board[] boards)
-    {
-        int lastBall = 0;
-        Board? winningBoard = null;
-
-        while (balls.Count > 0 && (winningBoard = FindWinningBoard(boards)) == null)
-        {
-            lastBall = balls.Dequeue();
-
-            MarkNumber(boards, lastBall);
-        }
-
-        return (lastBall, winningBoard);
-    }
-
     private static (Queue<int> balls, Board[] boards) ParseData(IEnumerable<string> data)
     {
         var lines = data.ToArray();

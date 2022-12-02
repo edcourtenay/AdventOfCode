@@ -3,27 +3,24 @@ namespace AdventOfCode.Year2022;
 [Description("Rock Paper Scissors")]
 public class Day02 : IPuzzle
 {
+    private static readonly LinkedList<Choice> Choices = new(new[] { Choice.Rock, Choice.Paper, Choice.Scissors });
+
     public object Part1(string input)
     {
-        return input
-            .ToLines(line => (Player: Translate(line[2]), Opponent: Translate(line[0])))
-            .Select(r => Score(r.Player, r.Opponent))
-            .Sum();
+        return Execute(input, line => (Player: Translate(line[2]), Opponent: Translate(line[0])));
     }
 
     public object Part2(string input)
     {
-        return input
-            .ToLines(line => (Player: GetStrategy(line[2], Translate(line[0])), Opponent: Translate(line[0])))
-            .Select(r => Score(r.Player, r.Opponent))
-            .Sum();
+        return Execute(input, line => (Player: GetStrategy(line[2], Translate(line[0])), Opponent: Translate(line[0])));
     }
 
-    public (Choice Player, Choice Opponent) Parse2(string line)
+    private static int Execute(string input, Func<string, (Choice Player, Choice Opponent)> convert)
     {
-        var opponent = Translate(line[0]);
-        var player = GetStrategy(line[2], opponent);
-        return (player, opponent);
+        return input
+            .ToLines(convert)
+            .Select(r => Score(r.Player, r.Opponent))
+            .Sum();
     }
 
     private static Choice Translate(char c) =>
@@ -35,33 +32,27 @@ public class Day02 : IPuzzle
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    public Choice GetStrategy(char c, Choice opponent)
-    {
-        return (c, opponent) switch
+    private static Choice GetStrategy(char c, Choice opponent) =>
+        (c, Choices.Find(opponent)) switch
         {
-            ('Z', Choice.Rock) => Choice.Paper,
-            ('Z', Choice.Paper) => Choice.Scissors,
-            ('Z', Choice.Scissors) => Choice.Rock,
-            ('X', Choice.Rock) => Choice.Scissors,
-            ('X', Choice.Paper) => Choice.Rock,
-            ('X', Choice.Scissors) => Choice.Paper,
-            var (_, a) => a,
+            ('Z', var n) => n!.NextOrFirst().Value,
+            ('X', var n) => n!.PreviousOrLast().Value,
+            ('Y', var n) => n!.Value,
+            _ => throw new ArgumentOutOfRangeException()
         };
-    }
 
-    public int Score(Choice player, Choice opponent)
+    private static int Score(Choice player, Choice opponent)
     {
-        return (player, opponent) switch
+        LinkedListNode<Choice> linkedListNode = Choices.Find(opponent)!;
+        return (player, linkedListNode.PreviousOrLast().Value, linkedListNode.NextOrFirst().Value) switch
         {
-            (Choice.Rock, Choice.Scissors) => 6,
-            (Choice.Paper, Choice.Rock) => 6,
-            (Choice.Scissors, Choice.Paper) => 6,
-            var (l, r) when l == r => 3,
-            _ => 0
+            var (p, _, w) when p == w => 6,
+            var (p, l, _) when p == l => 0,
+            _ => 3
         } + (int)player;
     }
 
-    public enum Choice
+    private enum Choice
     {
         Rock = 1,
         Paper = 2,

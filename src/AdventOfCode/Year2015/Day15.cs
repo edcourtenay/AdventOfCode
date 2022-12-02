@@ -6,7 +6,7 @@ namespace AdventOfCode.Year2015;
 public partial class Day15 : IPuzzle
 {
     private readonly Regex _regex = LineRegex();
-    
+
     public object Part1(string input)
     {
         Ingredient[] ingredients = Data(input).ToArray();
@@ -19,7 +19,7 @@ public partial class Day15 : IPuzzle
     {
         return string.Empty;
     }
-    
+
     private IEnumerable<Ingredient> Data(string input)
     {
         var reader = new StringReader(input);
@@ -44,10 +44,10 @@ public partial class Day15 : IPuzzle
     {
         return teaspoons.Select((t, i) => ingredients[i].TotalScore(t)).Aggregate(1, (x, y) => x * y);
     }
-    
+
     IEnumerable<int[]> Partition(int n, int k) {
         if (k == 1) {
-            yield return new int[] { n };
+            yield return new[] { n };
         } else {
             for (var i = 0; i <= n; i++) {
                 foreach (var rest in Partition(n - i, k - 1)) {
@@ -56,7 +56,7 @@ public partial class Day15 : IPuzzle
             }
         }
     }
-    
+
     public record Ingredient
     {
         public required string Name { get; init; }

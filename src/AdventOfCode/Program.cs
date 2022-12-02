@@ -12,7 +12,7 @@ var yearOption = new Option<int>(
     description: "The year of Advent of Code puzzles to run",
     getDefaultValue: () => DateTime.Today switch
     {
-        { Month: >= 1 and <= 11, Year: var year } d => year - 1,
+        { Month: >= 1 and <= 11, Year: var year } => year - 1,
         { Year: var year } => year
     });
 
