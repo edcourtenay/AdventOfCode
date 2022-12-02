@@ -1,4 +1,4 @@
-namespace AdventOfCode.Year2022;
+﻿namespace AdventOfCode.Year2022;
 
 [Description("Calorie Counting")]
 public class Day01 : IPuzzle
@@ -19,7 +19,7 @@ public class Day01 : IPuzzle
             .Select(set => set.Select(int.Parse).Sum())
             .OrderDescending().Take(topCount).Sum();
     }
-    
+
     private static IEnumerable<IEnumerable<string>> ToSequences(IEnumerable<string> source, Func<string, bool> predicate)
     {
         IEnumerable<string> GroupSequence(IEnumerator<string> enumerator, Func<string, bool> func)
