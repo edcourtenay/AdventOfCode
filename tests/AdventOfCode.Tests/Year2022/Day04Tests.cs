@@ -16,11 +16,11 @@ public class Day04Tests : IClassFixture<Day04>
     {
         _sut = sut;
     }
-    
+
     [Fact(DisplayName = "Part1 should return expected results from example data")]
     public void Part1Example()
     {
-        _sut.Part1(TestData).As<int>().Should().Be(-1);
+        _sut.Part1(TestData).As<int>().Should().Be(2);
     }
 
     [Fact(DisplayName = "Part2 should return expected results from example data")]
