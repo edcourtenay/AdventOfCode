@@ -1,7 +1,5 @@
 using AdventOfCode.Year2016;
 
-using FluentAssertions;
-
 namespace AdventOfCode.Tests.Year2016;
 
 public class Day03Tests

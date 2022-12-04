@@ -18,10 +18,8 @@ public class Day04 : IPuzzle
             .Count(countFunc);
     }
 
-    private static IEnumerable<int> IntersectAll(IEnumerable<Range> r)
-    {
-        return r.Aggregate((IEnumerable<int> a1, IEnumerable<int> a2) => a1.Intersect(a2));
-    }
+    private static IEnumerable<int> IntersectAll(IEnumerable<Range> r) =>
+        r.Aggregate((IEnumerable<int> a1, IEnumerable<int> a2) => a1.Intersect(a2));
 
     public record Range(int Start, int End) : IEnumerable<int>
     {
