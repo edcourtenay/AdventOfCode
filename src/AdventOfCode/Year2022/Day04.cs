@@ -6,16 +6,21 @@ namespace AdventOfCode.Year2022;
 public class Day04 : IPuzzle
 {
     public object Part1(string input)
-        => Solve(input, ranges => ranges[0].Intersect(ranges[1]).Count() == ranges.Min(range => range.Length));
+        => Solve(input, r => IntersectAll(r).Count() == r.Min(range => range.Length));
 
     public object Part2(string input)
-        => Solve(input, ranges => ranges[0].Intersect(ranges[1]).Any());
+        => Solve(input, r => IntersectAll(r).Any());
 
     private static int Solve(string input, Func<Range[], bool> countFunc)
     {
         return input
             .ToLines(s => s.Split(',').Select(Range.Parse).ToArray())
             .Count(countFunc);
+    }
+
+    private static IEnumerable<int> IntersectAll(IEnumerable<Range> r)
+    {
+        return r.Aggregate((IEnumerable<int> a1, IEnumerable<int> a2) => a1.Intersect(a2));
     }
 
     public record Range(int Start, int End) : IEnumerable<int>
