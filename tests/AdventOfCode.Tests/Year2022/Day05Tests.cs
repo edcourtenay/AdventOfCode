@@ -32,6 +32,6 @@ public class Day05Tests : IClassFixture<Day05>
     [Fact(DisplayName = "Part2 should return expected results from example data")]
     public void Part2Example()
     {
-        _sut.Part2(TestData).As<string>().Should().Be("CMZ");
+        _sut.Part2(TestData).As<string>().Should().Be("MCD");
     }
 }
