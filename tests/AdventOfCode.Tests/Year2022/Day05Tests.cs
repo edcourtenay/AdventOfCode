@@ -7,7 +7,7 @@ public class Day05Tests : IClassFixture<Day05>
     private readonly Day05 _sut;
 
     private const string TestData = """
-    [D]
+        [D]
     [N] [C]
     [Z] [M] [P]
      1   2   3
