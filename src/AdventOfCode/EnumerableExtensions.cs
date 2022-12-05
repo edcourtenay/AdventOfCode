@@ -130,4 +130,24 @@ public static class EnumerableExtensions
             yield return (previous, previous = enumerator.Current)!;
         }
     }
+
+    public static IEnumerable<IEnumerable<string>> ToSequences(this IEnumerable<string> source, Func<string, bool> predicate)
+    {
+        IEnumerable<string> GroupSequence(IEnumerator<string> enumerator, Func<string, bool> func)
+        {
+            do
+            {
+                yield return enumerator.Current;
+            } while (enumerator.MoveNext() && !func(enumerator.Current));
+        }
+
+        using IEnumerator<string> enumerator = source.GetEnumerator();
+        do
+        {
+            if (!enumerator.MoveNext())
+                yield break;
+
+            yield return GroupSequence(enumerator, predicate);
+        } while (true);
+    }
 }
