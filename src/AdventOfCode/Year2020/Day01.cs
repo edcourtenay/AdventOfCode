@@ -1,5 +1,6 @@
 ﻿namespace AdventOfCode.Year2020;
 
+[Description("Report Repair")]
 public class Day01 : IPuzzle
 {
     public object Part1(string input)
