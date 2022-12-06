@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace AdventOfCode.Year2019;
+﻿namespace AdventOfCode.Year2019;
 
 [Description("1202 Program Alarm")]
 public class Day02 : IPuzzle
