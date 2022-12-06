@@ -150,4 +150,34 @@ public static class EnumerableExtensions
             yield return GroupSequence(enumerator, predicate);
         } while (true);
     }
+
+    public static IEnumerable<IEnumerable<T>> Combinations<T>(this T[] source, int width)
+    {
+        static IEnumerable<int[]> GetCombinations(int k, int n)
+        {
+            var result = new int[k];
+            var stack = new Stack<int>();
+            stack.Push(1);
+
+            while (stack.Count > 0)
+            {
+                var index = stack.Count - 1;
+                var value = stack.Pop();
+
+                while (value <= n)
+                {
+                    result[index++] = value++;
+                    stack.Push(value);
+                    if (index == k)
+                    {
+                        yield return result.ToArray();
+                        break;
+                    }
+                }
+            }
+        }
+
+        return GetCombinations(n: source.Length, k: width)
+            .Select(indexes => indexes.Select(i => source[i - 1]));
+    }
 }
