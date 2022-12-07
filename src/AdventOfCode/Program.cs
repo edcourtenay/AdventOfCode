@@ -81,14 +81,15 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
         > 500 => "yellow",
         _ => "green"
     };
-    (string resultColour, object result) = obj switch
+    (string resultColour, string result) = obj switch
     {
         string s when string.IsNullOrEmpty(s) => ("red", "Incomplete"),
-        _ => ("cyan", obj)
+        _ => ("cyan", obj.ToString() ?? string.Empty)
     };
     string checkOrCross = expectedResult switch
     {
-        {} s when s == result.ToString() => "[green]✓[/]",
+        {} s when s == result => "[green]✓[/]",
+        {} s when result == "Incomplete" => "",
         {} s => "[red]×[/]",
         _ => "[purple]?[/]"
     };
