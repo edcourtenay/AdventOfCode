@@ -1,4 +1,5 @@
-﻿using System.CommandLine;
+﻿using System.Collections.Concurrent;
+using System.CommandLine;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -6,6 +7,8 @@ using System.Text.RegularExpressions;
 using AdventOfCode;
 
 using Spectre.Console;
+
+using static System.Text.Json.JsonSerializer;
 
 var yearOption = new Option<int>(
     name: "--year",
@@ -29,6 +32,8 @@ return await rootCommand.InvokeAsync(args);
 
 static void ExecutePuzzles(int selectedYear, int? selectedDay)
 {
+    ConcurrentDictionary<int, Dictionary<int, string[]>?> yearResults = new();
+
     var puzzles = typeof(Program).Assembly
         .GetTypes()
         .Where(t => typeof(IPuzzle).IsAssignableFrom(t))
@@ -49,14 +54,23 @@ static void ExecutePuzzles(int selectedYear, int? selectedDay)
             ? descriptionAttribute.Description
             : "Unknown";
         string input = ResourceString(year, day);
+        var results = yearResults.GetOrAdd(year, Results);
+        string[]? strings = null;
+        if (results != null && results.ContainsKey(day))
+        {
+            strings = results[day];
+        }
+
+        var result1 = strings is [{ } r1, ..] ? r1 : null;
+        var result2 = strings is [_, {} r2] ? r2 : null;
 
         AnsiConsole.MarkupLine($"[bold]{year:0000} Day {day:00}[/]: [link=https://adventofcode.com/{year}/day/{day}][dim]{description}[/][/]");
-        AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s)));
-        AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s)));
+        AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s), result1));
+        AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s), result2));
     }
 }
 
-static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, string, object> func)
+static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, string, object> func, string? expectedResult)
 {
     var sw = Stopwatch.StartNew();
     var obj = func(puzzle, input);
@@ -72,7 +86,13 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
         string s when string.IsNullOrEmpty(s) => ("red", "Incomplete"),
         _ => ("cyan", obj)
     };
-    return $"\t[bold]{part}[/]: [[[{timeColour}]{sw.Elapsed:mm\\:ss\\.fff}[/]]] [{resultColour}]{result}[/]";
+    string checkOrCross = expectedResult switch
+    {
+        {} s when s == result.ToString() => "[green]✓[/]",
+        {} s => "[red]×[/]",
+        _ => "[purple]?[/]"
+    };
+    return $"\t[bold]{part}[/]: [[[{timeColour}]{sw.Elapsed:mm\\:ss\\.fff}[/]]] [{resultColour}]{result}[/] {checkOrCross}";
 }
 
 static string ResourceString(int year, int day)
@@ -82,6 +102,15 @@ static string ResourceString(int year, int day)
     using StreamReader reader = new(manifestResourceStream);
 
     return reader.ReadToEnd();
+}
+
+static Dictionary<int, string[]>? Results(int year)
+{
+    var assembly = typeof(Program).GetTypeInfo().Assembly;
+    using Stream? manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.results.json")!;
+    return manifestResourceStream == null
+        ? null
+        : Deserialize<Dictionary<int, string[]>>(manifestResourceStream);
 }
 
 partial class Program

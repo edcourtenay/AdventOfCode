@@ -9,7 +9,9 @@
 
   <ItemGroup>
     <None Remove="Input\**\*.txt" />
+    <None Remove="Input\**\*.json" />
     <EmbeddedResource Include="Input\**\*.txt" />
+    <EmbeddedResource Include="Input\**\results.json" />
   </ItemGroup>
 
   <ItemGroup>
