@@ -1,0 +1,27 @@
+﻿namespace AdventOfCode.Year2016;
+
+[Description("Signals and Noise")]
+public class Day06 : IPuzzle
+{
+    public object Part1(string input)
+    {
+        return Solve(input, l => l.GroupBy(c => c).OrderByDescending(chars => chars.Count())
+            .Select(g => g.Key)
+            .First());
+    }
+
+    public object Part2(string input)
+    {
+        return Solve(input, l => l.GroupBy(c => c).OrderBy(chars => chars.Count())
+            .Select(g => g.Key)
+            .First());
+    }
+
+    private static object Solve(string input, Func<IEnumerable<char>, char> selector)
+    {
+        var t = input.ToLines()
+            .Pivot()
+            .Select(selector);
+        return new string(t.ToArray());
+    }
+}

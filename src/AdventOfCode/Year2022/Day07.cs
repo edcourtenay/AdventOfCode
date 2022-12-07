@@ -97,7 +97,6 @@ public class Day07 : IPuzzle
             return Directories
                 .Flatten(d => d.Directories).Concat(new []{ this })
                 .SelectMany(d => d.Files)
-                .ToArray()
                 .Sum(file => file.Size);
         }
 

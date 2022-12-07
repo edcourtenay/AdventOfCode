@@ -19,7 +19,7 @@ public class Day05 : IPuzzle
             do
             {
                 string chars = $"{input}{i++}";
-                hash = _md5.ComputeHash(Encoding.UTF8.GetBytes(chars));
+                hash = _md5.ComputeHash(Encoding.ASCII.GetBytes(chars));
             } while (!FiveZeroes(hash));
 
             result = (result << 4) | (byte)(hash[2] & 0x0F);
@@ -41,18 +41,17 @@ public class Day05 : IPuzzle
             do
             {
                 string chars = $"{input}{i++}";
-                hash = _md5.ComputeHash(Encoding.UTF8.GetBytes(chars));
+                hash = _md5.ComputeHash(Encoding.ASCII.GetBytes(chars));
                 pos = (byte)(hash[2] & 0x0F);
-            } while (!FiveZeroes(hash) || seen.Contains(pos));
+            } while (((pos & 0xF8) > 0) || !FiveZeroes(hash) || seen.Contains(pos));
 
             byte val = (byte)((hash[3] >> 4) & 0x0F);
             result |= (uint)(val << (4 * (8 - (pos + 1))));
-            result = result & 0xFFFFFFFF;
             seen.Add(pos);
         }
 
         return result.ToString("x8");
     }
 
-    public static readonly Func<byte[], bool> FiveZeroes = bytes => bytes[0] == 0 && bytes[1] == 0 && (bytes[2] & 0xF0) == 0;
+    private static bool FiveZeroes(byte[] bytes) => bytes[0] == 0 && bytes[1] == 0 && (bytes[2] & 0xF0) == 0;
 }
