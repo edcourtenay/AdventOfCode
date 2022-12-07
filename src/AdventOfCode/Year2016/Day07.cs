@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace AdventOfCode.Year2016;
+﻿namespace AdventOfCode.Year2016;
 
 [Description("Internet Protocol Version 7")]
 public partial class Day07 : IPuzzle
@@ -25,7 +23,7 @@ public partial class Day07 : IPuzzle
                && !arr.Where((s, i) => i % 2 != 0).Any(HasAbba);
     }
 
-    public static bool HasAbba(string text)
+    private static bool HasAbba(string text)
     {
         return text.SlidingWindow(4)
             .Select(chars => chars.ToArray())
@@ -51,7 +49,7 @@ public partial class Day07 : IPuzzle
         return x.Any(z => arr.Where((s, i) => i % 2 != 0).Any(v => v.Contains(z)));
     }
 
-    public static IEnumerable<char[]> FindAba(string input)
+    private static IEnumerable<char[]> FindAba(string input)
     {
         return input.SlidingWindow(3)
             .Select(chars => chars.ToArray())
