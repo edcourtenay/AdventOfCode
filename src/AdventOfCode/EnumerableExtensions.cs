@@ -180,4 +180,10 @@ public static class EnumerableExtensions
         return GetCombinations(n: source.Length, k: width)
             .Select(indexes => indexes.Select(i => source[i - 1]));
     }
+
+    public static IEnumerable<T> Flatten<T>(this IEnumerable<T> e, Func<T, IEnumerable<T>> f)
+    {
+        IEnumerable<T> enumerable = e as T[] ?? e.ToArray();
+        return enumerable.SelectMany(c => f(c).Flatten(f)).Concat(enumerable);
+    }
 }
