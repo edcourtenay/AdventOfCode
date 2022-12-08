@@ -186,4 +186,16 @@ public static class EnumerableExtensions
         IEnumerable<T> enumerable = e as T[] ?? e.ToArray();
         return enumerable.SelectMany(c => f(c).Flatten(f)).Concat(enumerable);
     }
+
+    public static IEnumerable<T> TakeUntil<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+    {
+        foreach (T item in source)
+        {
+            yield return item;
+            if (predicate(item))
+            {
+                yield break;
+            }
+        }
+    }
 }
