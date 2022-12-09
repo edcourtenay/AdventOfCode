@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode.Year2022;
 
-[Description("Puzzle Title")]
+[Description("Rope Bridge")]
 public class Day09 : IPuzzle
 {
     private static readonly (int x, int y) Up = new (0, 1);
