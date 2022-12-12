@@ -25,12 +25,12 @@ public class Day07 : IPuzzle
             .Min();
     }
 
-    public static Directory Parse(IEnumerable<string> lines)
+    private static Directory Parse(IEnumerable<string> lines)
     {
-        var root = new Directory() { Name = "/", Parent = null };
+        var root = new Directory { Name = "/", Parent = null };
         var blocks = ParseBlocks(lines);
 
-        blocks.Aggregate(root, (current, block) => ProcessBlock(block, current)!);
+        var _ = blocks.Aggregate(root, (current, block) => ProcessBlock(block, current)!);
         return root;
     }
 

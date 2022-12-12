@@ -29,15 +29,15 @@ public class Day02 : IPuzzle
             'A' or 'X' => Choice.Rock,
             'B' or 'Y' => Choice.Paper,
             'C' or 'Z' => Choice.Scissors,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(nameof(c))
         };
 
     private static Choice GetStrategy(char c, Choice opponent) =>
         (c, Choices.Find(opponent)) switch
         {
-            ('Z', var n) => n!.NextOrFirst().Value,
-            ('X', var n) => n!.PreviousOrLast().Value,
-            ('Y', var n) => n!.Value,
+            ('Z', { } n) => n.NextOrFirst().Value,
+            ('X', { } n) => n.PreviousOrLast().Value,
+            ('Y', { } n) => n.Value,
             _ => throw new ArgumentOutOfRangeException()
         };
 

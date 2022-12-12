@@ -84,11 +84,11 @@ public partial class Day11 : IPuzzle
         }
     }
 
-    private Monkey ParseMonkey(IEnumerable<string> block)
+    private static Monkey ParseMonkey(IEnumerable<string> block)
     {
         var lines = block.ToArray();
 
-        return new Monkey()
+        return new Monkey
         {
             Id = int.Parse(IdRegex().Match(lines[0]).Groups["id"].Value),
             Items = ItemsRegex().Matches(lines[1])[0].Groups["item"].Captures.Select(s => long.Parse(s.Value)).ToList(),
@@ -141,7 +141,6 @@ public partial class Day11 : IPuzzle
     private static partial Regex IdRegex();
     [GeneratedRegex(@"^\s+Starting items: ((?<item>\d+)(,\s)?)+$", RegexOptions.Compiled)]
     private static partial Regex ItemsRegex();
-
     [GeneratedRegex(@"^\s+Operation: new = (?<lvalue>old|\d+)\s(?<op>\*|\+)\s(?<rvalue>old|\d+)$", RegexOptions.Compiled)]
     private static partial Regex OperationRegex();
     [GeneratedRegex(@"^\s+Test: divisible by (?<div>\d+)$", RegexOptions.Compiled)]

@@ -21,14 +21,14 @@ public class Day08 : IPuzzle
             .Max(tuple => CalculateScenicScore(grid, tuple.X, tuple.Y));
     }
 
-    private int CalculateScenicScore(int[,] grid, int x, int y)
+    private static int CalculateScenicScore(int[,] grid, int x, int y)
     {
         return Directions
             .Select(direction => ItemsInDirection(grid, direction, x, y).Skip(1).TakeUntil(i => i >= grid[x, y]).Count())
             .Aggregate((c1, c2) => c1 * c2);
     }
 
-    public static int[,] ToGrid(string input)
+    private static int[,] ToGrid(string input)
     {
         int[,] grid = { };
         foreach ((string data, int y) in input.ToLines().Select((s, i) => (data: s, y: i )))
@@ -46,12 +46,12 @@ public class Day08 : IPuzzle
         return grid;
     }
 
-    public static bool IsVisible(int[,] grid, int x, int y)
+    private static bool IsVisible(int[,] grid, int x, int y)
     {
         return Directions.Any(tuple => IsVisible(ItemsInDirection(grid, tuple, x, y)));
     }
 
-    public static IEnumerable<int> ItemsInDirection(int[,] grid, (int dx, int dy) direction, int x, int y)
+    private static IEnumerable<int> ItemsInDirection(int[,] grid, (int dx, int dy) direction, int x, int y)
     {
         while (x >= 0 && x < grid.GetLength(0) && y >= 0 && y < grid.GetLength(1))
         {
@@ -61,7 +61,7 @@ public class Day08 : IPuzzle
         }
     }
 
-    public static bool IsVisible(IEnumerable<int> items)
+    private static bool IsVisible(IEnumerable<int> items)
     {
         using IEnumerator<int> enumerator = items.GetEnumerator();
         enumerator.MoveNext();
@@ -76,7 +76,7 @@ public class Day08 : IPuzzle
         return true;
     }
 
-    public static IEnumerable<(int X, int Y)> GridPositions(int[,] grid)
+    private static IEnumerable<(int X, int Y)> GridPositions(int[,] grid)
     {
         for (int y = 0; y < grid.GetLength(1); y++)
         {

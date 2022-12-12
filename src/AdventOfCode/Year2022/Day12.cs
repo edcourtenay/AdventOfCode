@@ -40,7 +40,7 @@ public class Day12 : IPuzzle
     private static Step? Navigate(Position[][] map, char startValue, char targetValue, Func<char, char, bool> rule)
     {
         Queue<Step> queue = new(new [] { FindStartStep(map, startValue) });
-        
+
         while (queue.Any())
         {
             var current = queue.Dequeue();

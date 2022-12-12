@@ -23,14 +23,21 @@ var dayOption = new Option<int?>(
     name: "--day",
     description: "Specific day to run");
 
+var retryOption = new Option<int>(
+    name: "--retry",
+    description: "Number of times to re-run puzzle (for timing purposes)",
+    getDefaultValue: () => 1
+);
+
 var rootCommand = new RootCommand("Advent of Code solution runner");
 rootCommand.AddOption(yearOption);
 rootCommand.AddOption(dayOption);
-rootCommand.SetHandler(ExecutePuzzles, yearOption, dayOption);
+rootCommand.AddOption(retryOption);
+rootCommand.SetHandler(ExecutePuzzles, yearOption, dayOption, retryOption);
 
 return await rootCommand.InvokeAsync(args);
 
-static void ExecutePuzzles(int selectedYear, int? selectedDay)
+static void ExecutePuzzles(int selectedYear, int? selectedDay, int retries)
 {
     ConcurrentDictionary<int, Dictionary<int, string[]>?> yearResults = new();
 
@@ -65,17 +72,26 @@ static void ExecutePuzzles(int selectedYear, int? selectedDay)
         var result2 = strings is [_, {} r2] ? r2 : null;
 
         AnsiConsole.MarkupLine($"[bold]{year:0000} Day {day:00}[/]: [link=https://adventofcode.com/{year}/day/{day}][dim]{description}[/][/]");
-        AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s), result1));
-        AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s), result2));
+        AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s), result1, retries));
+        AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s), result2, retries));
     }
 }
 
-static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, string, object> func, string? expectedResult)
+static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, string, object> func, string? expectedResult, int retries)
 {
-    var sw = Stopwatch.StartNew();
-    var obj = func(puzzle, input);
-    sw.Stop();
-    string timeColour = sw.ElapsedMilliseconds switch
+    var times = new List<double>();
+    object obj = string.Empty;
+
+    for (int i = 0; i < retries; i++)
+    {
+        var start = Stopwatch.GetTimestamp();
+        obj = func(puzzle, input);
+        var end = Stopwatch.GetTimestamp();
+        times.Add(Stopwatch.GetElapsedTime(start, end).TotalMilliseconds);
+    }
+
+    var elapsed = times.Min();
+    string timeColour = elapsed switch
     {
         > 1000 => "red",
         > 500 => "yellow",
@@ -93,7 +109,8 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
         {} s => "[red]×[/]",
         _ => "[purple]?[/]"
     };
-    return $"\t[bold]{part}[/]: [[[{timeColour}]{sw.Elapsed:mm\\:ss\\.fff}[/]]] [{resultColour}]{result}[/] {checkOrCross}";
+    var ms = elapsed.ToString("##,##0").PadLeft(6, ' ');
+    return $"\t[bold]{part}[/]: [[[{timeColour}]{ms}ms[/]]] [{resultColour}]{result}[/] {checkOrCross}";
 }
 
 static string ResourceString(int year, int day)
