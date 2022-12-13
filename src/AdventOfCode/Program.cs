@@ -23,8 +23,8 @@ var dayOption = new Option<int?>(
     name: "--day",
     description: "Specific day to run");
 
-var retryOption = new Option<int>(
-    name: "--retry",
+var iterationsOption = new Option<int>(
+    name: "--iterations",
     description: "Number of times to re-run puzzle (for timing purposes)",
     getDefaultValue: () => 1
 );
@@ -32,12 +32,12 @@ var retryOption = new Option<int>(
 var rootCommand = new RootCommand("Advent of Code solution runner");
 rootCommand.AddOption(yearOption);
 rootCommand.AddOption(dayOption);
-rootCommand.AddOption(retryOption);
-rootCommand.SetHandler(ExecutePuzzles, yearOption, dayOption, retryOption);
+rootCommand.AddOption(iterationsOption);
+rootCommand.SetHandler(ExecutePuzzles, yearOption, dayOption, iterationsOption);
 
 return await rootCommand.InvokeAsync(args);
 
-static void ExecutePuzzles(int selectedYear, int? selectedDay, int retries)
+static void ExecutePuzzles(int selectedYear, int? selectedDay, int iterations)
 {
     ConcurrentDictionary<int, Dictionary<int, string[]>?> yearResults = new();
 
@@ -72,17 +72,17 @@ static void ExecutePuzzles(int selectedYear, int? selectedDay, int retries)
         var result2 = strings is [_, {} r2] ? r2 : null;
 
         AnsiConsole.MarkupLine($"[bold]{year:0000} Day {day:00}[/]: [link=https://adventofcode.com/{year}/day/{day}][dim]{description}[/][/]");
-        AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s), result1, retries));
-        AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s), result2, retries));
+        AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s), result1, iterations));
+        AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s), result2, iterations));
     }
 }
 
-static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, string, object> func, string? expectedResult, int retries)
+static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, string, object> func, string? expectedResult, int iterations)
 {
     var times = new List<double>();
     object obj = string.Empty;
 
-    for (int i = 0; i < retries; i++)
+    for (int i = 0; i < iterations; i++)
     {
         var start = Stopwatch.GetTimestamp();
         obj = func(puzzle, input);

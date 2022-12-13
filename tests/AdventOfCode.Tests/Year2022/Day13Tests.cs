@@ -2,22 +2,37 @@
 
 namespace AdventOfCode.Tests.Year2022;
 
-public class Day09Tests : IClassFixture<Day09>
+public class Day13Tests : IClassFixture<Day13>
 {
-    private readonly Day09 _sut;
+    private readonly Day13 _sut;
 
     private const string TestData = """
-    R 4
-    U 4
-    L 3
-    D 1
-    R 4
-    D 1
-    L 5
-    R 2
+    [1,1,3,1,1]
+    [1,1,5,1,1]
+
+    [[1],[2,3,4]]
+    [[1],4]
+
+    [9]
+    [[8,7,6]]
+
+    [[4,4],4,4]
+    [[4,4],4,4,4]
+
+    [7,7,7,7]
+    [7,7,7]
+
+    []
+    [3]
+
+    [[[]]]
+    [[]]
+
+    [1,[2,[3,[4,[5,6,7]]]],8,9]
+    [1,[2,[3,[4,[5,6,0]]]],8,9]
     """;
 
-    public Day09Tests(Day09 sut)
+    public Day13Tests(Day13 sut)
     {
         _sut = sut;
     }
@@ -31,6 +46,6 @@ public class Day09Tests : IClassFixture<Day09>
     [Fact(DisplayName = "Part2 should return expected results from example data")]
     public void Part2Example()
     {
-        _sut.Part2(TestData).As<int>().Should().Be(1);
+        _sut.Part2(TestData).As<int>().Should().Be(140);
     }
 }
