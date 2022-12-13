@@ -33,6 +33,15 @@ public class Day13 : IPuzzle
 
     static int CompareNodes(JsonNode? left, JsonNode? right)
     {
+        int CompareArrays(JsonArray leftArray, JsonArray rightArray)
+        {
+            var c = leftArray.Zip(rightArray)
+                .Select(tuple => CompareNodes(tuple.First, tuple.Second))
+                .FirstOrDefault(i => i != 0);
+
+            return c != 0 ? c : leftArray.Count - rightArray.Count;
+        }
+
         return (left, right) switch
         {
             (JsonValue lv, JsonValue rv) => lv.GetValue<int>() - rv.GetValue<int>(),
@@ -41,14 +50,5 @@ public class Day13 : IPuzzle
             (JsonArray la, JsonArray ra) => CompareArrays(la, ra),
             _ => throw new ArgumentOutOfRangeException()
         };
-    }
-
-    static int CompareArrays(JsonArray leftArray, JsonArray rightArray)
-    {
-        var c = leftArray.Zip(rightArray)
-            .Select(tuple => CompareNodes(tuple.First, tuple.Second))
-            .FirstOrDefault(i => i != 0);
-
-        return c != 0 ? c : leftArray.Count - rightArray.Count;
     }
 }
