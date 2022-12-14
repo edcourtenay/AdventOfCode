@@ -39,12 +39,12 @@ public class Day13 : IPuzzle
                 .Select(tuple => CompareNodes(tuple.First, tuple.Second))
                 .FirstOrDefault(i => i != 0);
 
-            return c != 0 ? c : leftArray.Count - rightArray.Count;
+            return c != 0 ? c : leftArray.Count.CompareTo(rightArray.Count);
         }
 
         return (left, right) switch
         {
-            (JsonValue lv, JsonValue rv) => lv.GetValue<int>() - rv.GetValue<int>(),
+            (JsonValue lv, JsonValue rv) => lv.GetValue<int>().CompareTo(rv.GetValue<int>()),
             (JsonValue lv, JsonArray ra) => CompareNodes(new JsonArray(lv.GetValue<int>()), ra),
             (JsonArray la, JsonValue rv) => CompareNodes(la, new JsonArray(rv.GetValue<int>())),
             (JsonArray la, JsonArray ra) => CompareArrays(la, ra),

@@ -23,7 +23,7 @@ public partial class Day11 : IPuzzle
         return Solve(monkeys, 10000, l => l % lcd);
     }
 
-    private Dictionary<int, Monkey> ParseMonkeys(string input)
+    private static Dictionary<int, Monkey> ParseMonkeys(string input)
     {
         return input.ToLines()
             .ToSequences(string.IsNullOrEmpty)
