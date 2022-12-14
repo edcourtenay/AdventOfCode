@@ -5,42 +5,18 @@ namespace AdventOfCode.Year2022;
 [Description("Regolith Reservoir")]
 public partial class Day14 : IPuzzle
 {
+    public object Part1(string input) => Solve(input, (500, 0), false);
 
-    public object Part1(string input)
+    public object Part2(string input) => Solve(input, (500, 0), true);
+
+    private static object Solve(string input, (int, int) start, bool useFloor)
     {
         var set = input.ToLines()
             .SelectMany(ParseLine)
             .ToHashSet();
 
-        var bottomRow = set.Max(position => position.Y);
-
-        var count = 0;
-        while (Drop((500, 0), set, bottomRow, false))
-        {
-            count++;
-        }
-
-        return count;
-    }
-
-    public object Part2(string input)
-    {
-        var set = input.ToLines()
-            .SelectMany(ParseLine)
-            .ToHashSet();
-
-        var bottomRow = set.Max(position => position.Y);
-
-        var count = 0;
-        (int X, int Y) dropFrom = new(500, 0);
-
-        while (!set.Contains(dropFrom))
-        {
-            Drop(dropFrom, set, bottomRow, true);
-            count++;
-        }
-
-        return count;
+        return Drop(start, set, useFloor)
+            .Count();
     }
 
     private static IEnumerable<(int X, int Y)> ParseLine(string line)
@@ -64,46 +40,60 @@ public partial class Day14 : IPuzzle
         }
     }
 
-    public bool Drop((int X, int Y) start, HashSet<(int X, int Y)> positions, int bottom, bool useFloor)
+    private static IEnumerable<(int X, int Y)> Drop((int X, int Y) start, HashSet<(int X, int Y)> set, bool useFloor)
     {
-        bool CheckEmpty((int X, int Y) p) => (!useFloor || p.Y < bottom + 2) && !positions.Contains(p);
+        var stack = new Stack<(int X, int Y)>(new[] { start });
 
-        var current = start;
-        bool belowBottom = false;
-
-        while (true)
+        foreach ((int X, int Y) position in Drop(stack, set, set.Max(p => p.Y), useFloor))
         {
-            (int X, int Y) down = (current.X, current.Y + 1);
-            (int X, int Y) downLeft = (current.X - 1, current.Y + 1);
-            (int X, int Y) downRight = (current.X + 1, current.Y + 1);
-
-            var moveTo = current;
-            if (CheckEmpty(down))
-            {
-                moveTo = down;
-            }
-            else if (CheckEmpty(downLeft))
-            {
-                moveTo = downLeft;
-            }
-            else if (CheckEmpty(downRight))
-            {
-                moveTo = downRight;
-            }
-
-            if (moveTo == current || (belowBottom = (moveTo.Y >= bottom + 2)))
-            {
-                break;
-            }
-
-            current = moveTo;
+            set.Add(position);
+            yield return position;
         }
-
-        positions.Add(current);
-
-        return !belowBottom;
     }
 
-    [GeneratedRegex("(?<x>\\d+),(?<y>\\d+)", RegexOptions.Compiled)]
+    private static IEnumerable<(int X, int Y)> Drop(Stack<(int X, int Y)> stack, IReadOnlySet<(int X, int Y)> set, int bottom, bool useFloor)
+    {
+        bool CheckEmpty((int X, int Y) p) => (!useFloor || p.Y < bottom) && !set.Contains(p);
+
+        if (useFloor)
+        {
+            bottom += 2;
+        }
+
+        while (stack.TryPop(out var current))
+        {
+            while (true)
+            {
+                if (current.Y >= bottom)
+                {
+                    yield break;
+                }
+
+                (int X, int Y) down = (current.X, current.Y + 1);
+                (int X, int Y) downLeft = (current.X - 1, current.Y + 1);
+                (int X, int Y) downRight = (current.X + 1, current.Y + 1);
+
+                var moveTo = (CheckEmpty(downLeft), CheckEmpty(down), CheckEmpty(downRight)) switch
+                {
+                    (_, true, _) => down,
+                    (true, false, _) => downLeft,
+                    (false, false, true) => downRight,
+                    _ => current
+                };
+
+                if (moveTo == current)
+                {
+                    break;
+                }
+
+                stack.Push(current);
+                current = moveTo;
+            }
+
+            yield return current;
+        }
+    }
+
+    [GeneratedRegex(@"(?<x>\d+),(?<y>\d+)", RegexOptions.Compiled)]
     private static partial Regex PointsRegex();
 }
