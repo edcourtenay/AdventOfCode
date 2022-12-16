@@ -1,11 +1,12 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Year2022;
 
 [Description("Beacon Exclusion Zone")]
 public partial class Day15 : IPuzzle
 {
+    private static readonly RangeComparer RangeComparer = new();
+
     public object Part1(string input)
     {
         return SolvePart1(input, 2_000_000);
@@ -62,34 +63,33 @@ public partial class Day15 : IPuzzle
         return 0;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static IEnumerable<(int start, int end)> MergeRanges(IEnumerable<(int start, int end)> ranges)
     {
-        var ordered = ranges.OrderBy(tuple => tuple.start);
-        var mergedRanges = new List<(int start, int end)>();
+        var sortedRanges = new SortedSet<(int start, int end)>(ranges, RangeComparer);
 
-        foreach (var currentRange in ordered)
+        (int start, int end)? currentMergedRange = null;
+
+        foreach (var range in sortedRanges)
         {
-            if (mergedRanges.Count == 0)
+            if (currentMergedRange == null)
             {
-                mergedRanges.Add(currentRange);
-                continue;
-            }
-
-            var lastMergedRange = mergedRanges[^1];
-
-            if (currentRange.start - 1 <= lastMergedRange.end)
-            {
-                lastMergedRange.end = Math.Max(currentRange.end, lastMergedRange.end);
-                mergedRanges[^1] = lastMergedRange;
+                currentMergedRange = range;
             }
             else
             {
-                mergedRanges.Add(currentRange);
+                if (range.start <= currentMergedRange.Value.end + 1)
+                {
+                    currentMergedRange = (currentMergedRange.Value.start, Math.Max(currentMergedRange.Value.end, range.end));
+                }
+                else
+                {
+                    yield return currentMergedRange.Value;
+                    currentMergedRange = range;
+                }
             }
         }
 
-        return mergedRanges;
+        yield return currentMergedRange.Value;
     }
 
 
@@ -134,5 +134,15 @@ public partial class Day15 : IPuzzle
 
         [GeneratedRegex("Sensor at x=(?<sensorX>\\-?\\d+), y=(?<sensorY>\\-?\\d+): closest beacon is at x=(?<beaconX>\\-?\\d+), y=(?<beaconY>\\-?\\d+)", RegexOptions.Compiled)]
         private static partial Regex MyRegex();
+    }
+}
+
+public class RangeComparer : IComparer<(int start, int end)>
+{
+    public int Compare((int start, int end) lhs, (int start, int end) rhs)
+    {
+        return lhs.start == rhs.start
+            ? lhs.end.CompareTo(rhs.end)
+            : lhs.start.CompareTo(rhs.start);
     }
 }
