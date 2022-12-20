@@ -94,9 +94,19 @@ public static class EnumerableExtensions
         }
     }
 
-    public static IEnumerable<T> ToLines<T>(this string input, Func<string, T> convert)
+    public static IEnumerable<T> ToLines<T>(this string input, Func<string, T> selector)
     {
-        return input.ToLines().Select(convert);
+        return input.ToLines().Select(selector);
+    }
+
+    public static IEnumerable<TResult> ToLines<TResult>(this string input, Func<string, int, TResult> selector)
+    {
+        int index = -1;
+        foreach (string line in input.ToLines())
+        {
+            index++;
+            yield return selector(line, index);
+        }
     }
 
     public static IEnumerable<IEnumerable<T>> Pivot<T>(this IEnumerable<IEnumerable<T>> source)
