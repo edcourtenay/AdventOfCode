@@ -45,7 +45,7 @@ public partial class Day15 : IPuzzle
             var list = inputs
                 .Select(pair => pair.RangeForRow(row))
                 .Where(range => range != null)
-                .Select(range => (range.Value.from, range.Value.to))
+                .Select(range => (range!.Value.from, range.Value.to))
                 .Where(range => 0 <= range.from && range.from <= max.x || 0 <= range.to && range.to <= max.y)
                 .Select(range => (Math.Max(0, range.from), Math.Min(max.y, range.to)));
 
@@ -89,7 +89,7 @@ public partial class Day15 : IPuzzle
             }
         }
 
-        yield return currentMergedRange.Value;
+        yield return currentMergedRange!.Value;
     }
 
 
