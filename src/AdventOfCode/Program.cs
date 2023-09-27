@@ -60,12 +60,13 @@ static void ExecutePuzzles(int selectedYear, int? selectedDay, int iterations)
         string description = puzzleType.GetCustomAttribute<DescriptionAttribute>() is { } descriptionAttribute
             ? descriptionAttribute.Description
             : "Unknown";
+
         string input = ResourceString(year, day);
         var results = yearResults.GetOrAdd(year, Results);
         string[]? strings = null;
-        if (results != null && results.ContainsKey(day))
+        if (results != null && results.TryGetValue(day, out string[]? result))
         {
-            strings = results[day];
+            strings = result;
         }
 
         var result1 = strings is [{ } r1, ..] ? r1 : null;
@@ -122,13 +123,12 @@ static string ResourceString(int year, int day)
     return reader.ReadToEnd();
 }
 
-static Dictionary<int, string[]>? Results(int year)
+static Dictionary<int, string[]> Results(int year)
 {
     var assembly = typeof(Program).GetTypeInfo().Assembly;
-    using Stream? manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.results.json")!;
-    return manifestResourceStream == null
-        ? null
-        : Deserialize<Dictionary<int, string[]>>(manifestResourceStream);
+    using Stream manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.results.json")!;
+    Dictionary<int,string[]>? stringsMap = Deserialize<Dictionary<int, string[]>>(manifestResourceStream);
+    return stringsMap ?? new Dictionary<int, string[]>();
 }
 
 partial class Program

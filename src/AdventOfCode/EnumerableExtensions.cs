@@ -208,4 +208,32 @@ public static class EnumerableExtensions
             }
         }
     }
+
+    public static (T Min, T Max) MinMax<T>(this IEnumerable<T> source)
+        where T : IComparable<T>
+    {
+        using var enumerator = source.GetEnumerator();
+
+        if (!enumerator.MoveNext())
+        {
+            throw new InvalidOperationException("Sequence contains no elements.");
+        }
+
+        var min = enumerator.Current;
+        var max = enumerator.Current;
+        while (enumerator.MoveNext())
+        {
+            if (Comparer<T>.Default.Compare(enumerator.Current, min) < 0)
+            {
+                min = enumerator.Current;
+            }
+
+            if (Comparer<T>.Default.Compare(enumerator.Current, max) > 0)
+            {
+                max = enumerator.Current;
+            }
+        }
+
+        return (min, max);
+    }
 }
