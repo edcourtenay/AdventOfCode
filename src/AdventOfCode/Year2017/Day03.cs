@@ -13,7 +13,16 @@ public class Day03 : IPuzzle
 
     public object Part2(string input)
     {
-        return string.Empty;
+        var memory = new SpiralMemory();
+        var position = memory.AccessPort;
+        var current = memory.Get(position);
+        while (current < int.Parse(input))
+        {
+            position = memory.GetNext(position);
+            current = memory.GetSumOfAdjacent(position);
+            memory.Set(position, current);
+        }
+        return current;
     }
 
     private static int LengthOfSideWith(int n)
@@ -33,5 +42,57 @@ public class Day03 : IPuzzle
         return Enumerable.Range(0, 4)
             .Select(i => highest - (offset + (i * (sideLength - 1))))
             .ToArray();
+    }
+
+    class SpiralMemory
+    {
+        private readonly Dictionary<(int, int), int> _memory = new()
+        {
+            { (0, 0), 1 }
+        };
+
+        public (int x, int y) AccessPort => (0, 0);
+
+        public int Get(int x, int y) => Get((x, y));
+
+        public int Get((int, int) position)
+        {
+            return _memory.TryGetValue(position, out var n) ? n : 0;
+        }
+
+        public void Set((int, int) position, int value)
+        {
+            _memory[position] = value;
+        }
+
+        public int GetSumOfAdjacent((int, int) position)
+        {
+            IEnumerable<(int x, int y)> Adjacent((int x, int y) p)
+            {
+                foreach (var x in Enumerable.Range(p.x - 1, 3))
+                {
+                    foreach (int y in Enumerable.Range(p.y - 1, 3))
+                    {
+                        if (x == p.x && y == p.y)
+                        {
+                            continue;
+                        }
+
+                        yield return (x, y);
+                    }
+                }
+            }
+
+            return Adjacent(position).Select(p => Get(p)).Sum();
+        }
+
+        public (int x, int y) GetNext((int, int) position)
+        {
+            var (x, y) = position;
+            if (Get(x-1, y) > 0 && Get(x, y+1) == 0) return (x, y+1);
+            if (Get(x, y-1) > 0 && Get(x-1, y) == 0) return (x-1, y);
+            if (Get(x+1, y) > 0 && Get(x, y-1) == 0) return (x, y-1);
+            return (x+1, y);
+        }
     }
 }
