@@ -50,7 +50,7 @@ public partial class Day07 : IPuzzle
             }
         }
 
-        foreach (var (parent, childName) in parentChildPairs)
+        foreach ((Node parent, string childName) in parentChildPairs)
         {
             var node = nodesByName[childName];
             parent.Children.Add(node);
@@ -63,8 +63,6 @@ public partial class Day07 : IPuzzle
 
     [GeneratedRegex(@"(?<name>\w+)\s\((?<weight>\d+)\)(\s->\s(?n:(?<child>\w+)(?n:,\s)?)*)?$")]
     private static partial Regex MyRegex();
-
-    public record LineData(string Name, int Weight, string[] Children);
 
     public record Node
     {

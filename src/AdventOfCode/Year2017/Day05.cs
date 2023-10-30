@@ -3,6 +3,8 @@
 [Description("A Maze of Twisty Trampolines, All Alike")]
 public class Day05 : IPuzzle
 {
+    private static readonly Func<int, int> OffsetFunc = o => o >= 3 ? -1 : 1;
+
     public object Part1(string input)
     {
         return ExecuteSteps(input, _ => 1);
@@ -10,12 +12,12 @@ public class Day05 : IPuzzle
 
     public object Part2(string input)
     {
-        return ExecuteSteps(input, o => o >= 3 ? -1 : 1);
+        return ExecuteSteps(input, OffsetFunc);
     }
 
     private static int ExecuteSteps(string input, Func<int, int> offsetFunc)
     {
-        var array = input.ToLines(s => int.Parse(s)).ToArray();
+        var array = input.ToLines(int.Parse).ToArray();
         var index = 0;
         var steps = 0;
 
