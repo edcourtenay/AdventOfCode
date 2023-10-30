@@ -6,7 +6,7 @@ public class Day07Tests : IClassFixture<Day07>
 {
     private readonly Day07 _sut;
 
-    private static readonly string Part1ExampleData =
+    private static readonly string ExampleData =
         """
         pbga (66)
         xhth (57)
@@ -31,12 +31,12 @@ public class Day07Tests : IClassFixture<Day07>
     [Fact(DisplayName = "Part1 should return expected results from example data")]
     public void Part1Example()
     {
-        _sut.Part1(Part1ExampleData).As<string>().Should().Be("tknk");
+        _sut.Part1(ExampleData).As<string>().Should().Be("tknk");
     }
 
     [Fact(DisplayName = "Part2 should return expected results from example data")]
     public void Part2Example()
     {
-        _sut.Part2(Part1ExampleData).As<int>().Should().Be(60);
+        _sut.Part2(ExampleData).As<int>().Should().Be(60);
     }
 }

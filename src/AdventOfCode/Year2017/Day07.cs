@@ -5,8 +5,6 @@ namespace AdventOfCode.Year2017;
 [Description("Recursive Circus")]
 public partial class Day07 : IPuzzle
 {
-    public static readonly Regex regex = MyRegex();
-
     public object Part1(string input)
     {
         return ParseInput(input).Name;
@@ -24,7 +22,7 @@ public partial class Day07 : IPuzzle
 
         foreach (string line in input.ToLines())
         {
-            var match = regex.Match(line);
+            var match = MyRegex().Match(line);
             if (!match.Success)
             {
                 throw new Exception($"Failed to parse line: {line}");
