@@ -83,12 +83,19 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
     var times = new List<TimeSpan>();
     object obj = string.Empty;
 
-    for (int i = 0; i < iterations; i++)
+    try
     {
-        var start = Stopwatch.GetTimestamp();
-        obj = func(puzzle, input);
-        var end = Stopwatch.GetTimestamp();
-        times.Add(Stopwatch.GetElapsedTime(start, end));
+        for (int i = 0; i < iterations; i++)
+        {
+            var start = Stopwatch.GetTimestamp();
+            obj = func(puzzle, input);
+            var end = Stopwatch.GetTimestamp();
+            times.Add(Stopwatch.GetElapsedTime(start, end));
+        }
+    }
+    catch (NotImplementedException)
+    {
+        return $"\t[bold]{part}[/]: [purple]Not Implemented[/]";
     }
 
     var elapsed = TimeSpan.FromMicroseconds(times.Average(timeSpan => timeSpan.TotalMicroseconds));
@@ -113,11 +120,11 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
         _ => "[purple]?[/]"
     };
 
-    string timeDisplay = elapsed.Milliseconds switch
+    string timeDisplay = elapsed switch
     {
-        > 200 => $"{elapsed.TotalSeconds:##0.00}s",
-        > 20 => $"{elapsed.TotalMilliseconds:##0.00}ms",
-        _ => $"{elapsed.Microseconds:##0}μs"
+        { TotalSeconds: >= 1 } => $"{elapsed.TotalSeconds:#,##0.00}s ",
+        { TotalMicroseconds: <= 10_000 } => $"{elapsed.TotalMicroseconds:#,##0.00}μs",
+        _ => $"{elapsed.TotalMilliseconds:#,##0.00}ms"
     };
 
     return $"\t[bold]{part}[/]: [[[{timeColour}]{timeDisplay,12}[/]]] [{resultColour}]{result}[/] {checkOrCross}";
