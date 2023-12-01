@@ -35,13 +35,10 @@ public class Day01Tests : IClassFixture<Day01>
         _sut.Part1(input).As<int>().Should().Be(expected);
     }
 
-
     [Theory(DisplayName = "Part2 should return expected results from example data")]
     [InlineData(Day02TestData, 281)]
     public void Part2Example(string input, int expected)
     {
         _sut.Part2(input).As<int>().Should().Be(expected);
     }
-
-
 }
