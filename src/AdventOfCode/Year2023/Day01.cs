@@ -5,17 +5,14 @@ namespace AdventOfCode.Year2023;
 [Description("Trebuchet?!")]
 public partial class Day01 : IPuzzle
 {
-    private const string NumbersExpression = "zero|one|two|three|four|five|six|seven|eight|nine|\\d";
+    private const string NumbersExpression = "(?=(?'number'one|two|three|four|five|six|seven|eight|nine|\\d))";
 
     [GeneratedRegex(NumbersExpression, RegexOptions.Compiled )]
-    private static partial Regex LeftNumbersRegex();
-
-    [GeneratedRegex(NumbersExpression, RegexOptions.Compiled | RegexOptions.RightToLeft )]
-    private static partial Regex RightNumbersRegex();
+    private static partial Regex NumbersRegex();
 
     public object Part1(string input)
     {
-        return input.ToLines(ParseLine)
+        return input.ToLines(ParseLine1)
             .Sum();
     }
 
@@ -25,22 +22,21 @@ public partial class Day01 : IPuzzle
             .Sum();
     }
 
-    private int ParseLine(string line)
+    private int ParseLine1(string line)
     {
         return (line.First(char.IsAsciiDigit) - '0') * 10 + (line.Last(char.IsAsciiDigit) - '0');
     }
 
     private int ParseLine2(string line)
     {
-        Match first = LeftNumbersRegex().Match(line);
-        Match second = RightNumbersRegex().Match(line);
+        MatchCollection matchCollection = NumbersRegex().Matches(line);
 
-        return MatchToInt(first) * 10 + MatchToInt(second);
+        return MatchToInt(matchCollection[0]) * 10 + MatchToInt(matchCollection[^1]);
     }
 
     private int MatchToInt(Match match)
     {
-        return match.Value switch
+        return match.Groups["number"].ValueSpan switch
         {
             "zero" or "0" => 0,
             "one" or "1" => 1,

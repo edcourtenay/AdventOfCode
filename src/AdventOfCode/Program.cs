@@ -80,7 +80,7 @@ static void ExecutePuzzles(int selectedYear, int? selectedDay, int iterations)
 
 static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, string, object> func, string? expectedResult, int iterations)
 {
-    var times = new List<double>();
+    var times = new List<TimeSpan>();
     object obj = string.Empty;
 
     for (int i = 0; i < iterations; i++)
@@ -88,21 +88,23 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
         var start = Stopwatch.GetTimestamp();
         obj = func(puzzle, input);
         var end = Stopwatch.GetTimestamp();
-        times.Add(Stopwatch.GetElapsedTime(start, end).TotalMilliseconds);
+        times.Add(Stopwatch.GetElapsedTime(start, end));
     }
 
-    var elapsed = times.Min();
-    string timeColour = elapsed switch
+    var elapsed = TimeSpan.FromMicroseconds(times.Average(timeSpan => timeSpan.TotalMicroseconds));
+    string timeColour = elapsed.TotalMilliseconds switch
     {
         > 1000 => "red",
         > 500 => "yellow",
         _ => "green"
     };
+
     (string resultColour, string result) = obj switch
     {
         string s when string.IsNullOrEmpty(s) => ("red", "Incomplete"),
         _ => ("cyan", obj.ToString() ?? string.Empty)
     };
+
     string checkOrCross = expectedResult switch
     {
         {} s when s == result => "[green]✓[/]",
@@ -110,8 +112,15 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
         {} s => "[red]×[/]",
         _ => "[purple]?[/]"
     };
-    var ms = elapsed.ToString("##,##0").PadLeft(6, ' ');
-    return $"\t[bold]{part}[/]: [[[{timeColour}]{ms}ms[/]]] [{resultColour}]{result}[/] {checkOrCross}";
+
+    string timeDisplay = elapsed.Milliseconds switch
+    {
+        > 200 => $"{elapsed.TotalSeconds:##0.00}s",
+        > 20 => $"{elapsed.TotalMilliseconds:##0.00}ms",
+        _ => $"{elapsed.Microseconds:##0}μs"
+    };
+
+    return $"\t[bold]{part}[/]: [[[{timeColour}]{timeDisplay,12}[/]]] [{resultColour}]{result}[/] {checkOrCross}";
 }
 
 static string ResourceString(int year, int day)
