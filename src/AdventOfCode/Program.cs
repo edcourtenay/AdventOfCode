@@ -134,9 +134,16 @@ static string ResourceString(int year, int day)
 {
     var assembly = typeof(Program).GetTypeInfo().Assembly;
     using Stream manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.Day{day:00}.txt")!;
+
+    if (manifestResourceStream == null)
+    {
+        return string.Empty;
+    }
+
     using StreamReader reader = new(manifestResourceStream);
 
     return reader.ReadToEnd();
+
 }
 
 static Dictionary<int, string[]> Results(int year)
