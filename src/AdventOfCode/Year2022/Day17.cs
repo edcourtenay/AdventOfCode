@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Reflection.Metadata;
-using System.Text;
 
 namespace AdventOfCode.Year2022;
 
@@ -71,64 +70,16 @@ public class Day17 : IPuzzle
         return TopRow(chamber);
     }
 
-    private static void Visualise(int[] rock, int rockRow, Dictionary<int,int> chamber)
-    {
-        var sb = new StringBuilder();
-        for (int i = rockRow; i > 0; i--)
-        {
-            sb.Clear();
-            sb.Append("|       |");
-            int mask = 0b1000000;
-            int j = 1;
-            int c = chamber.TryGetValue(i, out int value) ? value : 0;
-            while (mask > 0)
-            {
-                if ((c & mask) != 0)
-                {
-                    sb[j] = '#';
-                }
-                j++;
-                mask = mask >> 1;
-            }
-
-            int rr = rockRow - i;
-            if (rr >= 0 && rr < rock.Length)
-            {
-                mask = 0b1000000;
-                j = 1;
-                while (mask > 0)
-                {
-                    if ((rock[rr] & mask) != 0)
-                    {
-                        sb[j] = '@';
-                    }
-                    j++;
-                    mask = mask >> 1;
-                }
-            }
-
-            Console.WriteLine(sb.ToString());
-        }
-        Console.WriteLine("+-------+");
-        Console.WriteLine();
-    }
-
     private static int TopRow(Dictionary<int, int> chamber)
     {
-        int fullRow = chamber.Where(pair => pair.Value == 0b1111111).Select(pair => pair.Key).DefaultIfEmpty(0).Max();
-        foreach (var key in chamber.Keys.Where(k => k < fullRow))
-        {
-            chamber.Remove(key);
-        }
-
-        return chamber.Where(pair => pair.Value != 0).Select(pair => pair.Key).DefaultIfEmpty(0).Max();
+        return chamber.Keys.Max();
     }
 
     private static int[] GetRock(ref int rockIndex)
     {
         int index = rockIndex;
         rockIndex = (rockIndex + 1) % RockData.Length;
-        return RockData[index].Select(r => r).ToArray();
+        return RockData[index];
     }
 
     private static bool CanRotate(IEnumerable<int> rock, int mask)
