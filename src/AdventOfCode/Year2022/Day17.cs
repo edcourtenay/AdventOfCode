@@ -7,8 +7,8 @@ namespace AdventOfCode.Year2022;
 [Description("Pyroclastic Flow")]
 public class Day17 : IPuzzle
 {
-    private const int LeftMask  = 0b100000;
-    private const int RightMask = 0b000001;
+    private const int LeftMask  = 0b1000000;
+    private const int RightMask = 0b0000001;
 
     private static readonly Move LeftMove = new Move(LeftMask, r => r << 1);
     private static readonly Move RightMove = new Move(RightMask, r => r >> 1);
@@ -46,8 +46,6 @@ public class Day17 : IPuzzle
 
         for (long i = 0; i < iterations; )
         {
-            Visualise(rock, rockRow, chamber);
-
             rock = Blow(rock, rockRow, currentWind.Value, chamber);
             currentWind = currentWind.NextOrFirst();
 
@@ -59,7 +57,7 @@ public class Day17 : IPuzzle
             {
                 for (int j = 0; j < rock.Length; j++)
                 {
-                    int chamberRow = rockRow + rock.Length - j - 1;
+                    int chamberRow = rockRow - j;
                     var row = chamber.TryGetValue(chamberRow, out var r) ? r : 0;
                     chamber[chamberRow] = row | rock[j];
                 }
@@ -82,15 +80,33 @@ public class Day17 : IPuzzle
             sb.Append("|       |");
             int mask = 0b1000000;
             int j = 1;
+            int c = chamber.TryGetValue(i, out int value) ? value : 0;
             while (mask > 0)
             {
-                if ((chamber.TryGetValue(i, out int value) ? value : 0 & mask) == 0)
+                if ((c & mask) != 0)
                 {
                     sb[j] = '#';
                 }
                 j++;
                 mask = mask >> 1;
             }
+
+            int rr = rockRow - i;
+            if (rr >= 0 && rr < rock.Length)
+            {
+                mask = 0b1000000;
+                j = 1;
+                while (mask > 0)
+                {
+                    if ((rock[rr] & mask) != 0)
+                    {
+                        sb[j] = '@';
+                    }
+                    j++;
+                    mask = mask >> 1;
+                }
+            }
+
             Console.WriteLine(sb.ToString());
         }
         Console.WriteLine("+-------+");
@@ -146,7 +162,7 @@ public class Day17 : IPuzzle
         var canMove = true;
         for (int i = 0; i < newRock.Length; i++)
         {
-            var row = chamber.TryGetValue(rockRow + newRock.Length - i - 1, out var r) ? r : 0;
+            var row = chamber.TryGetValue(rockRow - i, out var r) ? r : 0;
             canMove &= (newRock[i] & row) == 0;
         }
 
