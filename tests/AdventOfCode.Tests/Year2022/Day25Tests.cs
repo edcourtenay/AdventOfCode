@@ -35,12 +35,12 @@ public class Day25Tests : IClassFixture<Day25>
         _sut.Part1(input).As<string>().Should().Be(expected);
     }
 
-    [Theory(DisplayName = "Part2 should return expected results from example data")]
-    [InlineData(TestData, -1)]
-    public void Part2Example(string input, int expected)
-    {
-        _sut.Part2(input).As<int>().Should().Be(expected);
-    }
+    // [Theory(DisplayName = "Part2 should return expected results from example data")]
+    // [InlineData(TestData, -1)]
+    // public void Part2Example(string input, int expected)
+    // {
+    //     _sut.Part2(input).As<int>().Should().Be(expected);
+    // }
 
     [Theory(DisplayName = "SnafuToDecimal should return expected results from example data")]
     [InlineData("1=-0-2", 1747)]
