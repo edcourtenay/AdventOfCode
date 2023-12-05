@@ -14,7 +14,9 @@ public class Day05 : IPuzzle
     public object Part2(string input)
     {
         (SeedRange[] seeds, HashSet<CategoryMap> categoryMaps) = Parse(input,
-            longs => longs.Window(2).Select(w => new SeedRange(w.First(), w.Last())));
+            longs => longs.Window(2)
+                .Select(w => w.ToArray())
+                .Select(w => new SeedRange(w[0], w[1])));
 
         return Solve(seeds, categoryMaps);
     }
@@ -81,23 +83,23 @@ public class Day05 : IPuzzle
         {
             switch (line)
             {
-                case (string s, 0):
+                case ({ } s, 0):
                     IEnumerable<long> enumerable = s[7..].Split(' ').Select(long.Parse);
                     IEnumerable<SeedRange> valueTuples = func(enumerable);
                     seedValues = valueTuples.ToArray();
                     break;
 
-                case (string s, _) when s.EndsWith("map:"):
+                case ({ } s, _) when s.EndsWith("map:"):
                     inMap = true;
                     break;
 
-                case (string s, _) when string.IsNullOrEmpty(s) && inMap:
+                case ({ } s, _) when string.IsNullOrEmpty(s) && inMap:
                     categoryMaps.Add(new CategoryMap(ranges));
                     inMap = false;
                     ranges = new List<ValueRange>();
                     break;
 
-                case (string s, _) when inMap:
+                case ({ } s, _) when inMap:
                    var numbers = s.Split(' ').Select(long.Parse).ToArray();
                    ranges.Add(new ValueRange(numbers[0], numbers[1], numbers[2]));
                    break;
@@ -108,9 +110,9 @@ public class Day05 : IPuzzle
     }
 
 
-    public record CategoryMap(IList<ValueRange> Ranges);
+    private record CategoryMap(IList<ValueRange> Ranges);
 
-    public record ValueRange(long Destination, long Source, long Length);
+    private record ValueRange(long Destination, long Source, long Length);
 
     public record struct SeedRange(long Start, long Length)
     {
