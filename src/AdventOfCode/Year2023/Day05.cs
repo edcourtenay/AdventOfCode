@@ -5,7 +5,7 @@ public class Day05 : IPuzzle
 {
     public object Part1(string input)
     {
-        (SeedRange[] seeds, HashSet<CategoryMap> categoryMaps) = Parse(input,
+        var (seeds, categoryMaps) = Parse(input,
             longs => longs.Select(l => new SeedRange(l, 1L)));
 
         return Solve(seeds, categoryMaps);
@@ -13,7 +13,7 @@ public class Day05 : IPuzzle
 
     public object Part2(string input)
     {
-        (SeedRange[] seeds, HashSet<CategoryMap> categoryMaps) = Parse(input,
+        var (seeds, categoryMaps) = Parse(input,
             longs => longs.Window(2)
                 .Select(w => w.ToArray())
                 .Select(w => new SeedRange(w[0], w[1])));
@@ -21,15 +21,15 @@ public class Day05 : IPuzzle
         return Solve(seeds, categoryMaps);
     }
 
-    private static long Solve(SeedRange[] ranges, HashSet<CategoryMap> categoryMaps)
+    private static long Solve(IEnumerable<SeedRange> ranges, IEnumerable<IEnumerable<ValueRange>> categoryMaps)
     {
         return categoryMaps.Aggregate(ranges,
                 (current, categoryMap) =>
-                    current.SelectMany(seedRange => ProcessSeedRange(seedRange, categoryMap)).ToArray())
+                    current.SelectMany(seedRange => ProcessSeedRange(seedRange, categoryMap)))
             .Min(range => range.Start);
     }
 
-    private static IEnumerable<SeedRange> ProcessSeedRange(SeedRange seedRange, CategoryMap categoryMap)
+    private static IEnumerable<SeedRange> ProcessSeedRange(SeedRange seedRange, IEnumerable<ValueRange> categoryMap)
     {
         var seedRangeStart = seedRange.Start;
         var seedRangeLength = seedRange.Length;
@@ -38,7 +38,7 @@ public class Day05 : IPuzzle
             bool found = false;
             long bestDistance = seedRangeLength;
 
-            foreach (ValueRange valueRange in categoryMap.Ranges)
+            foreach (ValueRange valueRange in categoryMap)
             {
                 if (valueRange.Source <= seedRangeStart &&
                     seedRangeStart < (valueRange.Source + valueRange.Length))
@@ -71,10 +71,10 @@ public class Day05 : IPuzzle
         }
     }
 
-    private static (SeedRange[] seeds, HashSet<CategoryMap> categoryMaps) Parse(string input, Func<IEnumerable<long>, IEnumerable<SeedRange>> func)
+    private static (IEnumerable<SeedRange> seeds, IEnumerable<IEnumerable<ValueRange>> categoryMaps) Parse(string input, Func<IEnumerable<long>, IEnumerable<SeedRange>> func)
     {
-        var categoryMaps = new HashSet<CategoryMap>();
-        SeedRange[] seedValues = Array.Empty<SeedRange>();
+        var categoryMaps = new List<IList<ValueRange>>();
+        IEnumerable<SeedRange> seedValues = Array.Empty<SeedRange>();
 
         bool inMap = false;
         var ranges = new List<ValueRange>();
@@ -86,7 +86,7 @@ public class Day05 : IPuzzle
                 case ({ } s, 0):
                     IEnumerable<long> enumerable = s[7..].Split(' ').Select(long.Parse);
                     IEnumerable<SeedRange> valueTuples = func(enumerable);
-                    seedValues = valueTuples.ToArray();
+                    seedValues = valueTuples;
                     break;
 
                 case ({ } s, _) when s.EndsWith("map:"):
@@ -94,7 +94,7 @@ public class Day05 : IPuzzle
                     break;
 
                 case ({ } s, _) when string.IsNullOrEmpty(s) && inMap:
-                    categoryMaps.Add(new CategoryMap(ranges));
+                    categoryMaps.Add(ranges);
                     inMap = false;
                     ranges = new List<ValueRange>();
                     break;
@@ -108,9 +108,6 @@ public class Day05 : IPuzzle
 
         return (seedValues, categoryMaps);
     }
-
-
-    private record CategoryMap(IList<ValueRange> Ranges);
 
     private record ValueRange(long Destination, long Source, long Length);
 
