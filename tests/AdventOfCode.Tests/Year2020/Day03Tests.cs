@@ -6,19 +6,20 @@ public class Day03Tests : IClassFixture<Day03>
 {
     private readonly Day03 _sut;
 
-    private const string TestData = """
-    ..##.......
-    #...#...#..
-    .#....#..#.
-    ..#.#...#.#
-    .#...##..#.
-    ..#.##.....
-    .#.#.#....#
-    .#........#
-    #.##...#...
-    #...##....#
-    .#..#...#.#
-    """;
+    private const string TestData = 
+        """
+        ..##.......
+        #...#...#..
+        .#....#..#.
+        ..#.#...#.#
+        .#...##..#.
+        ..#.##.....
+        .#.#.#....#
+        .#........#
+        #.##...#...
+        #...##....#
+        .#..#...#.#
+        """;
 
     public Day03Tests(Day03 sut)
     {
@@ -28,7 +29,7 @@ public class Day03Tests : IClassFixture<Day03>
     [Fact(DisplayName = "Part1 should return expected results from example data")]
     public void Part1Example()
     {
-        _sut.Part1(TestData).As<long>().Should().Be(7);
+        _sut.Part1(TestData).As<int>().Should().Be(7);
     }
 
     [Fact(DisplayName = "Part2 should return expected results from example data")]

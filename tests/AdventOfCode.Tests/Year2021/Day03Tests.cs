@@ -6,20 +6,21 @@ public class Day03Tests : IClassFixture<Day03>
 {
     private readonly Day03 _sut;
 
-    private const string TestData = """
-    00100
-    11110
-    10110
-    10111
-    10101
-    01111
-    00111
-    11100
-    10000
-    11001
-    00010
-    01010
-    """;
+    private const string TestData = 
+        """
+        00100
+        11110
+        10110
+        10111
+        10101
+        01111
+        00111
+        11100
+        10000
+        11001
+        00010
+        01010
+        """;
 
     public Day03Tests(Day03 sut)
     {

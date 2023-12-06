@@ -6,7 +6,8 @@ public class Day03 : IPuzzle
     public object Part1(string input)
     {
         var charsEnumerable = input.ToLines(s => s.ToCharArray()).ToArray();
-        return GetLocationContents(charsEnumerable, (3, 1)).Count(c => c == '#');
+        var locationContents = GetLocationContents(charsEnumerable, (3, 1)).ToArray();
+        return locationContents.Count(c => c == '#');
     }
 
     public object Part2(string input)

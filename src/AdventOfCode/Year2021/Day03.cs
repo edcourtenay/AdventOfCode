@@ -1,4 +1,7 @@
-﻿namespace AdventOfCode.Year2021;
+﻿using System.Diagnostics;
+using System.Xml;
+
+namespace AdventOfCode.Year2021;
 
 [Description("Binary Diagnostic")]
 public class Day03 : IPuzzle
@@ -27,6 +30,45 @@ public class Day03 : IPuzzle
 
     public object Part2(string input)
     {
-        return string.Empty;
+        var bucket1 = input.ToLines().ToArray();
+        var bucket2 = input.ToLines().ToArray();
+
+        (int value1, int value2) = Process(0, bucket1, bucket2);
+        
+        
+        return value1 * value2;
+    }
+
+    public (int, int) Process(int index, string[] bucket1, string[] bucket2)
+    {
+        if (bucket1.Length == 1 && bucket2.Length == 1)
+        {
+            return (Convert.ToInt32(bucket1[0], 2), Convert.ToInt32(bucket2[0], 2));
+        }
+
+        if (bucket1.Length > 1)
+        {
+            bucket1 = ProcessBucket(index, bucket1, true);
+        }
+
+        if (bucket2.Length > 1)
+        {
+            bucket2 = ProcessBucket(index, bucket2, false);
+        }
+
+        return Process(index + 1, bucket1, bucket2);
+    }
+
+    private string[] ProcessBucket(int index, string[] bucket, bool most)
+    {
+        var dict = bucket.GroupBy(s => s[index])
+            .ToDictionary(g => g.Key, g => g.ToArray());
+
+        int zeroCount = dict['0'].Length;
+        int onesCount = dict['1'].Length;
+
+        return most ? zeroCount == onesCount ? dict['1'] : zeroCount > onesCount ? dict['0'] : dict['1'] :
+            zeroCount == onesCount ? dict['0'] :
+            zeroCount < onesCount ? dict['0'] : dict['1'];
     }
 }
