@@ -5,18 +5,20 @@ public class Day04 : IPuzzle
 {
     public object Part1(string input)
     {
+        return Solve(input, Enumerable.First);
+    }
+
+    public object Part2(string input)
+    {
+        return Solve(input, Enumerable.Last);
+    }
+
+    private int Solve(string input, Func<IEnumerable<(int ball, Board winningBoard)>, (int ball, Board? winningBoard)> findWinningBoard)
+    {
         IEnumerable<string> data = input.ToLines();
         var (balls, boards) = ParseData(data);
 
-        int ball = 0;
-        Board? winningBoard = null;
-
-        while (balls.Count > 0 && (winningBoard = FindWinningBoard(boards)) == null)
-        {
-            ball = balls.Dequeue();
-
-            MarkNumber(boards, ball);
-        }
+        (int ball, Board? winningBoard) = findWinningBoard(WinningBoards(balls, boards));
 
         if (winningBoard == null)
             return 0;
@@ -26,12 +28,31 @@ public class Day04 : IPuzzle
         return sum * ball;
     }
 
-    public object Part2(string input)
+    private IEnumerable<(int ball, Board winningBoard)> WinningBoards(Queue<int> balls, HashSet<Board> boards)
     {
-        return string.Empty;
+        int ball = 0;
+        while (true)
+        {
+            Board? winningBoard = null;
+
+            while (balls.Count > 0 && (winningBoard = FindWinningBoard(boards)) == null)
+            {
+                ball = balls.Dequeue();
+
+                MarkNumber(boards, ball);
+            }
+
+            if (winningBoard == null)
+            {
+                yield break;
+            }
+
+            yield return (ball, winningBoard);
+            boards.Remove(winningBoard);
+        }
     }
 
-    private bool IsWinningBoard(Board board)
+    private static bool IsWinningBoard(Board board)
     {
         var rows = Enumerable.Range(0, 5).Select(i => Enumerable.Range(i * 5, 5));
         var cols = Enumerable.Range(0, 5).Select(i => Enumerable.Range(0, 5).Select(j => j * 5 + i ));
@@ -40,12 +61,12 @@ public class Day04 : IPuzzle
         return all.Any(check => check.Select(n => board.Cells[n]).All(c => c.Marked));
     }
 
-    private Board? FindWinningBoard(Board[] boards)
+    private static Board? FindWinningBoard(IEnumerable<Board> boards)
     {
         return boards.FirstOrDefault(IsWinningBoard);
     }
 
-    private void MarkNumber(Board[] boards, int number)
+    private static void MarkNumber(HashSet<Board> boards, int number)
     {
         foreach (var board in boards)
         {
@@ -59,7 +80,7 @@ public class Day04 : IPuzzle
         }
     }
 
-    private static (Queue<int> balls, Board[] boards) ParseData(IEnumerable<string> data)
+    private static (Queue<int> balls, HashSet<Board> boards) ParseData(IEnumerable<string> data)
     {
         var lines = data.ToArray();
 
@@ -72,7 +93,7 @@ public class Day04 : IPuzzle
                 s.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                     .Select(s => new Cell(Convert.ToInt32(s), false)).ToArray())
             .Select(c => new Board(c, false))
-            .ToArray();
+            .ToHashSet();
 
         return (balls, boards);
     }
