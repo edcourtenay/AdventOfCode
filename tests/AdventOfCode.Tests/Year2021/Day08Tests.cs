@@ -27,12 +27,12 @@ public class Day08Tests : IClassFixture<Day08>
     [Fact(DisplayName = "Part1 should return expected results from example data")]
     public void Part1Example()
     {
-        _sut.Part1(TestData).As<long>().Should().Be(26);
+        _sut.Part1(TestData).As<int>().Should().Be(26);
     }
 
     [Fact(DisplayName = "Part2 should return expected results from example data")]
     public void Part2Example()
     {
-        _sut.Part2(TestData).As<long>().Should().Be(61229);
+        _sut.Part2(TestData).As<int>().Should().Be(61229);
     }
 }
