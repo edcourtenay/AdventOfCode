@@ -1,5 +1,10 @@
 using AdventOfCode.Year2023;
 
+using Spectre.Console;
+
+using Hand = AdventOfCode.Year2023.Day07.Hand;
+using HandTypes = AdventOfCode.Year2023.Day07.HandTypes;
+
 namespace AdventOfCode.Tests.Year2023;
 
 public class Day07Tests : IClassFixture<Day07>
@@ -35,15 +40,14 @@ public class Day07Tests : IClassFixture<Day07>
     }
 
     [Theory(DisplayName = "Jokers should parse correctly")]
-    [InlineData("J784T", Day07.HandTypes.HighCard, Day07.HandTypes.OnePair)]
-    [InlineData("11JKQ", Day07.HandTypes.OnePair, Day07.HandTypes.ThreeOfAKind)]
-    [InlineData("3232J", Day07.HandTypes.TwoPair, Day07.HandTypes.FullHouse)]
-    [InlineData("33J3J", Day07.HandTypes.FullHouse, Day07.HandTypes.FiveOfAKind)]
-    [InlineData("AAJAA", Day07.HandTypes.FourOfAKind, Day07.HandTypes.FiveOfAKind)]
-    [InlineData("JJJJJ", Day07.HandTypes.FiveOfAKind, Day07.HandTypes.FiveOfAKind)]
-    public void JokerTests(string input, Day07.HandTypes expectedWithoutJokers, Day07.HandTypes expectedWithJokers)
+    [InlineData("J784T", HandTypes.HighCard, HandTypes.OnePair)]
+    [InlineData("11JKQ", HandTypes.OnePair, HandTypes.ThreeOfAKind)]
+    [InlineData("3232J", HandTypes.TwoPair, HandTypes.FullHouse)]
+    [InlineData("33J3J", HandTypes.FullHouse, HandTypes.FiveOfAKind)]
+    [InlineData("AAJAA", HandTypes.FourOfAKind, HandTypes.FiveOfAKind)]
+    [InlineData("JJJJJ", HandTypes.FiveOfAKind, HandTypes.FiveOfAKind)]
+    public void JokerTests(string input, HandTypes expectedWithoutJokers, HandTypes expectedWithJokers)
     {
-        (new Day07.Hand(input, 0, false).HandType, new Day07.Hand(input, 0, true).HandType).Should().Be((expectedWithoutJokers, expectedWithJokers));
+        (new Hand(input, 0, false).HandType, new Hand(input, 0, true).HandType).Should().Be((expectedWithoutJokers, expectedWithJokers));
     }
-
 }

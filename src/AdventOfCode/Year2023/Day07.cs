@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace AdventOfCode.Year2023;
 
 [Description("Camel Cards")]
@@ -15,7 +13,7 @@ public class Day07 : IPuzzle
         return Solve(input, true);
     }
 
-    private object Solve(string input, bool joker)
+    private static object Solve(string input, bool joker)
     {
         var comparer = new HandComparer(joker);
 
@@ -25,10 +23,12 @@ public class Day07 : IPuzzle
             .Sum(tuple => tuple.Hand.Bid * tuple.Rank);
     }
 
-    public Hand ParseLine(string line, bool joker)
+    private static Hand ParseLine(string line, bool joker)
     {
-        var parts = line.Split(" ");
-        return new Hand(parts[0], int.Parse(parts[1]), joker);
+        if (line.Split(" ") is [{ } p0, { } p1])
+            return new Hand(p0, int.Parse(p1), joker);
+
+        throw new ArgumentException("Cannot parse line", nameof(line));
     }
 
     public record Hand
@@ -38,7 +38,7 @@ public class Day07 : IPuzzle
             this.Cards = Cards;
             this.Bid = Bid;
 
-            var arr = Cards.Where(c => c != 'J' || !joker) .GroupBy(c => c).Select(g => g.Count()).OrderDescending().ToArray();
+            var arr = Cards.Where(c => !joker || c != 'J').GroupBy(c => c).Select(g => g.Count()).OrderDescending().ToArray();
             var jokers = joker ? Cards.Count(c => c == 'J') : 0;
 
             HandType = (arr.FirstOrDefault() + jokers, arr) switch
@@ -69,7 +69,7 @@ public class Day07 : IPuzzle
         FiveOfAKind
     }
 
-    public class HandComparer : IComparer<Hand>
+    private class HandComparer : IComparer<Hand>
     {
         private readonly bool _joker;
         private const string CardOrder = "23456789TJQKA";

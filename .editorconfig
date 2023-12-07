@@ -6,7 +6,7 @@ indent_style = space
 end_of_line = lf
 
 # Xml files
-[*.xml]
+[{*.xml,*.config,*.props,*.targets,*.csproj,*.vbproj,*.fsproj,*.vcxproj,*.vcxproj.filters,*.testsettings,*.manifest}]
 indent_size = 2
 
 # C# files

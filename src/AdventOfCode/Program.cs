@@ -123,8 +123,8 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
     string timeDisplay = elapsed switch
     {
         { TotalSeconds: >= 1 } => $"{elapsed.TotalSeconds:#,##0.00}s ",
-        { TotalMicroseconds: <= 10_000 } => $"{elapsed.TotalMicroseconds:#,##0.00}μs",
-        _ => $"{elapsed.TotalMilliseconds:#,##0.00}ms"
+        { TotalMilliseconds: >= 1 } => $"{elapsed.TotalMilliseconds:#,##0.00}ms",
+        _ => $"{elapsed.TotalMicroseconds:#,##0.00}μs"
     };
 
     return $"\t[bold]{part}[/]: [[[{timeColour}]{timeDisplay,12}[/]]] [{resultColour}]{result}[/] {checkOrCross}";
