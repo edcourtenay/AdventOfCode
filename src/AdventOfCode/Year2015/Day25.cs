@@ -2,6 +2,7 @@
 
 namespace AdventOfCode.Year2015;
 
+[Description("Let It Snow")]
 public class Day25 : IPuzzle
 {
     public object Part1(string input)

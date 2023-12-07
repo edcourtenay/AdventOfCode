@@ -1,5 +1,6 @@
 ﻿namespace AdventOfCode.Year2015;
 
+[Description("Infinite Elves and Infinite Houses")]
 public class Day20 : IPuzzle
 {
     public object Part1(string input)
@@ -11,7 +12,7 @@ public class Day20 : IPuzzle
     {
         return PresentsByHouse(50, 11, 29000000);
     }
-    
+
     int PresentsByHouse(int steps, int mul, int l) {
         var presents = new int[1000000];
         for (var i = 1; i < presents.Length; i++) {
