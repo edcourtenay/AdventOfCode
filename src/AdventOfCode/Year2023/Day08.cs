@@ -19,11 +19,8 @@ public class Day08 : IPuzzle
     {
         var map = Map.Parse(input);
 
-        var steps = map.StartNodes
-            .Select(map.CycleLength)
-            .Order()
-            .ToArray();
-
+        var steps = map.StartNodes.AsParallel()
+            .Select(map.CycleLength);
 
         return LeastCommonMultiple(steps);
     }
