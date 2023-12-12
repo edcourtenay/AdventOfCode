@@ -32,7 +32,7 @@ public class Day12 : IPuzzle
     public static long CalculateLegalPositions(string input, IEnumerable<int> springLengths)
     {
         IReadOnlyList<char> chars = ("." + input + ".").ToCharArray();
-        IReadOnlyList<bool> springs = DamagedList(springLengths).ToArray();
+        IReadOnlyList<char> springs = DamagedList(springLengths).ToArray();
 
         long[,] table = new long[chars.Count + 1, springs.Count + 1];
         table[table.GetUpperBound(0), table.GetUpperBound(1)] = 1;
@@ -41,10 +41,10 @@ public class Day12 : IPuzzle
         {
             for (int s = springs.Count - 1; s >= 0; s--)
             {
-                table[c, s] = (chars[c] != '.', chars[c] != '#', springs[s]) switch
+                table[c, s] = (chars[c], springs[s]) switch
                 {
-                    (true, _, true) => table[c + 1, s + 1],
-                    (_, true, false) => table[c + 1, s + 1] + table[c + 1, s],
+                    (not '.', '#') => table[c + 1, s + 1],
+                    (not '#', '.') => table[c + 1, s + 1] + table[c + 1, s],
                     _ => 0
                 };
             }
@@ -53,17 +53,17 @@ public class Day12 : IPuzzle
         return table[0, 0];
     }
 
-    private static IEnumerable<bool> DamagedList(IEnumerable<int> springLengths){
-        yield return false;
+    private static IEnumerable<char> DamagedList(IEnumerable<int> springLengths){
+        yield return '.';
 
         foreach (var length in springLengths)
         {
             for (int i = 0; i < length; i++)
             {
-                yield return true;
+                yield return '#';
             }
 
-            yield return false;
+            yield return '.';
         }
     }
 }
