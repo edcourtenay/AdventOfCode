@@ -99,12 +99,7 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
     }
 
     var elapsed = TimeSpan.FromMicroseconds(times.Average(timeSpan => timeSpan.TotalMicroseconds));
-    string timeColour = elapsed.TotalMilliseconds switch
-    {
-        > 1000 => "red",
-        > 500 => "yellow",
-        _ => "green"
-    };
+    string timeString = FormatTimeSpan(elapsed);
 
     (string resultColour, string result) = obj switch
     {
@@ -114,26 +109,20 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
 
     string checkOrCross = expectedResult switch
     {
-        {} s when s == result => "[green]✓[/]",
-        {} s when result == "Incomplete" => "",
-        {} s => "[red]×[/]",
+        not null when expectedResult == result => "[green]✓[/]",
+        not null when result == "Incomplete" => "",
+        not null => "[red]×[/]",
         _ => "[purple]?[/]"
     };
 
-    string timeDisplay = elapsed switch
-    {
-        { TotalSeconds: >= 1 } => $"{elapsed.TotalSeconds:#,##0.00}s ",
-        { TotalMilliseconds: >= 1 } => $"{elapsed.TotalMilliseconds:#,##0.00}ms",
-        _ => $"{elapsed.TotalMicroseconds:#,##0.00}μs"
-    };
 
-    return $"\t[bold]{part}[/]: [[[{timeColour}]{timeDisplay,12}[/]]] [{resultColour}]{result}[/] {checkOrCross}";
+    return $"\t[bold]{part}[/]: [[{timeString}]] [{resultColour}]{result}[/] {checkOrCross}";
 }
 
 static string ResourceString(int year, int day)
 {
     var assembly = typeof(Program).GetTypeInfo().Assembly;
-    using Stream manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.Day{day:00}.txt")!;
+    using Stream? manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.Day{day:00}.txt");
 
     if (manifestResourceStream == null)
     {
@@ -152,6 +141,26 @@ static Dictionary<int, string[]> Results(int year)
     using Stream manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.results.json")!;
     Dictionary<int,string[]>? stringsMap = Deserialize<Dictionary<int, string[]>>(manifestResourceStream);
     return stringsMap ?? new Dictionary<int, string[]>();
+}
+
+static string FormatTimeSpan(TimeSpan elapsed)
+{
+    string timeColour = elapsed.TotalMilliseconds switch
+    {
+        > 1000 => "red",
+        > 500 => "yellow",
+        _ => "green"
+    };
+
+    string timeDisplay = elapsed switch
+    {
+        { TotalSeconds: >= 1 } => $"{elapsed.TotalSeconds:#,##0.00}s ",
+        { TotalMilliseconds: >= 1 } => $"{elapsed.TotalMilliseconds:#,##0.00}ms",
+        _ => $"{elapsed.TotalMicroseconds:#,##0.00}μs"
+    };
+
+    var timeString = $"[{timeColour}]{timeDisplay,12}[/]";
+    return timeString;
 }
 
 partial class Program
