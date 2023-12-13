@@ -22,59 +22,50 @@ public static class EnumerableExtensions
 
     public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunkSize)
     {
-        IEnumerable<IEnumerable<T>> ChunkInternal(IEnumerable<T> source, int chunkSize)
+        using var enumerator = source.GetEnumerator();
+        do
         {
-            using var enumerator = source.GetEnumerator();
-            do
-            {
-                if (!enumerator.MoveNext())
-                    yield break;
+            if (!enumerator.MoveNext())
+                yield break;
 
-                yield return ChunkSequence(enumerator, chunkSize);
-            } while (true);
-        }
+            yield return ChunkSequence(enumerator);
+        } while (true);
 
-        IEnumerable<T> ChunkSequence(IEnumerator<T> enumerator, int chunkSize)
+        IEnumerable<T> ChunkSequence(IEnumerator<T> sourceEnumerator)
         {
             var count = 0;
 
             do
             {
-                yield return enumerator.Current;
-            } while (++count < chunkSize && enumerator.MoveNext());
+                yield return sourceEnumerator.Current;
+            } while (++count < chunkSize && sourceEnumerator.MoveNext());
         }
-
-        return ChunkInternal(source, chunkSize);
     }
 
     public static IEnumerable<IEnumerable<T>> ChunkBy<T>(this IEnumerable<T> source, Func<T, bool> predicate, bool dropChunkSeparator = true)
     {
-        IEnumerable<IEnumerable<T>> ChunkInternal()
+        using var enumerator = source.GetEnumerator();
+        do
         {
-            using var enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+                yield break;
+
+            yield return ChunkSequence(enumerator);
+        } while (true);
+
+        IEnumerable<T> ChunkSequence(IEnumerator<T> sourceEnumerator)
+        {
+            bool predicateMatched;
             do
             {
-                if (!enumerator.MoveNext())
-                    yield break;
+                predicateMatched = predicate(sourceEnumerator.Current);
 
-                yield return ChunkSequence(enumerator);
-            } while (true);
+                if (!predicateMatched || !dropChunkSeparator)
+                {
+                    yield return sourceEnumerator.Current;
+                }
+            } while (!predicateMatched && sourceEnumerator.MoveNext());
         }
-
-        IEnumerable<T> ChunkSequence(IEnumerator<T> enumerator)
-        {
-            do
-            {
-                yield return enumerator.Current;
-            } while (!predicate(enumerator.Current) && enumerator.MoveNext());
-
-            if (dropChunkSeparator)
-            {
-                enumerator.MoveNext();
-            }
-        }
-
-        return ChunkInternal();
     }
 
     public static IEnumerable<IEnumerable<T>> Window<T>(this IEnumerable<T> source, int size, bool allowPartialWindow = false)

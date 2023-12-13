@@ -37,7 +37,7 @@ public class Day13 : IPuzzle
 
     private static Patterns ParsePatterns(string input) =>
         input.ToLines()
-            .ChunkBy(string.IsNullOrEmpty, false)
+            .ChunkBy(string.IsNullOrEmpty)
             .Select(ParsePattern);
 
     private static Pattern ParsePattern(IEnumerable<string> block) =>
