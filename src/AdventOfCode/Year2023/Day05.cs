@@ -5,7 +5,7 @@ public class Day05 : IPuzzle
 {
     public object Part1(string input)
     {
-        var (seeds, categoryMaps) = Parse(input,
+        (IEnumerable<SeedRange> seeds, IEnumerable<IEnumerable<ValueRange>> categoryMaps) = Parse(input,
             longs => longs.Select(l => new SeedRange(l, 1L)));
 
         return Solve(seeds, categoryMaps);
@@ -13,7 +13,7 @@ public class Day05 : IPuzzle
 
     public object Part2(string input)
     {
-        var (seeds, categoryMaps) = Parse(input,
+        (IEnumerable<SeedRange> seeds, IEnumerable<IEnumerable<ValueRange>> categoryMaps) = Parse(input,
             longs => longs.Window(2)
                 .Select(w => w.ToArray())
                 .Select(w => new SeedRange(w[0], w[1])));
@@ -33,12 +33,14 @@ public class Day05 : IPuzzle
     {
         var seedRangeStart = seedRange.Start;
         var seedRangeLength = seedRange.Length;
+        var valueRanges = categoryMap as ValueRange[] ?? categoryMap.ToArray();
+
         while (seedRangeLength != 0)
         {
             bool found = false;
             long bestDistance = seedRangeLength;
 
-            foreach (ValueRange valueRange in categoryMap)
+            foreach (ValueRange valueRange in valueRanges)
             {
                 if (valueRange.Source <= seedRangeStart &&
                     seedRangeStart < (valueRange.Source + valueRange.Length))
@@ -96,7 +98,7 @@ public class Day05 : IPuzzle
                 case ({ } s, _) when string.IsNullOrEmpty(s) && inMap:
                     categoryMaps.Add(ranges);
                     inMap = false;
-                    ranges = new List<ValueRange>();
+                    ranges = [];
                     break;
 
                 case ({ } s, _) when inMap:

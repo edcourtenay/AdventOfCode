@@ -20,7 +20,7 @@ public class Day12 : IPuzzle
             .Sum(data => CalculateLegalPositions(data.input, data.springLengths));
     }
 
-    private LineData Unfold(LineData data) =>
+    private static LineData Unfold(LineData data) =>
         (string.Join('?', Enumerable.Repeat(data.input, 5)), Enumerable.Repeat(data.springLengths, 5).SelectMany(x => x).ToArray());
 
     private static LineData Parse(string line)

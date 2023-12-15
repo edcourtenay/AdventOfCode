@@ -34,7 +34,7 @@ public class Day06Tests : IClassFixture<Day06>
     [Fact(DisplayName = "Parse should return expected results from example data")]
     public void ParseInputExample()
     {
-        _sut.Parse(TestData).Should().BeEquivalentTo(new Day06.Race[]
+        Day06.Parse(TestData).Should().BeEquivalentTo(new Day06.Race[]
         {
             new (9, 7), new (40, 15), new (200, 30)
         });

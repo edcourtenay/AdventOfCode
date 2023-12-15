@@ -29,7 +29,7 @@ public class Day11 : IPuzzle
     {
         return input.ToLines()
             .Select((line, y) => (line, y))
-            .SelectMany(t => t.line.Select((c, x) => (c, x, t.y)).Where(t => t.c == '#'))
+            .SelectMany(t => t.line.Select((c, x) => (c, x, t.y)).Where(u => u.c == '#'))
             .Select(t => ((long)t.x, (long)t.y));
     }
 

@@ -38,7 +38,7 @@ public class Day04Tests : IClassFixture<Day04>
     [Fact(DisplayName = "ParseLine should return expected results from example data")]
     public void ParseLineExample()
     {
-        _sut.ParseLine("Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53").Should()
+        Day04.ParseLine("Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53").Should()
             .BeEquivalentTo(new Day04.Card(1,
                 new[] { 41, 48, 83, 86, 17 },
                 new[] { 83, 86, 6, 31, 17, 9, 48, 53 }));
@@ -53,6 +53,6 @@ public class Day04Tests : IClassFixture<Day04>
     [InlineData("Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11", 0)]
     public void CardPointsExample(string line, int expected)
     {
-        _sut.ParseLine(line).Points.Should().Be(expected);
+        Day04.ParseLine(line).Points.Should().Be(expected);
     }
 }

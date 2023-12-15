@@ -1,3 +1,5 @@
+using System.Collections;
+
 namespace AdventOfCode.Year2023;
 
 [Description("Camel Cards")]
@@ -56,7 +58,7 @@ public class Day07 : IPuzzle
         public string Cards { get; }
         public int Bid { get; }
         public HandTypes HandType { get; }
-    };
+    }
 
     public enum HandTypes
     {
@@ -69,7 +71,7 @@ public class Day07 : IPuzzle
         FiveOfAKind
     }
 
-    private class HandComparer : IComparer<Hand>
+    private class HandComparer : IComparer<Hand?>
     {
         private readonly bool _joker;
         private const string CardOrder = "23456789TJQKA";
@@ -80,8 +82,13 @@ public class Day07 : IPuzzle
             _joker = joker;
         }
 
-        public int Compare(Hand x, Hand y)
+        public int Compare(Hand? x, Hand? y)
         {
+            if (x == null || y == null)
+            {
+                return Comparer.Default.Compare(x, y);
+            }
+
             var handTypeComparison = x.HandType.CompareTo(y.HandType);
             if (handTypeComparison != 0)
             {

@@ -15,17 +15,17 @@ public class Day09 : IPuzzle
         return Solve(input, tuple => tuple.left);
     }
 
-    private long Solve(string input, Func<(long left, long right), long> selector)
+    private static long Solve(string input, Func<(long left, long right), long> selector)
     {
         return input.ToLines(line => line.Split(' ').Select(long.Parse).ToArray())
             .Select(Extrapolate)
             .Sum(selector);
     }
 
-    public T[] GenerateSequence<T>(IEnumerable<T> input) where T : INumber<T> =>
+    public static T[] GenerateSequence<T>(IEnumerable<T> input) where T : INumber<T> =>
         input.SlidingWindow(2).Select(window => window.ToArray()).Select(w => w[1] - w[0]).ToArray();
 
-    public (T left, T right) Extrapolate<T>(T[] input) where T : INumber<T>
+    public static (T left, T right) Extrapolate<T>(T[] input) where T : INumber<T>
     {
         var leftStack = new Stack<T>();
         var rightStack = new Stack<T>();

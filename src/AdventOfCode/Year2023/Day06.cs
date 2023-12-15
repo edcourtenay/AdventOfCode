@@ -17,18 +17,18 @@ public class Day06 : IPuzzle
             .Aggregate((a, b) => a * b);
     }
 
-    public Race[] Parse(string input, bool badKerning = false)
+    public static IEnumerable<Race> Parse(string input, bool badKerning = false)
     {
         var lines =input.ToLines().ToArray();
-        var times = FixKerning(lines[0][6..]).Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToArray();
-        var distances = FixKerning(lines[1][10..]).Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToArray();
+        var times = FixKerning(lines[0][6..]).Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(double.Parse);
+        var distances = FixKerning(lines[1][10..]).Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(double.Parse);
 
-        return times.Zip(distances).Select(tuple => new Race(tuple.Second, tuple.First)).ToArray();
+        return times.Zip(distances).Select(tuple => new Race(tuple.Second, tuple.First));
 
         string FixKerning(string s) => badKerning ? s.Replace(" ", "") : s;
     }
 
-    private int ProcessRace(Race race)
+    private static int ProcessRace(Race race)
     {
         var range = SolveQuadratic(1, race.Time, race.Distance)
             .Select(Math.Abs)
@@ -40,12 +40,7 @@ public class Day06 : IPuzzle
         return range[1] - range[0] + 1;
     }
 
-    public record Race(double Distance, double Time)
-    {
-        public double Speed => Distance / (double)Time;
-    }
-
-    public double[] SolveQuadratic(double a, double b, double c)
+    private static double[] SolveQuadratic(double a, double b, double c)
     {
         double discriminant = (b * b) - (4 * a * c);
 
@@ -66,4 +61,6 @@ public class Day06 : IPuzzle
                 }
         }
     }
+
+    public record Race(double Distance, double Time);
 }

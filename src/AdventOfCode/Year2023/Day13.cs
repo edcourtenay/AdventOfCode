@@ -13,7 +13,7 @@ public class Day13 : IPuzzle
     public object Part2(string input)
         => Solve(input, 1);
 
-    private int Solve(string input, int i) =>
+    private static int Solve(string input, int i) =>
         ParsePatterns(input).Sum(pattern => SolvePattern(pattern, i));
 
     private static int SolvePattern(Pattern pattern, int smudge) =>

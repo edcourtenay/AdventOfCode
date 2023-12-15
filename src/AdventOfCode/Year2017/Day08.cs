@@ -22,7 +22,7 @@ public partial class Day08 : IPuzzle
         return maxValue;
     }
 
-    private static void Process(string input, Dictionary<string, int> registers, Action<int> onMax = null)
+    private static void Process(string input, Dictionary<string, int> registers, Action<int>? onMax = null)
     {
         var max = int.MinValue;
 
@@ -41,15 +41,8 @@ public partial class Day08 : IPuzzle
             var condition = match.Groups["condition"].Value;
             var conditionAmount = int.Parse(match.Groups["conditionAmount"].Value);
 
-            if (!registers.TryGetValue(register, out var registerValue))
-            {
-                registerValue = 0;
-            }
-
-            if (!registers.TryGetValue(conditionRegister, out var conditionRegisterValue))
-            {
-                conditionRegisterValue = 0;
-            }
+            var registerValue = registers.GetValueOrDefault(register, 0);
+            var conditionRegisterValue = registers.GetValueOrDefault(conditionRegister, 0);
 
             var conditionMet = condition switch
             {

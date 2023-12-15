@@ -1,5 +1,3 @@
-using System.Text;
-
 using Point = (int X, int Y);
 
 namespace AdventOfCode.Year2023;
@@ -54,8 +52,6 @@ public class Day10 : IPuzzle
 
     private static IEnumerable<Point> InteriorPoints((Point Start, int[][] Map) data, HashSet<Point> loop)
     {
-        var sb = new StringBuilder();
-
         int[][] map = data.Map;
         for (int y = 0; y < map[0].Length; y++)
         {

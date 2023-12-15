@@ -37,7 +37,7 @@ public class Day02Tests : IClassFixture<Day02>
     [Fact(DisplayName = "ParseGame should return expected results from example data")]
     public void ParseGameTest()
     {
-        var result = _sut.ParseGame("Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red");
+        var result = Day02.ParseGame("Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red");
         result.Should().BeEquivalentTo(new Day02.Game(3,
             new[]
             {

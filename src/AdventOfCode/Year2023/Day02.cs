@@ -19,12 +19,10 @@ public class Day02 : IPuzzle
                          game.Sets.Max(set => set.Blue));
     }
 
-    private bool FilterImpossible(Game game)
-    {
-        return game.Sets.All(set => set is { Red: <=12 , Green: <=13, Blue: <=14 });
-    }
+    private static bool FilterImpossible(Game game) =>
+        game.Sets.All(set => set is { Red: <=12 , Green: <=13, Blue: <=14 });
 
-    public Game ParseGame(string input)
+    public static Game ParseGame(string input)
     {
         string[] strings = input.Split(':', StringSplitOptions.TrimEntries).ToArray();
         int id = int.Parse(strings[0].Split(' ')[1]);
@@ -33,7 +31,7 @@ public class Day02 : IPuzzle
         return new Game(id, sets);
     }
 
-    private Set ParseSet(string input)
+    private static Set ParseSet(string input)
     {
         var hands = input.Split(',', StringSplitOptions.TrimEntries);
         int red = 0;
@@ -42,7 +40,7 @@ public class Day02 : IPuzzle
 
         foreach (string hand in hands)
         {
-            var (color, count) = ParseHand(hand);
+            (string color, int count) = ParseHand(hand);
             switch (color)
             {
                 case "red":
@@ -62,15 +60,10 @@ public class Day02 : IPuzzle
         return new Set(red, green, blue);
     }
 
-    private (string color, int count) ParseHand(string hand)
+    private static (string color, int count) ParseHand(string hand)
     {
         string[] strings = hand.Split(' ', StringSplitOptions.TrimEntries);
         return (color: strings[1], count: int.Parse(strings[0]));
-    }
-
-    public Set MinimumSet(Game game)
-    {
-        return new Set(game.Sets.Max(set => set.Red), game.Sets.Max(set => set.Green), game.Sets.Max(set => set.Blue));
     }
 
     public record Set(int Red, int Green, int Blue);

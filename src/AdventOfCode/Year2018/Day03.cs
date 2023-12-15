@@ -32,13 +32,13 @@ public partial class Day03 : IPuzzle
         {
             foreach ((int x, int y) pos in claim.Positions())
             {
-                if (dict.TryGetValue(pos, out List<int> list))
+                if (dict.TryGetValue(pos, out List<int>? list))
                 {
                     list.Add(claim.Id);
                 }
                 else
                 {
-                    dict[pos] = new List<int>(new[] { claim.Id });
+                    dict[pos] = [..new[] { claim.Id }];
                 }
             }
         }

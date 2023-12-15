@@ -6,7 +6,7 @@ namespace AdventOfCode.Year2023;
 public partial class Day04 : IPuzzle
 {
     [GeneratedRegex(@"Card\s+(?'card'\d+):(?'foo'\s+\d+)*\s\|(?'bar'\s+\d+)*", RegexOptions.Compiled)]
-    public static partial Regex MyRegex();
+    private static partial Regex MyRegex();
 
     public object Part1(string input)
     {
@@ -34,26 +34,7 @@ public partial class Day04 : IPuzzle
         return piles.Sum();
     }
 
-
-    private (int, int) Day4(string p)
-    {
-        int[] t = File.ReadAllLines(p).Select(s => s.Split
-                    (':')[1].Split('|').Select(s => s.Split(' ', (StringSplitOptions)1)).ToArray())
-                .Select(v => v[0].Intersect(v[1]).Count()).ToArray(),
-        u = new int[t.Length];
-        Array.Fill(u, 1);
-        for (int i = 0; i < t.Length; ++i)
-        {
-            for (int j = 1; j <= t[i]; ++j)
-            {
-                u[i + j] += u[i];
-            }
-        }
-
-        return (t.Sum(c => (1 << c) >> 1), u.Sum());
-    }
-
-    public Card ParseLine(string line)
+    public static Card ParseLine(string line)
     {
         Match match = MyRegex().Match(line);
         int cardId = int.Parse(match.Groups["card"].Value);
@@ -75,5 +56,5 @@ public partial class Day04 : IPuzzle
         }
 
         public int MatchCount => WinningNumbers.Intersect(Numbers).Count();
-    };
+    }
 }

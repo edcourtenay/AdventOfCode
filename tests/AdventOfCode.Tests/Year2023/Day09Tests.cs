@@ -37,7 +37,7 @@ public class Day09Tests : IClassFixture<Day09>
     [InlineData(new long[] { 3, 3, 3, 3, 3}, new long[] { 0, 0, 0, 0 })]
     public void GenerateExamples(long[] input, long[] expected)
     {
-        _sut.GenerateSequence(input).Should().BeEquivalentTo(expected);
+        Day09.GenerateSequence(input).Should().BeEquivalentTo(expected);
     }
 
     [Theory(DisplayName = "Extrapolate should return expected results from puzzle input")]
@@ -46,6 +46,6 @@ public class Day09Tests : IClassFixture<Day09>
     [InlineData(new long[] { 10, 13, 16, 21, 30, 45 }, 5, 68)]
     public void ExtrapolateExamples(long[] input, long left, long right)
     {
-        _sut.Extrapolate(input).Should().Be((left, right));
+        Day09.Extrapolate(input).Should().Be((left, right));
     }
 }

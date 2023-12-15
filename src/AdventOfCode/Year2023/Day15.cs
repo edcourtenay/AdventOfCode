@@ -6,7 +6,7 @@ namespace AdventOfCode.Year2023;
 public partial class Day15 : IPuzzle
 {
     [GeneratedRegex("([a-z]+)([=-])([0-9]?)", RegexOptions.Compiled)]
-    public static partial Regex LabelRegex();
+    private static partial Regex LabelRegex();
 
     public object Part1(string input)
     {
@@ -86,7 +86,7 @@ public partial class Day15 : IPuzzle
         return sum;
     }
 
-    private void ParseLabel(ReadOnlySpan<char> slice, out int boxId, out ReadOnlySpan<char> label, out char operation,
+    private static void ParseLabel(ReadOnlySpan<char> slice, out int boxId, out ReadOnlySpan<char> label, out char operation,
         out int focalLength)
     {
         boxId = CalculateBoxId(slice);

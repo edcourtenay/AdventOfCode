@@ -22,19 +22,19 @@ public partial class Day01 : IPuzzle
             .Sum();
     }
 
-    private int ParseLine1(string line)
+    private static int ParseLine1(string line)
     {
         return (line.First(char.IsAsciiDigit) - '0') * 10 + (line.Last(char.IsAsciiDigit) - '0');
     }
 
-    private int ParseLine2(string line)
+    private static int ParseLine2(string line)
     {
         MatchCollection matchCollection = NumbersRegex().Matches(line);
 
         return MatchToInt(matchCollection[0]) * 10 + MatchToInt(matchCollection[^1]);
     }
 
-    private int MatchToInt(Match match)
+    private static int MatchToInt(Match match)
     {
         return match.Groups["number"].ValueSpan switch
         {
@@ -48,7 +48,7 @@ public partial class Day01 : IPuzzle
             "seven" or "7" => 7,
             "eight" or "8" => 8,
             "nine" or "9" => 9,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new IndexOutOfRangeException()
         };
     }
 }

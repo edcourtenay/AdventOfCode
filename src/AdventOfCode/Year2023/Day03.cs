@@ -23,8 +23,8 @@ public partial class Day03 : IPuzzle
         var lines = input.ToLines()
             .Select((s, i) => (s, i));
 
-        List<ValueCapture> values = new();
-        List<SymbolCapture> symbols = new();
+        List<ValueCapture> values = [];
+        List<SymbolCapture> symbols = [];
 
         foreach ((string? line, int y) in lines)
         {
@@ -32,11 +32,11 @@ public partial class Day03 : IPuzzle
             {
                 if (match.Groups["digit"].Success)
                 {
-                    values.Add(new(match.Index, y, match.Length, int.Parse(match.Value)));
+                    values.Add(new ValueCapture(match.Index, y, match.Length, int.Parse(match.Value)));
                 }
                 else
                 {
-                    symbols.Add(new(match.Index, y, match.Value[0]));
+                    symbols.Add(new SymbolCapture(match.Index, y, match.Value[0]));
                 }
             }
         }
