@@ -50,7 +50,7 @@ public partial class Day15 : IPuzzle
 
                 case '=':
                     bool replaced = false;
-                    LinkedListNode<(string label, int focalLength)> newNode = new LinkedListNode<(string label, int focalLength)>((label.ToString(), focalLength));
+                    LinkedListNode<(string label, int focalLength)> newNode = new((label.ToString(), focalLength));
                     while (node != null)
                     {
                         if (label.SequenceEqual(node.Value.label))
@@ -99,10 +99,8 @@ public partial class Day15 : IPuzzle
             : slice[index + 1] - '0';
     }
 
-    private int CalculateBoxId(ReadOnlySpan<char> span)
+    private static int CalculateBoxId(ReadOnlySpan<char> span)
     {
-        int boxId = 0;
-
         for (int i = 0; i < span.Length; i++)
         {
             if (char.IsAsciiLetter(span[i]))
@@ -116,7 +114,7 @@ public partial class Day15 : IPuzzle
         return 0;
     }
 
-    private int CalculateHash(ReadOnlySpan<char> span)
+    private static int CalculateHash(ReadOnlySpan<char> span)
     {
         int current = 0;
         foreach (var c in span)
