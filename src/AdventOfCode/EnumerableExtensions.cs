@@ -2,22 +2,22 @@
 
 public static class EnumerableExtensions
 {
-    public static IEnumerable<T[]> Permutations<T>(this T[] rgt) {
+    public static IEnumerable<T[]> Permutations<T>(this T[] source) {
+        return PermutationsRec(0);
+
         IEnumerable<T[]> PermutationsRec(int i) {
-            if (i == rgt.Length) {
-                yield return rgt.ToArray();
+            if (i == source.Length) {
+                yield return source.ToArray();
             }
 
-            for (var j = i; j < rgt.Length; j++) {
-                (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
+            for (var j = i; j < source.Length; j++) {
+                (source[i], source[j]) = (source[j], source[i]);
                 foreach (var perm in PermutationsRec(i + 1)) {
                     yield return perm;
                 }
-                (rgt[i], rgt[j]) = (rgt[j], rgt[i]);
+                (source[i], source[j]) = (source[j], source[i]);
             }
         }
-
-        return PermutationsRec(0);
     }
 
     public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunkSize)
@@ -230,8 +230,12 @@ public static class EnumerableExtensions
         }
     }
 
-    public static (T Min, T Max) MinMax<T>(this IEnumerable<T> source)
-        where T : IComparable<T>
+    public static (T Min, T Max) MinMax<T>(this IEnumerable<T> source) where T : IComparable<T>
+    {
+        return MinMax(source, Comparer<T>.Default);
+    }
+
+    public static (T Min, T Max) MinMax<T>(this IEnumerable<T> source, IComparer<T> comparer)
     {
         using var enumerator = source.GetEnumerator();
 
@@ -244,14 +248,48 @@ public static class EnumerableExtensions
         var max = enumerator.Current;
         while (enumerator.MoveNext())
         {
-            if (Comparer<T>.Default.Compare(enumerator.Current, min) < 0)
+            if (comparer.Compare(enumerator.Current, min) < 0)
             {
                 min = enumerator.Current;
             }
 
-            if (Comparer<T>.Default.Compare(enumerator.Current, max) > 0)
+            if (comparer.Compare(enumerator.Current, max) > 0)
             {
                 max = enumerator.Current;
+            }
+        }
+
+        return (min, max);
+    }
+
+    public static (TValue Min, TValue Max) MinMaxBy<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, TValue> selector) where TValue : IComparable<TValue>
+    {
+        return MinMaxBy(source, selector, Comparer<TValue>.Default);
+    }
+
+    private static (TValue Min, TValue Max) MinMaxBy<TSource, TValue>(IEnumerable<TSource> source, Func<TSource, TValue> selector, IComparer<TValue> comparer) where TValue : IComparable<TValue>
+    {
+        using var enumerator = source.GetEnumerator();
+
+        if (!enumerator.MoveNext())
+        {
+            throw new InvalidOperationException("Sequence contains no elements.");
+        }
+
+        var min = selector(enumerator.Current);
+        var max = selector(enumerator.Current);
+        while (enumerator.MoveNext())
+        {
+            var value = selector(enumerator.Current);
+
+            if (comparer.Compare(value, min) < 0)
+            {
+                min = value;
+            }
+
+            if (comparer.Compare(value, max) > 0)
+            {
+                max = value;
             }
         }
 

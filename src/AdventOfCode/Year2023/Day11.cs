@@ -36,20 +36,18 @@ public class Day11 : IPuzzle
     public static IEnumerable<Point> Expand(IEnumerable<Point> source, long expansionFactor)
     {
         List<Point> points = source.ToList();
-        (long minX, long maxX) = points.Select(p => p.X).MinMax();
-        (long minY, long maxY) = points.Select(p => p.Y).MinMax();
-
         return ExpandAxis(
-            ExpandAxis(points, minX, maxX, (point, i) => point.X == i, (point, i) => (point.X + i, point.Y), expansionFactor), minY,
-            maxY, (point, i) => point.Y == i, (point, i) => (point.X, point.Y + i), expansionFactor);
+            ExpandAxis(points, points.MinMaxBy(p => p.X), (point, i) => point.X == i,
+                (point, i) => (point.X + i, point.Y), expansionFactor), points.MinMaxBy(p => p.Y),
+            (point, i) => point.Y == i, (point, i) => (point.X, point.Y + i), expansionFactor);
     }
 
-    private static IEnumerable<Point> ExpandAxis(IEnumerable<Point> source, long min, long max, Func<Point, long, bool> predicate, Func<Point, long, Point> generator, long expansionFactor)
+    private static IEnumerable<Point> ExpandAxis(IEnumerable<Point> source, (long min, long max) extents, Func<Point, long, bool> predicate, Func<Point, long, Point> generator, long expansionFactor)
     {
         var points = source.ToList();
 
         var expansion = 0L;
-        for (long i = min; i <= max; i++)
+        for (long i = extents.min; i <= extents.max; i++)
         {
             var j = i;
             var set = points.Where(p => predicate(p, j)).ToArray();
