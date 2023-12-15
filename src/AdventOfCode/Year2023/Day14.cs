@@ -119,15 +119,11 @@ public class Day14 : IPuzzle
         return (positions.Max(t => t.x + 1), positions.Max(t => t.y + 1), dictionary);
     }
 
-    private static int GenerateHashCode(GridData grid)
-    {
-        return grid.positions
-            .Select(pair => pair.Key)
-            .OrderBy(p => p.x)
-            .ThenBy(p => p.y)
-            .Select(p => HashCode.Combine(p.x, p.y))
-            .Aggregate(HashCode.Combine);
-    }
+    private static long GenerateHashCode(GridData grid) =>
+        grid.positions
+            .Where(pair => pair.Value == 'O')
+            .Select(kvp => (long)HashCode.Combine(kvp.Key.x, kvp.Key.y))
+            .Sum();
 
     public enum  Direction
     {
