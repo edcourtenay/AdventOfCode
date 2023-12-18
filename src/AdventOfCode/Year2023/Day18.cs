@@ -13,41 +13,44 @@ public sealed partial class Day18 : IPuzzle
 
     public object Part1(string input)
     {
-        return Solve(input, match => (direction: match.Groups["direction"].Value[0], count: int.Parse(match.Groups["count"].Value)));
+        return Solve(input, match =>
+        {
+            char direction = match.Groups["direction"].Value[0];
+            int count = int.Parse(match.Groups["count"].Value);
+            return (direction, count);
+        });
     }
 
     public object Part2(string input)
     {
-        return Solve(input, ColourToInstruction);
+        return Solve(input, match =>
+        {
+            int colour = Convert.ToInt32(match.Groups["colour"].Value, 16);
+            char direction = (colour & 0xF) switch
+            {
+                0x0 => 'R',
+                0x1 => 'U',
+                0x2 => 'L',
+                0x3 => 'D',
+                _ => throw new InvalidOperationException()
+            };
+            int count = (colour >> 4);
+
+            return (direction, count);
+        });
     }
 
     private static long Solve(string input, Func<Match, Instruction> matchToInstruction)
     {
-        var edges = GetEdges(input.ToLines(line => LineRegex().Match(line))
-            .Where(match => match.Success)
-            .Select(matchToInstruction))
-            .ToList();
+        (long perimeter, long area) = GetEdges(input.ToLines(line => LineRegex().Match(line))
+                .Where(match => match.Success)
+                .Select(matchToInstruction))
+            .Aggregate((p: 0L, a: 0L),
+                (acc, edge) => (acc.p + Math.Abs(edge.to.x - edge.from.x) + Math.Abs(edge.to.y - edge.from.y),
+                    acc.a + ((edge.from.x + edge.to.x) * (edge.from.y - edge.to.y))),
+                acc => ((acc.p / 2) + 1, Math.Abs(acc.a / 2)));
 
-        long perimeter = edges.Aggregate(0L, (acc, edge) => acc += Math.Abs(edge.to.x - edge.from.x) + Math.Abs(edge.to.y - edge.from.y), acc => acc / 2 + 1);
-        long area = edges.Aggregate(0L, (acc, edge) => acc += (edge.from.x + edge.to.x) * (edge.from.y - edge.to.y), acc => Math.Abs(acc / 2));
-
-        return area + perimeter;
-    }
-
-    private static Instruction ColourToInstruction(Match match)
-    {
-        int colour = Convert.ToInt32(match.Groups["colour"].Value, 16);
-        char direction = (colour & 0xF) switch
-        {
-            0x0 => 'R',
-            0x1 => 'U',
-            0x2 => 'L',
-            0x3 => 'D',
-            _ => throw new InvalidOperationException()
-        };
-        int count = (colour >> 4);
-
-        return (direction, count);
+        return perimeter + area;
     }
 
     private static IEnumerable<Edge> GetEdges(IEnumerable<Instruction> data)
