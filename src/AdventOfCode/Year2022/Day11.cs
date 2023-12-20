@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Year2022;
@@ -18,7 +17,7 @@ public partial class Day11 : IPuzzle
     {
         var monkeys = ParseMonkeys(input);
 
-        var lcd = LeastCommonMultiple(monkeys.Values.Select(monkey => monkey.DivisibleBy));
+        var lcd = monkeys.Values.Select(monkey => monkey.DivisibleBy).LeastCommonMultiple();
 
         return Solve(monkeys, 10000, l => l % lcd);
     }
@@ -42,22 +41,6 @@ public partial class Day11 : IPuzzle
             .OrderDescending()
             .Take(2)
             .Aggregate((x, y) => x * y);
-    }
-
-    private static T GreatestCommonDivisor<T>(T n1, T n2) where T : INumber<T>
-    {
-        while (true)
-        {
-            if (n2 == T.Zero) return n1;
-            var n3 = n1;
-            n1 = n2;
-            n2 = n3 % n2;
-        }
-    }
-
-    private static T LeastCommonMultiple<T>(IEnumerable<T> numbers) where T : INumber<T>
-    {
-        return numbers.Aggregate((n1, n2) => n1 * n2 / GreatestCommonDivisor(n1, n2));
     }
 
     private static void DoRound(Dictionary<int, Monkey> monkeys, Func<long, long> func)

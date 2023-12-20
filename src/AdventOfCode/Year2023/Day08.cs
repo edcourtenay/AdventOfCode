@@ -22,36 +22,12 @@ public class Day08 : IPuzzle
         var steps = map.StartNodes.AsParallel()
             .Select(map.CycleLength);
 
-        return LeastCommonMultiple(steps);
+        return steps.LeastCommonMultiple();
     }
 
     private static (string node, string left, string right) ParseInstruction(string line)
     {
         return (line[..3], line[7..10], line[12..15]);
-    }
-
-    static T LeastCommonMultiple<T>(IEnumerable<T> numbers) where T : INumber<T>
-    {
-        return numbers.Aggregate(LeastCommonMultiple);
-    }
-    static T LeastCommonMultiple<T>(T a, T b) where T : INumber<T>
-    {
-        return T.Abs(a * b) / GreatestCommonDivisor(a, b);
-    }
-
-    static T GreatestCommonDivisor<T>(T a, T b) where T : INumber<T>
-    {
-        while (true)
-        {
-            if (b == T.Zero)
-            {
-                return a;
-            }
-
-            var temp = a;
-            a = b;
-            b = temp % b;
-        }
     }
 
     public class Map
