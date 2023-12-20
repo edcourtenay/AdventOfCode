@@ -295,4 +295,9 @@ public static class EnumerableExtensions
 
         return (min, max);
     }
+
+    public static IEnumerable<T> ToEnumerable<T>(this T item)
+    {
+        yield return item;
+    }
 }
