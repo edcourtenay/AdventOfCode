@@ -1,5 +1,4 @@
 using System.Linq.Expressions;
-using System.Numerics;
 
 namespace AdventOfCode.Year2023;
 
@@ -8,7 +7,7 @@ public sealed class Day19 : IPuzzle
 {
     public object Part1(string input)
     {
-        var (workflows, parts) = ParseData(input);
+        (List<Workflow> workflows, List<Part> parts) = ParseData(input);
 
         ParameterExpression[] parameterExpressions = new[]
         {
@@ -30,7 +29,7 @@ public sealed class Day19 : IPuzzle
 
     public object Part2(string input)
     {
-        var (workflows, inputs) = ParseData(input);
+        (List<Workflow> workflows, _) = ParseData(input);
 
         ParameterExpression[] parameterExpressions = new[]
         {
@@ -100,16 +99,11 @@ public sealed class Day19 : IPuzzle
         return chain;
     }
 
-    private static long WalkExpression(Expression expression)
+    private static long WalkExpression(Expression expression, Stack<Expression>? stack = null)
     {
-        var stack = new Stack<Expression>();
-        long r = WalkExpression(expression, stack);
+        stack ??= new Stack<Expression>();
 
-        return r;
-    }
-
-    private static long WalkExpression(Expression expression, Stack<Expression> stack, long result = 0L)
-    {
+        long result = 0L;
         switch (expression)
         {
             case ConstantExpression { Value: bool accepted }:
@@ -124,7 +118,6 @@ public sealed class Day19 : IPuzzle
                 stack.Pop();
                 break;
         }
-
         return result;
     }
 
@@ -147,11 +140,6 @@ public sealed class Day19 : IPuzzle
                             _ => range
                         };
 
-                        if (range.from > range.to)
-                        {
-                            range = (0, 0);
-                        }
-
                         dict[name] = range;
                         break;
                     }
@@ -163,20 +151,19 @@ public sealed class Day19 : IPuzzle
 
     private static Expression InvertTest(Expression binaryExpressionTest)
     {
-        if (binaryExpressionTest is BinaryExpression
+        return binaryExpressionTest switch
+        {
+            BinaryExpression
             {
                 NodeType: var nodeType, Left: var left, Right: ConstantExpression { Value: int right }
-            })
-        {
-            return nodeType switch
+            } => nodeType switch
             {
                 ExpressionType.LessThan => Expression.GreaterThan(left, Expression.Constant(right - 1)),
                 ExpressionType.GreaterThan => Expression.LessThan(left, Expression.Constant(right + 1)),
                 _ => binaryExpressionTest
-            };
-        }
-
-        throw new ArgumentOutOfRangeException(nameof(binaryExpressionTest));
+            },
+            _ => binaryExpressionTest
+        };
     }
 
     private static (List<Workflow> Workflows, List<Part> Input) ParseData(string input)
@@ -253,8 +240,11 @@ public sealed class Day19 : IPuzzle
         return new Rule(condition, input[(colon + 1)..].ToString());
     }
 
-    public record Condition(string Parameter, char Operator, int Value);
-    public record Rule(Condition? Condition, string Result);
-    public record Workflow(string Name, List<Rule> Rules);
-    public record struct Part(int X, int M, int A, int S);
+    private record Condition(string Parameter, char Operator, int Value);
+
+    private record Rule(Condition? Condition, string Result);
+
+    private record Workflow(string Name, List<Rule> Rules);
+
+    private record struct Part(int X, int M, int A, int S);
 }
