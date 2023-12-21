@@ -30,28 +30,22 @@ public class Day21 : IPuzzle
         return answer;
     }
 
-    public int Solve(string input, int targetSteps)
+    public static int Solve(string input, int targetSteps)
     {
         return WalkGarden(Parse(input), [targetSteps]).First();
     }
 
-    public int[] WalkGarden(Garden garden, int[] targetSteps)
+    private static int[] WalkGarden(Garden garden, int[] targetSteps)
     {
         var directions = new Point[]{(-1,0), (1,0), (0,1), (0,-1)};
-        var visited = new HashSet<(Point point, int steps)>();
+        var visited = new Dictionary<Point, int>();
         var queue = new Queue<(Point point, int steps)>();
         var maxTarget = targetSteps.Max();
-        var results = targetSteps.ToDictionary(i => i, i => 0);
 
         queue.Enqueue((garden.start, 0));
 
         while(queue.TryDequeue(out var location))
         {
-            if (results.TryGetValue(location.steps, out int value))
-            {
-                results[location.steps] = ++value;
-            }
-
             if(location.steps == maxTarget)
             {
                 continue;
@@ -67,18 +61,23 @@ public class Day21 : IPuzzle
                     continue;
                 }
 
-                ((int newX, int newY) nextPoint, int) next = (nextPoint: (newX, newY), location.steps + 1);
-                if (visited.Add(next))
+                (Point point, int steps) next = ((newX, newY), location.steps + 1);
+                if (visited.ContainsKey(next.point))
                 {
-                    queue.Enqueue(next);
+                    continue;
                 }
+
+                visited.Add(next.point, next.steps);
+                queue.Enqueue(next);
             }
         }
 
-        return targetSteps.Select(i => results[i]).ToArray();
+        return targetSteps
+            .Select(i => visited.Count(kvp => kvp.Value <= i && (kvp.Value & 0x1) == (i & 0x1)))
+            .ToArray();
     }
 
-    public Garden Parse(string input)
+    private static Garden Parse(string input)
     {
         var maxX = 0;
         var maxY = 0;
