@@ -13,8 +13,8 @@ public class Day21 : IPuzzle
 
     public object Part2(string input)
     {
+        const int target = 26501365;
         var garden = Parse(input);
-        var target = 26501365;
 
         long grids = target / garden.maxX;
         var remaining = target % garden.maxX;
