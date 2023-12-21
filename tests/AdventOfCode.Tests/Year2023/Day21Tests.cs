@@ -33,10 +33,12 @@ public class Day21Tests : IClassFixture<Day21>
         _sut.Solve(input, targetSteps).As<int>().Should().Be(expected);
     }
 
-    // [Theory(DisplayName = "Part2 should return expected results from example data")]
-    // [InlineData(TestData, -1)]
-    // public void Part2Example(string input, int expected)
-    // {
-    //     _sut.Part2(input).As<int>().Should().Be(expected);
-    // }
+    [Theory(DisplayName = "Part2 should return expected results from example data")]
+    [InlineData(TestData, 6, 16)]
+    [InlineData(TestData, 10, 50)]
+    [InlineData(TestData, 50, 1594)]
+    public void Part2Example(string input, int targetSteps, int expected)
+    {
+        _sut.Solve(input, targetSteps).As<int>().Should().Be(expected);
+    }
 }
