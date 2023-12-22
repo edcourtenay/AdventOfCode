@@ -9,6 +9,11 @@ public static class RangeExtensions
         return range.from <= value && value <= range.to;
     }
 
+    public static bool Intersects<T>(this (T from, T to) range, (T from, T to) other) where T : IBinaryInteger<T>
+    {
+        return range.from <= other.to && other.from <= range.to;
+    }
+
     public static IEnumerable<(T from, T to)> MergeOverlapping<T>(this IEnumerable<(T from, T to)> source)  where T : IBinaryInteger<T>
     {
         source = source.OrderBy(r => r.from);
