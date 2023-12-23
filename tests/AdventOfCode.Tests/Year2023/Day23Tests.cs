@@ -8,7 +8,29 @@ public class Day23Tests : IClassFixture<Day23>
 
     private const string TestData =
         """
-
+        #.#####################
+        #.......#########...###
+        #######.#########.#.###
+        ###.....#.>.>.###.#.###
+        ###v#####.#v#.###.#.###
+        ###.>...#.#.#.....#...#
+        ###v###.#.#.#########.#
+        ###...#.#.#.......#...#
+        #####.#.#.#######.#.###
+        #.....#.#.#.......#...#
+        #.#####.#.#.#########v#
+        #.#...#...#...###...>.#
+        #.#.#v#######v###.###v#
+        #...#.>.#...>.>.#.###.#
+        #####v#.#.###v#.#.###.#
+        #.....#...#...#.#.#...#
+        #.#########.###.#.#.###
+        #...###...#...#...#.###
+        ###.###.#.###v#####v###
+        #...#...#.#.>.>.#.>.###
+        #.###.###.#.###.#.#v###
+        #.....###...###...#...#
+        #####################.#
         """;
 
     public Day23Tests(Day23 sut)
@@ -17,14 +39,14 @@ public class Day23Tests : IClassFixture<Day23>
     }
 
     [Theory(DisplayName = "Part1 should return expected results from example data")]
-    [InlineData(TestData, -1)]
+    [InlineData(TestData, 94)]
     public void Part1Example(string input, int expected)
     {
         _sut.Part1(input).As<int>().Should().Be(expected);
     }
 
     [Theory(DisplayName = "Part2 should return expected results from example data")]
-    [InlineData(TestData, -1)]
+    [InlineData(TestData, 154)]
     public void Part2Example(string input, int expected)
     {
         _sut.Part2(input).As<int>().Should().Be(expected);
