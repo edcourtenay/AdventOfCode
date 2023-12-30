@@ -109,10 +109,10 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
 
     string checkOrCross = expectedResult switch
     {
-        not null when expectedResult == result => "[green]✓[/]",
+        not null when expectedResult == result => "[green]:check_mark:[/]",
         not null when result == "Incomplete" => "",
-        not null => "[red]×[/]",
-        _ => "[purple]?[/]"
+        not null => "[red]:multiply:[/]",
+        _ => "[purple]:exclamation_question_mark:[/]"
     };
 
 
