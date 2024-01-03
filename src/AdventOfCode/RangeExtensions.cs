@@ -4,7 +4,7 @@ namespace AdventOfCode;
 
 public static class RangeExtensions
 {
-    public static bool Contains<T>(this (T from, T to) range, T value) where T : IBinaryInteger<T>
+    public static bool Contains<T>(this (T from, T to) range, T value) where T : INumber<T>
     {
         return range.from <= value && value <= range.to;
     }

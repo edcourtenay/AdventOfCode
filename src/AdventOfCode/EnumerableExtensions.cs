@@ -19,6 +19,10 @@ public static class EnumerableExtensions
             }
         }
     }
+    public static List<(T left, T right)> CartesianPairs<T>(this List<T> list)
+    {
+        return list.SelectMany((left, index) => list.Skip(index).Select(right => (left, right))).ToList();
+    }
 
     public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunkSize)
     {
