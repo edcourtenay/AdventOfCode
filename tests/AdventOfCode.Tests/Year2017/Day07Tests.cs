@@ -6,22 +6,21 @@ public class Day07Tests : IClassFixture<Day07>
 {
     private readonly Day07 _sut;
 
-    private static readonly string ExampleData =
-        """
-        pbga (66)
-        xhth (57)
-        ebii (61)
-        havc (66)
-        ktlj (57)
-        fwft (72) -> ktlj, cntj, xhth
-        qoyq (66)
-        padx (45) -> pbga, havc, qoyq
-        tknk (41) -> ugml, padx, fwft
-        jptl (61)
-        ugml (68) -> gyxo, ebii, jptl
-        gyxo (61)
-        cntj (57)
-        """;
+    private const string ExampleData = """
+                                       pbga (66)
+                                       xhth (57)
+                                       ebii (61)
+                                       havc (66)
+                                       ktlj (57)
+                                       fwft (72) -> ktlj, cntj, xhth
+                                       qoyq (66)
+                                       padx (45) -> pbga, havc, qoyq
+                                       tknk (41) -> ugml, padx, fwft
+                                       jptl (61)
+                                       ugml (68) -> gyxo, ebii, jptl
+                                       gyxo (61)
+                                       cntj (57)
+                                       """;
 
     public Day07Tests(Day07 sut)
     {

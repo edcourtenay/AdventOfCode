@@ -65,11 +65,11 @@ public class Day18 : IPuzzle
             _current = 0;
             _buffer = 1;
 
-            _grid = new[]
-            {
+            _grid =
+            [
                 new bool[_width * _height],
                 new bool[_width * _height]
-            };
+            ];
         }
 
         public int Index(int x, int y) => y * _width + x;

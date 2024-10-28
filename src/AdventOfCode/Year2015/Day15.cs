@@ -47,7 +47,7 @@ public partial class Day15 : IPuzzle
 
     IEnumerable<int[]> Partition(int n, int k) {
         if (k == 1) {
-            yield return new[] { n };
+            yield return [n];
         } else {
             for (var i = 0; i <= n; i++) {
                 foreach (var rest in Partition(n - i, k - 1)) {
@@ -70,7 +70,7 @@ public partial class Day15 : IPuzzle
             Capacity * teaspoons + Durability * teaspoons + Flavour * teaspoons + Texture * teaspoons +
             Calories * teaspoons;
 
-        public int[] Properties => new[] { Capacity, Durability, Flavour, Texture, Calories };
+        public int[] Properties => [Capacity, Durability, Flavour, Texture, Calories];
     }
 
     [GeneratedRegex(@"^(?<ingredient>\w+):\scapacity\s(?<capacity>-?\d+),\sdurability\s(?<durability>-?\d+),\sflavor\s(?<flavour>-?\d+),\stexture\s(?<texture>-?\d+),\scalories\s(?<calories>-?\d+)$", RegexOptions.Compiled)]

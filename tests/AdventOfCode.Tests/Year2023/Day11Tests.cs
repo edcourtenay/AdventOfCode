@@ -37,10 +37,9 @@ public class Day11Tests : IClassFixture<Day11>
     [Fact(DisplayName = "Parse should return expected results from example data")]
     public void ParseTest()
     {
-        Day11.Parse(TestData).Should().BeEquivalentTo(new[]
-        {
+        Day11.Parse(TestData).Should().BeEquivalentTo([
             (3, 0), (7, 1), (0, 2), (6, 4), (1, 5), (9, 6), (7, 8), (0, 9), (4, 9)
-        });
+        ]);
     }
 
     [Fact(DisplayName = "Expand should return expected results from example data")]
@@ -49,9 +48,8 @@ public class Day11Tests : IClassFixture<Day11>
         Day11.Expand(new (long, long)[]
         {
             (3, 0), (7, 1), (0, 2), (6, 4), (1, 5), (9, 6), (7, 8), (0, 9), (4, 9)
-        }, 2L).Should().BeEquivalentTo(new[]
-        {
+        }, 2L).Should().BeEquivalentTo([
             (4, 0), (9, 1), (0, 2), (8, 5), (1, 6), (12, 7), (9, 10), (0, 11), (5, 11)
-        });
+        ]);
     }
 }

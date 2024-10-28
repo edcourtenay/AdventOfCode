@@ -32,7 +32,7 @@ public class Day05 : IPuzzle
     {
         int i = 0;
         ulong result = 0;
-        HashSet<int> seen = new();
+        HashSet<int> seen = [];
 
         for (int j = 0; j < 8; j++)
         {

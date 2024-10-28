@@ -1,7 +1,5 @@
 using AdventOfCode.Year2023;
 
-using Spectre.Console;
-
 using Hand = AdventOfCode.Year2023.Day07.Hand;
 using HandTypes = AdventOfCode.Year2023.Day07.HandTypes;
 
@@ -48,6 +46,6 @@ public class Day07Tests : IClassFixture<Day07>
     [InlineData("JJJJJ", HandTypes.FiveOfAKind, HandTypes.FiveOfAKind)]
     public void JokerTests(string input, HandTypes expectedWithoutJokers, HandTypes expectedWithJokers)
     {
-        (new Hand(input, 0, false).HandType, new Hand(input, 0, true).HandType).Should().Be((expectedWithoutJokers, expectedWithJokers));
+        (new Hand(input, 0).HandType, new Hand(input, 0, true).HandType).Should().Be((expectedWithoutJokers, expectedWithJokers));
     }
 }

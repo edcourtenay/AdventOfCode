@@ -9,11 +9,11 @@ public sealed class Day19 : IPuzzle
     {
         (List<Workflow> workflows, List<Part> parts) = ParseData(input);
 
-        ParameterExpression[] parameterExpressions = new[]
-        {
+        ParameterExpression[] parameterExpressions =
+        [
             Expression.Parameter(typeof(int), "x"), Expression.Parameter(typeof(int), "m"),
             Expression.Parameter(typeof(int), "a"), Expression.Parameter(typeof(int), "s")
-        };
+        ];
 
         Expression inExpression = BuildExpressionFrom("in", workflows, parameterExpressions);
 
@@ -31,11 +31,11 @@ public sealed class Day19 : IPuzzle
     {
         (List<Workflow> workflows, _) = ParseData(input);
 
-        ParameterExpression[] parameterExpressions = new[]
-        {
+        ParameterExpression[] parameterExpressions =
+        [
             Expression.Parameter(typeof(int), "x"), Expression.Parameter(typeof(int), "m"),
             Expression.Parameter(typeof(int), "a"), Expression.Parameter(typeof(int), "s")
-        };
+        ];
 
         Expression inExpression = BuildExpressionFrom("in", workflows, parameterExpressions);
 
@@ -55,7 +55,7 @@ public sealed class Day19 : IPuzzle
             { "x", parameterExpressions.First(p => p.Name == "x") },
             { "m", parameterExpressions.First(p => p.Name == "m") },
             { "a", parameterExpressions.First(p => p.Name == "a") },
-            { "s", parameterExpressions.First(p => p.Name == "s") },
+            { "s", parameterExpressions.First(p => p.Name == "s") }
         };
 
         return BuildExpression(start, dict, expressions);
@@ -86,7 +86,7 @@ public sealed class Day19 : IPuzzle
                         Expression.Constant(condition.Value)),
                     BuildExpression(rule.Result, workflows, expressions),
                     chain,
-                    typeof(bool)),
+                    typeof(bool))
             };
 
             if (chain.CanReduce)

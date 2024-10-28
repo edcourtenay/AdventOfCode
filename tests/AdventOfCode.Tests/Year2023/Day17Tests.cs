@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-
 using AdventOfCode.Year2023;
 
 namespace AdventOfCode.Tests.Year2023;

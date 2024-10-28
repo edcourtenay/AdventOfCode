@@ -72,6 +72,6 @@ public partial class Day05 : IPuzzle
         }
     }
 
-    [GeneratedRegex("move (?<quantity>\\d+) from (?<source>\\d+) to (?<destination>\\d+)", RegexOptions.Compiled)]
+    [GeneratedRegex(@"move (?<quantity>\d+) from (?<source>\d+) to (?<destination>\d+)", RegexOptions.Compiled)]
     private static partial Regex InstructionRegex();
 }

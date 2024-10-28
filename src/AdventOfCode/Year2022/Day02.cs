@@ -3,7 +3,7 @@ namespace AdventOfCode.Year2022;
 [Description("Rock Paper Scissors")]
 public class Day02 : IPuzzle
 {
-    private static readonly LinkedList<Choice> Choices = new(new[] { Choice.Rock, Choice.Paper, Choice.Scissors });
+    private static readonly LinkedList<Choice> Choices = new([Choice.Rock, Choice.Paper, Choice.Scissors]);
 
     public object Part1(string input)
     {

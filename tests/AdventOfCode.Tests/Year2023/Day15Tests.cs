@@ -7,9 +7,7 @@ public class Day15Tests : IClassFixture<Day15>
     private readonly Day15 _sut;
 
     private const string TestData =
-        """
-        rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7
-        """;
+        "rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7";
 
     public Day15Tests(Day15 sut)
     {

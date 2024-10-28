@@ -42,7 +42,7 @@ public partial class Day14 : IPuzzle
 
     private static IEnumerable<(int X, int Y)> Drop((int X, int Y) start, HashSet<(int X, int Y)> set, bool useFloor)
     {
-        var stack = new Stack<(int X, int Y)>(new[] { start });
+        var stack = new Stack<(int X, int Y)>([start]);
 
         foreach ((int X, int Y) position in Drop(stack, set, set.Max(p => p.Y), useFloor))
         {

@@ -18,12 +18,13 @@ public class Day10 : IPuzzle
     private const int EastToWest = East | West;
     private const int NoConnection = 0b0000;
 
-    private readonly (int SourceMask, int DestinationMask, Point Direction)[] _directions = {
+    private readonly (int SourceMask, int DestinationMask, Point Direction)[] _directions =
+    [
         (South, North, (0, 1)),
         (East, West, (1, 0)),
         (North, South, (0, -1)),
         (West, East, (-1, 0))
-    };
+    ];
 
     public object Part1(string input)
     {

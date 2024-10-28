@@ -19,16 +19,14 @@ public partial class Day01 : IPuzzle
     {
         (int, int) Find()
         {
-            HashSet<(int, int)> set = new();
+            HashSet<(int, int)> set = [];
             IEnumerable<(int, int)> valueTuples = Walk(input);
             foreach (var pos in valueTuples)
             {
-                if (set.Contains(pos))
+                if (!set.Add(pos))
                 {
                     return pos;
                 }
-
-                set.Add(pos);
             }
 
             throw new InvalidOperationException();

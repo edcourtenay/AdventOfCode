@@ -69,7 +69,7 @@ public partial class Day07 : IPuzzle
         public required string Name { get; init; }
         public required int Weight { get; init; }
         public Node? Parent { get; init; } = null;
-        public List<Node> Children { get; init; } = new();
+        public List<Node> Children { get; init; } = [];
         public int TotalWeight => Weight + Children.Sum(c => c.TotalWeight);
         public bool IsBalanced => Children.Select(c => c.TotalWeight).Distinct().Count() == 1;
 

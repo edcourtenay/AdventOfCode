@@ -16,10 +16,9 @@ public class Day01 : IPuzzle
         while (true)
         {
             sum += node!.Value;
-            if (set.Contains(sum))
+            if (!set.Add(sum))
                 return sum;
 
-            set.Add(sum);
             node = node.NextOrFirst();
         }
     }

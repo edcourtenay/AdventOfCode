@@ -33,7 +33,7 @@ public partial class Day02 : IPuzzle
                && item.Password[item.Min - 1] != item.Password[item.Max - 1];
     }
 
-    [GeneratedRegex("(?<min>\\d+)-(?<max>\\d+) (?<char>\\w): (?<password>\\w+)", RegexOptions.Compiled)]
+    [GeneratedRegex(@"(?<min>\d+)-(?<max>\d+) (?<char>\w): (?<password>\w+)", RegexOptions.Compiled)]
     private static partial Regex MyRegex();
 
 

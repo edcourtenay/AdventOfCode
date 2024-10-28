@@ -132,7 +132,7 @@ public partial class Day15 : IPuzzle
             throw new ApplicationException($"Could not parse line: {line}");
         }
 
-        [GeneratedRegex("Sensor at x=(?<sensorX>\\-?\\d+), y=(?<sensorY>\\-?\\d+): closest beacon is at x=(?<beaconX>\\-?\\d+), y=(?<beaconY>\\-?\\d+)", RegexOptions.Compiled)]
+        [GeneratedRegex(@"Sensor at x=(?<sensorX>\-?\d+), y=(?<sensorY>\-?\d+): closest beacon is at x=(?<beaconX>\-?\d+), y=(?<beaconY>\-?\d+)", RegexOptions.Compiled)]
         private static partial Regex MyRegex();
     }
 }

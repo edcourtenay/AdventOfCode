@@ -6,7 +6,7 @@ public class Day07 : IPuzzle
     public object Part1(string input)
     {
         Directory root = Parse(input.ToLines());
-        return root.Directories.Flatten(directory => directory.Directories).Concat(new[] { root })
+        return root.Directories.Flatten(directory => directory.Directories).Concat([root])
             .Select(directory => directory.Size())
             .Where(size => size <= 100000)
             .Sum();
@@ -19,7 +19,7 @@ public class Day07 : IPuzzle
         Directory root = Parse(input.ToLines());
         int freeSpace = totalDiskSize - root.Size();
 
-        return root.Directories.Flatten(directory => directory.Directories).Concat(new[] { root })
+        return root.Directories.Flatten(directory => directory.Directories).Concat([root])
             .Select(directory => directory.Size())
             .Where(size => freeSpace + size >= 30000000)
             .Min();
@@ -30,7 +30,7 @@ public class Day07 : IPuzzle
         var root = new Directory { Name = "/", Parent = null };
         var blocks = ParseBlocks(lines);
 
-        var _ = blocks.Aggregate(root, (current, block) => ProcessBlock(block, current)!);
+        _ = blocks.Aggregate(root, (current, block) => ProcessBlock(block, current)!);
         return root;
     }
 
@@ -68,12 +68,12 @@ public class Day07 : IPuzzle
 
     private static IEnumerable<IEnumerable<string>> ParseBlocks(IEnumerable<string> lines)
     {
-        List<Queue<string>> blocks = new();
+        List<Queue<string>> blocks = [];
         Queue<string> current = new();
 
         foreach (string line in lines)
         {
-            if (line.StartsWith("$"))
+            if (line.StartsWith('$'))
             {
                 current = new Queue<string>();
                 blocks.Add(current);
@@ -89,13 +89,13 @@ public class Day07 : IPuzzle
     {
         public required string Name { get; init; }
         public required Directory? Parent { get; init; }
-        public HashSet<File> Files { get; } = new();
-        public HashSet<Directory> Directories { get; } = new();
+        public HashSet<File> Files { get; } = [];
+        public HashSet<Directory> Directories { get; } = [];
 
         public int Size()
         {
             return Directories
-                .Flatten(d => d.Directories).Concat(new []{ this })
+                .Flatten(d => d.Directories).Concat([this])
                 .SelectMany(d => d.Files)
                 .Sum(file => file.Size);
         }

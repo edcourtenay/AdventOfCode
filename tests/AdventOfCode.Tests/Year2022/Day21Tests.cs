@@ -1,7 +1,5 @@
 ﻿using AdventOfCode.Year2022;
 
-using FluentAssertions;
-
 namespace AdventOfCode.Tests.Year2022;
 
 public class Day21Tests : IClassFixture<Day21>

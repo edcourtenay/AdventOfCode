@@ -71,10 +71,12 @@ public class Day09 : IPuzzle
 
     private static bool IsTouching((int x, int y) head, (int x, int y) tail)
     {
-        (int x, int y)[] neighbours = {
+        (int x, int y)[] neighbours =
+        [
             (-1, 1), (0, 1), (1, 1),
             (-1, 0), (0, 0), (1, 0),
-            (-1, -1), (0, -1), (1, -1) };
+            (-1, -1), (0, -1), (1, -1)
+        ];
         return neighbours.Any(tuple => (head.x + tuple.x, head.y + tuple.y) == tail);
     }
 }

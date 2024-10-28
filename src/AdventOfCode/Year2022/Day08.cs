@@ -3,7 +3,7 @@
 [Description("Treetop Tree House")]
 public class Day08 : IPuzzle
 {
-    private static readonly (int x, int y)[] Directions = { (1, 0), (-1, 0), (0, 1), (0, -1) };
+    private static readonly (int x, int y)[] Directions = [(1, 0), (-1, 0), (0, 1), (0, -1)];
 
     public object Part1(string input)
     {

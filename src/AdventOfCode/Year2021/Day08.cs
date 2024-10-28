@@ -19,7 +19,8 @@ public class Day08 : IPuzzle
             .Sum();
     }
 
-    private readonly string[] Digits = {
+    private readonly string[] Digits =
+    [
         "abcefg", //0
         "cf", //1
         "acdeg", //2
@@ -30,7 +31,7 @@ public class Day08 : IPuzzle
         "acf", //7
         "abcdefg", //8
         "abcdfg"  //9
-    };
+    ];
 
     private static int DecodeLine(string line)
     {
@@ -46,7 +47,7 @@ public class Day08 : IPuzzle
 
         var e = eight.Except(nine).Single();
         var c = eight.Except(six).Single();
-        var f = one.Except(new[] { c }).Single();
+        var f = one.Except([c]).Single();
 
         var five = parsedLine.observation.Single(x => x.Length == 5 && !x.Contains(c) && !x.Contains(e));
         var two = parsedLine.observation.Single(x => x.Length == 5 && x != five && x.Contains(c) && !x.Contains(f));
@@ -63,7 +64,7 @@ public class Day08 : IPuzzle
             six,
             seven,
             eight,
-            nine,
+            nine
         };
 
         return parsedLine.digit

@@ -4,7 +4,7 @@ namespace AdventOfCode.Year2023;
 public sealed class Day20 : IPuzzle
 {
     private static readonly Signal ButtonTrigger = new("", "button", false);
-    private static readonly string[] LineSeparator = {"->", ","};
+    private static readonly string[] LineSeparator = ["->", ","];
 
     public object Part1(string input)
     {

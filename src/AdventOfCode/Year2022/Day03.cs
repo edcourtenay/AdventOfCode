@@ -7,7 +7,7 @@ public class Day03 : IPuzzle
         Execute(input, s => s.ToLines(SplitIntoCompartments));
 
     public object Part2(string input) =>
-        Execute(input, s => input.ToLines().Window(3));
+        Execute(input, _ => input.ToLines().Window(3));
 
     private static int Execute(string input, Func<string, IEnumerable<IEnumerable<IEnumerable<char>>>> func) =>
         func(input)
@@ -22,6 +22,6 @@ public class Day03 : IPuzzle
     private static string[] SplitIntoCompartments(string arg)
     {
         int compartmentLength = arg.Length / 2;
-        return new [] { arg[..compartmentLength], arg[^compartmentLength..] };
+        return [arg[..compartmentLength], arg[^compartmentLength..]];
     }
 }

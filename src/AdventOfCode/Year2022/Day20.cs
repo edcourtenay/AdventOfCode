@@ -19,7 +19,7 @@ public class Day20 : IPuzzle
             .ToLines(selector)
             .ToList();
 
-        List<(long value, int originalIndex)> mixedNumbers = new(numbers);
+        List<(long value, int originalIndex)> mixedNumbers = [..numbers];
 
         for (int i = 0; i < iterations; i++)
         {

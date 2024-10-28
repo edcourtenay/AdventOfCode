@@ -25,7 +25,7 @@ public partial class Day04 : IPuzzle
 
     private bool IsValid(string s)
     {
-        string[] keys = {"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"};
+        string[] keys = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"];
         bool isValid = KeyValueRegex()
             .Matches(s)
             .ToDictionary(match => match.Groups["key"].Value, match => match.Groups["value"].Value)
@@ -45,7 +45,7 @@ public partial class Day04 : IPuzzle
             ("hgt", @"(\d+)(cm|in)", m => (m.Groups[2].Value == "cm" && (int.Parse(m.Groups[1].Value) is >= 150 and <= 193)) || (m.Groups[2].Value == "in" && (int.Parse(m.Groups[1].Value) is >= 59 and <= 76))),
             ("hcl", @"#([0-9a-f]{6})", _ => true),
             ("ecl", @"(amb|blu|brn|gry|grn|hzl|oth)", _ => true),
-            ("pid", @"(\d{9})", _ => true),
+            ("pid", @"(\d{9})", _ => true)
         };
         string[] keys = ops.Select(tuple => tuple.Key).Distinct().ToArray();
 

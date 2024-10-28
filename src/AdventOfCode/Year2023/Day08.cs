@@ -1,5 +1,3 @@
-using System.Numerics;
-
 namespace AdventOfCode.Year2023;
 
 [Description("Haunted Wasteland")]

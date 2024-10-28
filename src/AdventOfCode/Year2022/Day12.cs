@@ -39,9 +39,9 @@ public class Day12 : IPuzzle
 
     private static Step? Navigate(Position[][] map, char startValue, char targetValue, Func<char, char, bool> rule)
     {
-        Queue<Step> queue = new(new [] { FindStartStep(map, startValue) });
+        Queue<Step> queue = new([FindStartStep(map, startValue)]);
 
-        while (queue.Any())
+        while (queue.Count != 0)
         {
             var current = queue.Dequeue();
             if (map[current.Y][current.X].Value == targetValue)
@@ -64,12 +64,12 @@ public class Day12 : IPuzzle
     private static IEnumerable<Step> ValidMoves(Position[][] map, Step current, Func<char, char, bool> rule)
     {
         Step[] possibleSteps =
-        {
+        [
             new(current.X, current.Y - 1),
             new(current.X, current.Y + 1),
             new(current.X - 1, current.Y),
             new(current.X + 1, current.Y)
-        };
+        ];
 
         return possibleSteps.Where(to => IsValidMove(map, current, to, rule));
     }

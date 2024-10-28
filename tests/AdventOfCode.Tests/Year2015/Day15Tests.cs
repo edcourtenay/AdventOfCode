@@ -8,11 +8,11 @@ public class Day15Tests
 
     public Day15Tests()
     {
-        _ingredients = new Day15.Ingredient[]
-        {
+        _ingredients =
+        [
             //Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8
             //Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3
-            new()
+            new Day15.Ingredient
             {
                 Name = "Butterscotch",
                 Capacity = -1,
@@ -21,7 +21,7 @@ public class Day15Tests
                 Texture = 3,
                 Calories = 8
             },
-            new()
+            new Day15.Ingredient
             {
                 Name = "Cinnamon",
                 Capacity = 2,
@@ -30,7 +30,7 @@ public class Day15Tests
                 Texture = -1,
                 Calories = 3
             }
-        };
+        ];
     }
 
     [Fact(Skip="Not implemented correctly")]
@@ -38,7 +38,7 @@ public class Day15Tests
     {
         var sut = new Day15();
 
-        int result = sut.Calculate(_ingredients, new[] { 44, 56 });
+        int result = sut.Calculate(_ingredients, [44, 56]);
 
         result.Should().Be(62842880);
     }

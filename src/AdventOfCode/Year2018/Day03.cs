@@ -78,6 +78,6 @@ public partial class Day03 : IPuzzle
         }
     }
 
-    [GeneratedRegex("#(?<id>\\d+) @ (?<x>\\d+),(?<y>\\d+): (?<width>\\d+)x(?<height>\\d+)", RegexOptions.Compiled)]
+    [GeneratedRegex(@"#(?<id>\d+) @ (?<x>\d+),(?<y>\d+): (?<width>\d+)x(?<height>\d+)", RegexOptions.Compiled)]
     private static partial Regex ClaimRegex();
 }

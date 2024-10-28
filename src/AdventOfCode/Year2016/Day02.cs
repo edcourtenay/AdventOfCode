@@ -15,7 +15,7 @@ public class Day02 : IPuzzle
         return FindCombination(input, (0, 2), IsKeyValid2, DiamondPad);
     }
 
-    private static object FindCombination(string input, (int, int) startKey, Func<(int col, int row), bool> validFunc,
+    private static string FindCombination(string input, (int, int) startKey, Func<(int col, int row), bool> validFunc,
         Func<(int col, int row), char> charFunc)
     {
         StringBuilder sb = new();
@@ -54,17 +54,14 @@ public class Day02 : IPuzzle
         }
     }
 
-    private static bool IsKeyValid1((int col, int row) position) => !(position.col is < 0 or > 2 || position.row is < 0 or > 2);
+    private static bool IsKeyValid1((int col, int row) position) 
+        => !(position.col is < 0 or > 2 || position.row is < 0 or > 2);
 
-    private static bool IsKeyValid2((int col, int row) position)
-    {
-        return !(position.col is < 0 or > 4 || position.row is < 0 or > 4) && DiamondPad(position) != '.';
-    }
+    private static bool IsKeyValid2((int col, int row) position) 
+        => !(position.col is < 0 or > 4 || position.row is < 0 or > 4) && DiamondPad(position) != '.';
 
-    private static char SquarePad((int col, int row) position)
-    {
-        return (char)('1' + position.col + position.row * 3);
-    }
+    private static char SquarePad((int col, int row) position) 
+        => (char)('1' + position.col + position.row * 3);
 
     private static char DiamondPad((int col, int row) position)
     {

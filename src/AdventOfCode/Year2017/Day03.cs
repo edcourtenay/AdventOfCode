@@ -57,7 +57,7 @@ public class Day03 : IPuzzle
 
         public int Get((int, int) position)
         {
-            return _memory.TryGetValue(position, out var n) ? n : 0;
+            return _memory.GetValueOrDefault(position, 0);
         }
 
         public void Set((int, int) position, int value)
@@ -83,7 +83,7 @@ public class Day03 : IPuzzle
                 }
             }
 
-            return Adjacent(position).Select(p => Get(p)).Sum();
+            return Adjacent(position).Select(Get).Sum();
         }
 
         public (int x, int y) GetNext((int, int) position)

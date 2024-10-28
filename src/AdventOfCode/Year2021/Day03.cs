@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Xml;
-
-namespace AdventOfCode.Year2021;
+﻿namespace AdventOfCode.Year2021;
 
 [Description("Binary Diagnostic")]
 public class Day03 : IPuzzle
@@ -41,25 +38,27 @@ public class Day03 : IPuzzle
 
     public (int, int) Process(int index, string[] bucket1, string[] bucket2)
     {
-        if (bucket1.Length == 1 && bucket2.Length == 1)
+        while (true)
         {
-            return (Convert.ToInt32(bucket1[0], 2), Convert.ToInt32(bucket2[0], 2));
-        }
+            switch (bucket1.Length)
+            {
+                case 1 when bucket2.Length == 1:
+                    return (Convert.ToInt32(bucket1[0], 2), Convert.ToInt32(bucket2[0], 2));
+                case > 1:
+                    bucket1 = ProcessBucket(index, bucket1, true);
+                    break;
+            }
 
-        if (bucket1.Length > 1)
-        {
-            bucket1 = ProcessBucket(index, bucket1, true);
-        }
+            if (bucket2.Length > 1)
+            {
+                bucket2 = ProcessBucket(index, bucket2, false);
+            }
 
-        if (bucket2.Length > 1)
-        {
-            bucket2 = ProcessBucket(index, bucket2, false);
+            index++;
         }
-
-        return Process(index + 1, bucket1, bucket2);
     }
 
-    private string[] ProcessBucket(int index, string[] bucket, bool most)
+    private static string[] ProcessBucket(int index, string[] bucket, bool most)
     {
         var dict = bucket.GroupBy(s => s[index])
             .ToDictionary(g => g.Key, g => g.ToArray());

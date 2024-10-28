@@ -47,17 +47,17 @@ public class Day06 : IPuzzle
         switch (discriminant)
         {
             case < 0:
-                return Array.Empty<double>();
+                return [];
             case 0:
                 {
                     double root = -b / (2 * a);
-                    return new[] { root, root };
+                    return [root, root];
                 }
             default:
                 {
                     double root1 = (-b + Math.Sqrt(discriminant)) / (2 * a);
                     double root2 = (-b - Math.Sqrt(discriminant)) / (2 * a);
-                    return new[] { root1, root2 };
+                    return [root1, root2];
                 }
         }
     }

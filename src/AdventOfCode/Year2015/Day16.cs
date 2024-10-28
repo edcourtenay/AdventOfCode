@@ -18,7 +18,7 @@ public partial class Day16 : IPuzzle
         ["goldfish"] = 5,
         ["trees"] = 3,
         ["cars"] = 2,
-        ["perfumes"] = 1,
+        ["perfumes"] = 1
     };
 
     public object Part1(string input)

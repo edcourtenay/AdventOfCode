@@ -40,8 +40,8 @@ public class Day04Tests : IClassFixture<Day04>
     {
         Day04.ParseLine("Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53").Should()
             .BeEquivalentTo(new Day04.Card(1,
-                new[] { 41, 48, 83, 86, 17 },
-                new[] { 83, 86, 6, 31, 17, 9, 48, 53 }));
+                [41, 48, 83, 86, 17],
+                [83, 86, 6, 31, 17, 9, 48, 53]));
     }
 
     [Theory(DisplayName = "Card Points")]

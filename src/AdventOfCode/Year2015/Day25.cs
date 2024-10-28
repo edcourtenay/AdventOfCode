@@ -3,7 +3,7 @@
 namespace AdventOfCode.Year2015;
 
 [Description("Let It Snow")]
-public class Day25 : IPuzzle
+public partial class Day25 : IPuzzle
 {
     public object Part1(string input)
     {
@@ -32,7 +32,10 @@ public class Day25 : IPuzzle
     }
 
     (int irowDst, int icolDst) Parse(string input){
-        var m = Regex.Match(input, @"To continue, please consult the code grid in the manual.  Enter the code at row (\d+), column (\d+).");
+        var m = ParseRegex().Match(input);
         return (int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
     }
+
+    [GeneratedRegex(@"To continue, please consult the code grid in the manual.  Enter the code at row (\d+), column (\d+).")]
+    private static partial Regex ParseRegex();
 }

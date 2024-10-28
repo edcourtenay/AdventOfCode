@@ -6,13 +6,12 @@ public class Day08Tests : IClassFixture<Day08>
 {
     private readonly Day08 _sut;
 
-    private static readonly string ExampleData =
-        """
-        b inc 5 if a > 1
-        a inc 1 if b < 5
-        c dec -10 if a >= 1
-        c inc -20 if c == 10
-        """;
+    private const string ExampleData = """
+                                       b inc 5 if a > 1
+                                       a inc 1 if b < 5
+                                       c dec -10 if a >= 1
+                                       c inc -20 if c == 10
+                                       """;
 
     public Day08Tests(Day08 sut)
     {

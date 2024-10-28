@@ -128,7 +128,7 @@ public partial class Day07 : IPuzzle
         }
     }
 
-    [GeneratedRegex("(?<expression>.+)\\s->\\s(?<output>\\w+)", RegexOptions.Compiled)]
+    [GeneratedRegex(@"(?<expression>.+)\s->\s(?<output>\w+)", RegexOptions.Compiled)]
     private static partial Regex LineRegex();
     [GeneratedRegex(@"^(?<constant>\d+)$", RegexOptions.Compiled)]
     private static partial Regex ConstantRegex();

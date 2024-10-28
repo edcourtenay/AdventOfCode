@@ -39,11 +39,10 @@ public class Day02Tests : IClassFixture<Day02>
     {
         var result = Day02.ParseGame("Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red");
         result.Should().BeEquivalentTo(new Day02.Game(3,
-            new[]
-            {
-                new Day02.Set(20, 8, 6),
+        [
+            new Day02.Set(20, 8, 6),
                 new Day02.Set(4, 13, 5),
                 new Day02.Set(1, 5, 0)
-            }));
+        ]));
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace AdventOfCode.Year2016;
 
 [Description("Internet Protocol Version 7")]
-public partial class Day07 : IPuzzle
+public class Day07 : IPuzzle
 {
     public object Part1(string input)
     {
@@ -19,8 +19,8 @@ public partial class Day07 : IPuzzle
     {
         var arr = line.Split('[', ']');
 
-        return arr.Where((s, i) => i % 2 == 0).Any(HasAbba)
-               && !arr.Where((s, i) => i % 2 != 0).Any(HasAbba);
+        return arr.Where((_, i) => i % 2 == 0).Any(HasAbba)
+               && !arr.Where((_, i) => i % 2 != 0).Any(HasAbba);
     }
 
     private static bool HasAbba(string text)
@@ -35,7 +35,7 @@ public partial class Day07 : IPuzzle
     {
         var arr = line.Split('[', ']');
 
-        var x = arr.Where((s, i) => i % 2 == 0)
+        var x = arr.Where((_, i) => i % 2 == 0)
             .SelectMany(FindAba)
             .Select(chars =>
             {
@@ -46,7 +46,7 @@ public partial class Day07 : IPuzzle
                 return new string(chars);
             });
 
-        return x.Any(z => arr.Where((s, i) => i % 2 != 0).Any(v => v.Contains(z)));
+        return x.Any(z => arr.Where((_, i) => i % 2 != 0).Any(v => v.Contains(z)));
     }
 
     private static IEnumerable<char[]> FindAba(string input)

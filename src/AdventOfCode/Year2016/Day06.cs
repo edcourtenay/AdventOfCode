@@ -17,7 +17,7 @@ public class Day06 : IPuzzle
             .First());
     }
 
-    private static object Solve(string input, Func<IEnumerable<char>, char> selector)
+    private static string Solve(string input, Func<IEnumerable<char>, char> selector)
     {
         var t = input.ToLines()
             .Pivot()

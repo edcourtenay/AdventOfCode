@@ -13,16 +13,16 @@ public class Day16 : IPuzzle
     private static readonly Dir West = (-1, 0);
     private static readonly Dir East = (1, 0);
 
-    private static readonly Dir[] EastWest = {(1, 0), (-1, 0)};
-    private static readonly Dir[] NorthSouth = {(0, 1), (0, -1)};
+    private static readonly Dir[] EastWest = [(1, 0), (-1, 0)];
+    private static readonly Dir[] NorthSouth = [(0, 1), (0, -1)];
 
     private static readonly (char tile, Func<Dir, Dir>? reflectFunc, Func<Dir, bool>? splitTestFunc, Dir[]? splitDirections)[] Tiles =
-    {
+    [
         ('/', dir => (-dir.dY, -dir.dX), null, null),
         ('\\', dir => (dir.dY, dir.dX), null, null),
         ('-', null, dir => dir.dY != 0, EastWest),
         ('|', null, dir => dir.dX != 0, NorthSouth)
-    };
+    ];
 
     public object Part1(string input)
     {
@@ -55,7 +55,7 @@ public class Day16 : IPuzzle
 
     private static int RunBeam(Beam start, GridData grid)
     {
-        var beams = new Queue<Beam>(new [] { start });
+        var beams = new Queue<Beam>([start]);
         var pointsVisited = new HashSet<Point>();
         var beamsVisited = new HashSet<Beam> { start };
 
@@ -94,10 +94,10 @@ public class Day16 : IPuzzle
                 }
                 else if (splitTest?.Invoke(beam.direction) == true)
                 {
-                    newBeams = splitDirections!.Select(dir =>
+                    newBeams = splitDirections!.Select(Beam (dir) =>
                     {
                         Point point = (position.x + dir.dX, position.y + dir.dY);
-                        return (Beam)(point, dir);
+                        return (point, dir);
                     }).ToArray();
                     return true;
                 }
@@ -106,7 +106,7 @@ public class Day16 : IPuzzle
             position = (position.x + beam.direction.dX, position.y + beam.direction.dY);
         }
 
-        newBeams = Array.Empty<Beam>();
+        newBeams = [];
         return false;
     }
 

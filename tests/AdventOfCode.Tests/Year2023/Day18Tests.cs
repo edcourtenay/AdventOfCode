@@ -46,9 +46,10 @@ public class Day18Tests : IClassFixture<Day18>
     [Fact(DisplayName = "Shoelace test")]
     public void ShoelaceAreaTest()
     {
-        ((int x, int y) from, (int x, int y) to)[] edges = {
+        ((int x, int y) from, (int x, int y) to)[] edges =
+        [
             ((0, 0), (4, 0)), ((4, 0), (4, 4)), ((4, 4), (0, 4)), ((0, 4), (0, 0))
-        };
+        ];
 
         var result = Math.Abs(edges.Aggregate(0, (acc, edge) => acc += (edge.from.x + edge.to.x) * (edge.from.y - edge.to.y)) / 2);
 
