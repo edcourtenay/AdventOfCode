@@ -53,8 +53,6 @@ public partial class Day14 : IPuzzle
 
     private static IEnumerable<(int X, int Y)> Drop(Stack<(int X, int Y)> stack, IReadOnlySet<(int X, int Y)> set, int bottom, bool useFloor)
     {
-        bool CheckEmpty((int X, int Y) p) => (!useFloor || p.Y < bottom) && !set.Contains(p);
-
         if (useFloor)
         {
             bottom += 2;
@@ -92,6 +90,10 @@ public partial class Day14 : IPuzzle
 
             yield return current;
         }
+
+        yield break;
+
+        bool CheckEmpty((int X, int Y) p) => (!useFloor || p.Y < bottom) && !set.Contains(p);
     }
 
     [GeneratedRegex(@"(?<x>\d+),(?<y>\d+)", RegexOptions.Compiled)]

@@ -38,6 +38,8 @@ public class Day18 : IPuzzle
     
     private IEnumerable<char> Data(string input)
     {
+        return ReadData().SelectMany(s => s.ToCharArray());
+
         IEnumerable<string> ReadData()
         {
             var reader = new StringReader(input);
@@ -46,7 +48,6 @@ public class Day18 : IPuzzle
                 yield return line;
             }
         }
-        return ReadData().SelectMany(s => s.ToCharArray());
     }
 
     public class Grid
@@ -126,6 +127,11 @@ public class Day18 : IPuzzle
 
         public void Part2Tick()
         {
+            SetCorners();
+            PartTick();
+            SetCorners();
+            return;
+
             void SetCorners()
             {
                 _grid[_current][Index(0, 0)] = true;
@@ -133,10 +139,6 @@ public class Day18 : IPuzzle
                 _grid[_current][Index(0, _height - 1)] = true;
                 _grid[_current][Index(_width - 1, _height - 1)] = true;
             }
-
-            SetCorners();
-            PartTick();
-            SetCorners();
         }
 
         public int CountLights()

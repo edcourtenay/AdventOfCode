@@ -25,7 +25,7 @@ public sealed class Day20 : IPuzzle
 
         var map = modules.ToDictionary(m => m.Name);
 
-        foreach (var (key, module) in map)
+        foreach ((string key, Module module) in map)
         {
             foreach (var target in module.Targets)
             {

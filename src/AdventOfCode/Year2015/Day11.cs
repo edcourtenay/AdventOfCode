@@ -63,6 +63,9 @@ public class Day11 : IPuzzle
 
     public static readonly Func<char[], bool> HasNonOverlappingPairs = chars =>
     {
+        return SplitArrayByCharacterChange(chars)
+            .Count(arr => arr.Length == 2) >= 2;
+
         IEnumerable<char[]> SplitArrayByCharacterChange(char[] input)
         {
             for (int i = 0; i < input.Length; i++)
@@ -78,9 +81,6 @@ public class Day11 : IPuzzle
                 i = j - 1;
             }
         }
-
-        return SplitArrayByCharacterChange(chars)
-            .Count(arr => arr.Length == 2) >= 2;
     };
 
     public static readonly Func<char[], bool> HasIllegalCharacters = chars =>

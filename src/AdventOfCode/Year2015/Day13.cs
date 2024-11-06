@@ -43,12 +43,6 @@ public partial class Day13 : IPuzzle
 
     public int CalculateHappiness(IDictionary<(string, string), int> table, string[] permutation)
     {
-        int Loop(int x)
-        {
-            x += 1;
-            return x > permutation.Length - 1 ? 0 : x;
-        }
-
         int previous = permutation.Length - 1;
         int current = 0;
         int next = 1;
@@ -65,6 +59,12 @@ public partial class Day13 : IPuzzle
         } while (current != 0);
 
         return sum;
+
+        int Loop(int x)
+        {
+            x += 1;
+            return x > permutation.Length - 1 ? 0 : x;
+        }
     }
     
     public IDictionary<(string, string), int> Table(string input)

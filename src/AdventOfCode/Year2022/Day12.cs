@@ -92,13 +92,6 @@ public class Day12 : IPuzzle
 
     private static bool IsValidMove(Position[][] map, Step from, Step to, Func<char, char, bool> rule)
     {
-        char ReplaceChar(char c) => c switch
-        {
-            'S' => 'a',
-            'E' => 'z',
-            _ => c
-        };
-
         (int x, int y) = to;
         if (y >= 0 && y < map.Length && x >= 0 && x < map[y].Length && !map[from.Y][from.X].Visited)
         {
@@ -107,6 +100,12 @@ public class Day12 : IPuzzle
 
         return false;
 
+        char ReplaceChar(char c) => c switch
+        {
+            'S' => 'a',
+            'E' => 'z',
+            _ => c
+        };
     }
 
     private record struct Position(char Value)

@@ -17,6 +17,10 @@ public partial class Day01 : IPuzzle
 
     public object Part2(string input)
     {
+        (int x, int y) position = Find();
+
+        return Math.Abs(position.x) + Math.Abs(position.y);
+
         (int, int) Find()
         {
             HashSet<(int, int)> set = [];
@@ -31,10 +35,6 @@ public partial class Day01 : IPuzzle
 
             throw new InvalidOperationException();
         }
-        
-        (int x, int y) position = Find();
-
-        return Math.Abs(position.x) + Math.Abs(position.y);
     }
 
     private IEnumerable<(int, int)> Walk(string input)

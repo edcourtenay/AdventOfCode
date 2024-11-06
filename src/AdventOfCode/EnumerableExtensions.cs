@@ -164,14 +164,6 @@ public static class EnumerableExtensions
 
     public static IEnumerable<IEnumerable<string>> ToSequences(this IEnumerable<string> source, Func<string, bool> predicate)
     {
-        IEnumerable<string> GroupSequence(IEnumerator<string> enumerator, Func<string, bool> func)
-        {
-            do
-            {
-                yield return enumerator.Current;
-            } while (enumerator.MoveNext() && !func(enumerator.Current));
-        }
-
         using IEnumerator<string> enumerator = source.GetEnumerator();
         do
         {
@@ -180,10 +172,21 @@ public static class EnumerableExtensions
 
             yield return GroupSequence(enumerator, predicate);
         } while (true);
+
+        IEnumerable<string> GroupSequence(IEnumerator<string> enumerator, Func<string, bool> func)
+        {
+            do
+            {
+                yield return enumerator.Current;
+            } while (enumerator.MoveNext() && !func(enumerator.Current));
+        }
     }
 
     public static IEnumerable<IEnumerable<T>> Combinations<T>(this T[] source, int width)
     {
+        return GetCombinations(n: source.Length, k: width)
+            .Select(indexes => indexes.Select(i => source[i - 1]));
+
         static IEnumerable<int[]> GetCombinations(int k, int n)
         {
             var result = new int[k];
@@ -207,9 +210,6 @@ public static class EnumerableExtensions
                 }
             }
         }
-
-        return GetCombinations(n: source.Length, k: width)
-            .Select(indexes => indexes.Select(i => source[i - 1]));
     }
 
     public static IEnumerable<T> Flatten<T>(this IEnumerable<T> e, Func<T, IEnumerable<T>> f)
@@ -267,7 +267,7 @@ public static class EnumerableExtensions
         return MinMaxBy(source, selector, Comparer<TValue>.Default);
     }
 
-    private static (TValue Min, TValue Max) MinMaxBy<TSource, TValue>(IEnumerable<TSource> source, Func<TSource, TValue> selector, IComparer<TValue> comparer) where TValue : IComparable<TValue>
+    private static (TValue Min, TValue Max) MinMaxBy<TSource, TValue>(IEnumerable<TSource> source, Func<TSource, TValue> selector, Comparer<TValue> comparer) where TValue : IComparable<TValue>
     {
         using var enumerator = source.GetEnumerator();
 

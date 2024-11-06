@@ -46,8 +46,8 @@ public class Day05 : IPuzzle
                     seedRangeStart < (valueRange.Source + valueRange.Length))
                 {
                     var offset = seedRangeStart - valueRange.Source;
-                    var remainder = long.Min(valueRange.Length - offset, seedRangeLength);
-                    yield return (valueRange.Destination + offset, remainder);
+                    var remainder = Math.Min(valueRange.Length - offset, seedRangeLength);
+                    yield return new SeedRange(valueRange.Destination + offset, remainder);
 
                     seedRangeStart += remainder;
                     seedRangeLength -= remainder;
@@ -57,7 +57,7 @@ public class Day05 : IPuzzle
 
                 if (valueRange.Source > seedRangeStart)
                 {
-                    bestDistance = long.Min(valueRange.Source - seedRangeStart, bestDistance);
+                    bestDistance = Math.Min(valueRange.Source - seedRangeStart, bestDistance);
                 }
             }
 
@@ -66,8 +66,8 @@ public class Day05 : IPuzzle
                 continue;
             }
 
-            var handle = long.Min(bestDistance, seedRangeLength);
-            yield return (seedRangeStart, handle);
+            var handle = Math.Min(bestDistance, seedRangeLength);
+            yield return new SeedRange(seedRangeStart, handle);
             seedRangeStart += handle;
             seedRangeLength -= handle;
         }

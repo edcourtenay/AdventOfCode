@@ -29,6 +29,8 @@ public partial class Day07 : IPuzzle
 
     public IDictionary<string, string> Data(string input)
     {
+        return new Dictionary<string, string>(GetEntries());
+
         IEnumerable<KeyValuePair<string, string>> GetEntries()
         {
             using var r = new StringReader(input);
@@ -41,8 +43,6 @@ public partial class Day07 : IPuzzle
                 }
             }
         }
-
-        return new Dictionary<string, string>(GetEntries());
     }
 
     private static int ExecuteExpression(Expression expression)

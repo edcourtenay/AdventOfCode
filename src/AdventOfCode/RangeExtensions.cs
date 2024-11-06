@@ -122,18 +122,3 @@ public static class RangeExtensions
         return range.to - range.from + T.One;
     }
 }
-
-public static class DictionaryExtensions
-{
-    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFunc)
-    {
-        if (dictionary.TryGetValue(key, out TValue? value))
-        {
-            return value;
-        }
-
-        value = valueFunc(key);
-        dictionary.Add(key, value);
-        return value;
-    }
-}

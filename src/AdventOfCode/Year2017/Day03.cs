@@ -67,6 +67,8 @@ public class Day03 : IPuzzle
 
         public int GetSumOfAdjacent((int, int) position)
         {
+            return Adjacent(position).Select(Get).Sum();
+
             IEnumerable<(int x, int y)> Adjacent((int x, int y) p)
             {
                 foreach (var x in Enumerable.Range(p.x - 1, 3))
@@ -82,8 +84,6 @@ public class Day03 : IPuzzle
                     }
                 }
             }
-
-            return Adjacent(position).Select(Get).Sum();
         }
 
         public (int x, int y) GetNext((int, int) position)
