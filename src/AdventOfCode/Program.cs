@@ -3,12 +3,9 @@ using System.CommandLine;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
-
 using AdventOfCode;
 using AdventOfCode.Solutions;
-
 using Spectre.Console;
-
 using static System.Text.Json.JsonSerializer;
 
 var yearOption = new Option<int>(
@@ -40,12 +37,14 @@ return await rootCommand.InvokeAsync(args);
 
 static void ExecutePuzzles(int selectedYear, int? selectedDay, int iterations)
 {
-    ConcurrentDictionary<int, Dictionary<int, string[]>?> yearResults = new();
+    ConcurrentDictionary<int, Dictionary<int, DayResult>?> yearResults = new();
 
-    var puzzles = typeof(Program).Assembly
-        .GetTypes()
-        .Where(t => typeof(IPuzzle).IsAssignableFrom(t))
-        .Where(t => t is { IsInterface: false, IsAbstract: false })
+    var puzzles = Assembly.GetExecutingAssembly().GetReferencedAssemblies().Select(Assembly.Load)
+        .SelectMany(a => a.GetTypes()
+            .Where(t => typeof(IPuzzle).IsAssignableFrom(t))
+            .Where(t => t is { IsInterface: false, IsAbstract: false })
+        )
+        .Distinct()
         .Select(t => (type: t, match: YearDayRegex().Match(t.FullName!)))
         .Where(t => t.match.Success)
         .Select(t => (t.type, year: int.Parse(t.match.Groups["year"].Value), day: int.Parse(t.match.Groups["day"].Value)))
@@ -63,19 +62,12 @@ static void ExecutePuzzles(int selectedYear, int? selectedDay, int iterations)
             : "Unknown";
 
         string input = ResourceString(year, day);
-        var results = yearResults.GetOrAdd(year, Results);
-        string[]? strings = null;
-        if (results != null && results.TryGetValue(day, out string[]? result))
-        {
-            strings = result;
-        }
-
-        var result1 = strings is [{ } r1, ..] ? r1 : null;
-        var result2 = strings is [_, {} r2] ? r2 : null;
+        var result = yearResults.GetOrAdd(year, Results)!
+            .TryGetValue(day, out var r) ? r : new DayResult();
 
         AnsiConsole.MarkupLine($"[bold]{year:0000} Day {day:00}[/]: [link=https://adventofcode.com/{year}/day/{day}][dim]{description}[/][/]");
-        AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s), result1, iterations));
-        AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s), result2, iterations));
+        AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s), result.Part1, iterations));
+        AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s), result.Part2, iterations));
     }
 }
 
@@ -136,12 +128,12 @@ static string ResourceString(int year, int day)
 
 }
 
-static Dictionary<int, string[]> Results(int year)
+static Dictionary<int, DayResult> Results(int year)
 {
     var assembly = typeof(Program).GetTypeInfo().Assembly;
     using Stream manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.results.json")!;
-    Dictionary<int,string[]>? stringsMap = Deserialize<Dictionary<int, string[]>>(manifestResourceStream);
-    return stringsMap ?? new Dictionary<int, string[]>();
+    Dictionary<int, DayResult>? results = Deserialize<Dictionary<int, DayResult>>(manifestResourceStream);
+    return results ?? new Dictionary<int, DayResult>();
 }
 
 static string FormatTimeSpan(TimeSpan elapsed)
