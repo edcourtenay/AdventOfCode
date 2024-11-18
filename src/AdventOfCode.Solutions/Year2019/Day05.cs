@@ -1,4 +1,4 @@
-namespace AdventOfCode.Year2019;
+namespace AdventOfCode.Solutions.Year2019;
 
 [Description("Sunny with a Chance of Asteroids")]
 public class Day05 : IPuzzle

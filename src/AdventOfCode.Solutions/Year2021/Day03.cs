@@ -1,14 +1,14 @@
-﻿namespace AdventOfCode.Year2021;
+﻿namespace AdventOfCode.Solutions.Year2021;
 
 [Description("Binary Diagnostic")]
 public class Day03 : IPuzzle
 {
     public object Part1(string input)
     {
-        var lines = Enumerable
-            .Select<IEnumerable<char>, (int zeroes, int ones)>(input
-                .ToLines(d => Enumerable.ToArray<char>(d))
-                .Pivot(), line => Enumerable.Aggregate<char, (int zeroes, int ones)>(line, (zeroes: 0, ones: 0), (current, c) => c switch
+        var lines = input
+            .ToLines(d => d.ToArray())
+            .Pivot()
+            .Select(line => line.Aggregate((zeroes: 0, ones: 0), (current, c) => c switch
             {
                 '0' => current with { zeroes = current.zeroes + 1 },
                 '1' => current with { ones = current.ones + 1 },
@@ -20,6 +20,9 @@ public class Day03 : IPuzzle
         var gamma = lines.Select(LeastCommon).Aggregate(0, (i, j) => i * 2 + j);
 
         return gamma * epsilon;
+
+        int MostCommon((int zeroes, int ones) tuple) => tuple.ones > tuple.zeroes ? 1 : 0;
+        int LeastCommon((int zeroes, int ones) tuple) => tuple.ones < tuple.zeroes ? 1 : 0;
     }
 
     public object Part2(string input)

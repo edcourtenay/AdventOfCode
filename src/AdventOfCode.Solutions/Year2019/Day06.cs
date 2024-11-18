@@ -1,4 +1,4 @@
-namespace AdventOfCode.Year2019;
+namespace AdventOfCode.Solutions.Year2019;
 
 [Description("Universal Orbit Map")]
 public class Day06 : IPuzzle
