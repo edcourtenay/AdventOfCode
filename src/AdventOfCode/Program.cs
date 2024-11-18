@@ -2,7 +2,7 @@
 using System.CommandLine;
 using System.Diagnostics;
 using System.Reflection;
-using System.Text.RegularExpressions;
+
 using AdventOfCode;
 using AdventOfCode.Solutions;
 using Spectre.Console;
@@ -39,39 +39,19 @@ static void ExecutePuzzles(int selectedYear, int? selectedDay, int iterations)
 {
     ConcurrentDictionary<int, Dictionary<int, DayResult>?> yearResults = new();
 
-    var puzzles = Assembly.GetExecutingAssembly().GetReferencedAssemblies().Select(Assembly.Load)
-        .SelectMany(a => a.GetTypes()
-            .Where(t => typeof(IPuzzle).IsAssignableFrom(t))
-            .Where(t => t is { IsInterface: false, IsAbstract: false })
-        )
-        .Distinct()
-        .Select(t => (type: t, match: YearDayRegex().Match(t.FullName!)))
-        .Where(t => t.match.Success)
-        .Select(t => (t.type, year: int.Parse(t.match.Groups["year"].Value), day: int.Parse(t.match.Groups["day"].Value)))
-        .OrderBy(t => t.year)
-        .ThenBy(t => t.day)
-        .Where(t => t.year == selectedYear && ((selectedDay.HasValue && t.day == selectedDay.Value) || !selectedDay.HasValue));
-
-    foreach ((Type puzzleType, int year, int day) in puzzles)
+    foreach (var puzzle in PuzzleLocator.GetPuzzles(selectedYear, selectedDay))
     {
-        if (Activator.CreateInstance(puzzleType) is not IPuzzle puzzle)
-            continue;
+        string input = ResourceString(puzzle);
+        var result = yearResults.GetOrAdd(puzzle.Year, Results)!
+            .TryGetValue(puzzle.Day, out var r) ? r : new DayResult();
 
-        string description = puzzleType.GetCustomAttribute<DescriptionAttribute>() is { } descriptionAttribute
-            ? descriptionAttribute.Description
-            : "Unknown";
-
-        string input = ResourceString(year, day);
-        var result = yearResults.GetOrAdd(year, Results)!
-            .TryGetValue(day, out var r) ? r : new DayResult();
-
-        AnsiConsole.MarkupLine($"[bold]{year:0000} Day {day:00}[/]: [link=https://adventofcode.com/{year}/day/{day}][dim]{description}[/][/]");
+        AnsiConsole.MarkupLine($"[bold]{puzzle.Year:0000} Day {puzzle.Day:00}[/]: [link=https://adventofcode.com/{puzzle.Year}/day/{puzzle.Day}][dim]{puzzle.Name}[/][/]");
         AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s), result.Part1, iterations));
         AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s), result.Part2, iterations));
     }
 }
 
-static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, string, object> func, string? expectedResult, int iterations)
+static string Run(PuzzleContainer puzzle, string part, string input, Func<IPuzzle, string, object> func, string? expectedResult, int iterations)
 {
     var times = new List<TimeSpan>();
     object obj = string.Empty;
@@ -81,7 +61,7 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
         for (int i = 0; i < iterations; i++)
         {
             var start = Stopwatch.GetTimestamp();
-            obj = func(puzzle, input);
+            obj = func(puzzle.Puzzle, input);
             var end = Stopwatch.GetTimestamp();
             times.Add(Stopwatch.GetElapsedTime(start, end));
         }
@@ -108,14 +88,13 @@ static string Run(IPuzzle puzzle, string part, string input, Func<IPuzzle, strin
         _ => "[purple]:exclamation_question_mark:[/]"
     };
 
-
     return $"\t[bold]{part}[/]: [[{timeString}]] [{resultColour}]{result}[/] {checkOrCross}";
 }
 
-static string ResourceString(int year, int day)
+static string ResourceString(PuzzleContainer puzzle)
 {
-    var assembly = typeof(Program).GetTypeInfo().Assembly;
-    using Stream? manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.Day{day:00}.txt");
+    var assembly = Assembly.GetExecutingAssembly();
+    using Stream? manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{puzzle.Year:0000}.Day{puzzle.Day:00}.txt");
 
     if (manifestResourceStream == null)
     {
@@ -123,14 +102,12 @@ static string ResourceString(int year, int day)
     }
 
     using StreamReader reader = new(manifestResourceStream);
-
     return reader.ReadToEnd();
-
 }
 
 static Dictionary<int, DayResult> Results(int year)
 {
-    var assembly = typeof(Program).GetTypeInfo().Assembly;
+    var assembly = Assembly.GetExecutingAssembly();
     using Stream manifestResourceStream = assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.results.json")!;
     Dictionary<int, DayResult>? results = Deserialize<Dictionary<int, DayResult>>(manifestResourceStream);
     return results ?? new Dictionary<int, DayResult>();
@@ -154,10 +131,4 @@ static string FormatTimeSpan(TimeSpan elapsed)
 
     var timeString = $"[{timeColour}]{timeDisplay,12}[/]";
     return timeString;
-}
-
-partial class Program
-{
-    [GeneratedRegex(@"Year(?<year>\d+)\.Day(?<day>\d+)")]
-    private static partial Regex YearDayRegex();
 }
