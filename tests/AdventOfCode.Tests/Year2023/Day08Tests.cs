@@ -1,15 +1,13 @@
-using AdventOfCode.Year2023;
+using AdventOfCode.Solutions.Year2023;
 
 namespace AdventOfCode.Tests.Year2023;
 
 public class Day08Tests : IClassFixture<Day08>
 {
-    private readonly Day08 _sut;
-
-    private const string TestData1=
+    private const string TestData1 =
         """
         RL
-        
+
         AAA = (BBB, CCC)
         BBB = (DDD, EEE)
         CCC = (ZZZ, GGG)
@@ -22,7 +20,7 @@ public class Day08Tests : IClassFixture<Day08>
     private const string TestData2 =
         """
         LLR
-        
+
         AAA = (BBB, BBB)
         BBB = (AAA, ZZZ)
         ZZZ = (ZZZ, ZZZ)
@@ -41,6 +39,8 @@ public class Day08Tests : IClassFixture<Day08>
         22Z = (22B, 22B)
         XXX = (XXX, XXX)
         """;
+
+    private readonly Day08 _sut;
 
     public Day08Tests(Day08 sut)
     {

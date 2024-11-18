@@ -1,11 +1,9 @@
-using AdventOfCode.Year2023;
+using AdventOfCode.Solutions.Year2023;
 
 namespace AdventOfCode.Tests.Year2023;
 
 public class Day18Tests : IClassFixture<Day18>
 {
-    private readonly Day18 _sut;
-
     private const string TestData =
         """
         R 6 (#70c710)
@@ -23,6 +21,8 @@ public class Day18Tests : IClassFixture<Day18>
         L 2 (#015232)
         U 2 (#7a21e3)
         """;
+
+    private readonly Day18 _sut;
 
     public Day18Tests(Day18 sut)
     {
@@ -51,7 +51,9 @@ public class Day18Tests : IClassFixture<Day18>
             ((0, 0), (4, 0)), ((4, 0), (4, 4)), ((4, 4), (0, 4)), ((0, 4), (0, 0))
         ];
 
-        var result = Math.Abs(edges.Aggregate(0, (acc, edge) => acc += (edge.from.x + edge.to.x) * (edge.from.y - edge.to.y)) / 2);
+        int result =
+            Math.Abs(
+                edges.Aggregate(0, (acc, edge) => acc += (edge.from.x + edge.to.x) * (edge.from.y - edge.to.y)) / 2);
 
         result.Should().Be(16);
     }

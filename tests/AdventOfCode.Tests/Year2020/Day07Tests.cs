@@ -1,11 +1,9 @@
-﻿using AdventOfCode.Year2020;
+﻿using AdventOfCode.Solutions.Year2020;
 
 namespace AdventOfCode.Tests.Year2020;
 
 public class Day07Tests : IClassFixture<Day07>
 {
-    private readonly Day07 _sut;
-
     private const string TestData = """
                                     light red bags contain 1 bright white bag, 2 muted yellow bags.
                                     dark orange bags contain 3 bright white bags, 4 muted yellow bags.
@@ -17,6 +15,8 @@ public class Day07Tests : IClassFixture<Day07>
                                     faded blue bags contain no other bags.
                                     dotted black bags contain no other bags.
                                     """;
+
+    private readonly Day07 _sut;
 
     public Day07Tests(Day07 sut)
     {

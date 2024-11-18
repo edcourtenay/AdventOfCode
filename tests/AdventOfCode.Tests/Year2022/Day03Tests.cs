@@ -1,19 +1,19 @@
-﻿using AdventOfCode.Year2022;
+﻿using AdventOfCode.Solutions.Year2022;
 
 namespace AdventOfCode.Tests.Year2022;
 
 public class Day03Tests : IClassFixture<Day03>
 {
-    private readonly Day03 _sut;
-
     private const string TestData = """
-    vJrwpWtwJgWrhcsFMMfFFhFp
-    jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
-    PmmdzqPrVvPwwTWBwg
-    wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
-    ttgJtRGJQctTZtZT
-    CrZsJsPPZsGzwwsLwLmpwMDw
-    """;
+                                    vJrwpWtwJgWrhcsFMMfFFhFp
+                                    jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+                                    PmmdzqPrVvPwwTWBwg
+                                    wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+                                    ttgJtRGJQctTZtZT
+                                    CrZsJsPPZsGzwwsLwLmpwMDw
+                                    """;
+
+    private readonly Day03 _sut;
 
     public Day03Tests(Day03 sut)
     {

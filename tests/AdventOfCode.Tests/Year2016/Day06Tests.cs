@@ -1,29 +1,29 @@
-﻿using AdventOfCode.Year2016;
+﻿using AdventOfCode.Solutions.Year2016;
 
 namespace AdventOfCode.Tests.Year2016;
 
 public class Day06Tests : IClassFixture<Day06>
 {
-    private readonly Day06 _sut;
-
     private const string TestData = """
-    eedadn
-    drvtee
-    eandsr
-    raavrd
-    atevrs
-    tsrnev
-    sdttsa
-    rasrtv
-    nssdts
-    ntnada
-    svetve
-    tesnvt
-    vntsnd
-    vrdear
-    dvrsen
-    enarar
-    """;
+                                    eedadn
+                                    drvtee
+                                    eandsr
+                                    raavrd
+                                    atevrs
+                                    tsrnev
+                                    sdttsa
+                                    rasrtv
+                                    nssdts
+                                    ntnada
+                                    svetve
+                                    tesnvt
+                                    vntsnd
+                                    vrdear
+                                    dvrsen
+                                    enarar
+                                    """;
+
+    private readonly Day06 _sut;
 
 
     public Day06Tests(Day06 sut)

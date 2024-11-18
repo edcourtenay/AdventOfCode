@@ -1,4 +1,4 @@
-using AdventOfCode.Year2015;
+using AdventOfCode.Solutions.Year2015;
 
 namespace AdventOfCode.Tests.Year2015;
 
@@ -9,9 +9,9 @@ public class Day11Tests
     [InlineData("azz", "baa")]
     public void IncrementPasswordTests(string password, string expected)
     {
-        var sut = new Day11();
+        Day11 sut = new();
 
-        var result = sut.IncrementPassword(password.ToCharArray());
+        char[] result = sut.IncrementPassword(password.ToCharArray());
 
         result.Should().ContainInOrder(expected.ToCharArray());
     }
@@ -21,7 +21,7 @@ public class Day11Tests
     [InlineData("abdeghp", false)]
     public void HasRunOfCharactersTests(string input, bool expected)
     {
-        var result = Day11.HasRunOfCharacters(input.ToCharArray());
+        bool result = Day11.HasRunOfCharacters(input.ToCharArray());
 
         result.Should().Be(expected);
     }
@@ -31,7 +31,7 @@ public class Day11Tests
     [InlineData("hijklmmn", false)]
     public void HasNonOverlappingPairsTests(string input, bool expected)
     {
-        var result = Day11.HasNonOverlappingPairs(input.ToCharArray());
+        bool result = Day11.HasNonOverlappingPairs(input.ToCharArray());
 
         result.Should().Be(expected);
     }

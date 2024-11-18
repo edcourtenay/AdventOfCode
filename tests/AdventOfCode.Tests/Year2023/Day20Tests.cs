@@ -1,11 +1,9 @@
-using AdventOfCode.Year2023;
+using AdventOfCode.Solutions.Year2023;
 
 namespace AdventOfCode.Tests.Year2023;
 
 public class Day20Tests : IClassFixture<Day20>
 {
-    private readonly Day20 _sut;
-
     private const string TestData =
         """
         broadcaster -> a
@@ -14,6 +12,8 @@ public class Day20Tests : IClassFixture<Day20>
         %b -> con
         &con -> output
         """;
+
+    private readonly Day20 _sut;
 
     public Day20Tests(Day20 sut)
     {

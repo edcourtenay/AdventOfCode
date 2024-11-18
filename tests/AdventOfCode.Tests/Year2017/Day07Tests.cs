@@ -1,11 +1,9 @@
-﻿using AdventOfCode.Year2017;
+﻿using AdventOfCode.Solutions.Year2017;
 
 namespace AdventOfCode.Tests.Year2017;
 
 public class Day07Tests : IClassFixture<Day07>
 {
-    private readonly Day07 _sut;
-
     private const string ExampleData = """
                                        pbga (66)
                                        xhth (57)
@@ -21,6 +19,8 @@ public class Day07Tests : IClassFixture<Day07>
                                        gyxo (61)
                                        cntj (57)
                                        """;
+
+    private readonly Day07 _sut;
 
     public Day07Tests(Day07 sut)
     {

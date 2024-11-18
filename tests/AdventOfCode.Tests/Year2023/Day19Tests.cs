@@ -1,11 +1,9 @@
-using AdventOfCode.Year2023;
+using AdventOfCode.Solutions.Year2023;
 
 namespace AdventOfCode.Tests.Year2023;
 
 public class Day19Tests : IClassFixture<Day19>
 {
-    private readonly Day19 _sut;
-
     private const string TestData =
         """
         px{a<2006:qkq,m>2090:A,rfg}
@@ -19,13 +17,15 @@ public class Day19Tests : IClassFixture<Day19>
         qqz{s>2770:qs,m<1801:hdj,R}
         gd{a>3333:R,R}
         hdj{m>838:A,pv}
-        
+
         {x=787,m=2655,a=1222,s=2876}
         {x=1679,m=44,a=2067,s=496}
         {x=2036,m=264,a=79,s=2244}
         {x=2461,m=1339,a=466,s=291}
         {x=2127,m=1623,a=2188,s=1013}
         """;
+
+    private readonly Day19 _sut;
 
     public Day19Tests(Day19 sut)
     {

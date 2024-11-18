@@ -1,15 +1,13 @@
 using System.Text;
 
-using static AdventOfCode.Year2023.Day14;
+using AdventOfCode.Solutions.Year2023;
 
-using AdventOfCode.Year2023;
+using static AdventOfCode.Solutions.Year2023.Day14;
 
 namespace AdventOfCode.Tests.Year2023;
 
 public class Day14Tests : IClassFixture<Day14>
 {
-    private readonly Day14 _sut;
-
     private const string TestData =
         """
         O....#....
@@ -80,6 +78,8 @@ public class Day14Tests : IClassFixture<Day14>
         #.OOO#...O
         """;
 
+    private readonly Day14 _sut;
+
     public Day14Tests(Day14 sut)
     {
         _sut = sut;
@@ -102,7 +102,7 @@ public class Day14Tests : IClassFixture<Day14>
     [Fact]
     public void TiltNorthTest()
     {
-        var grid = ParseInput(TestData);
+        (int xLength, int yLength, Dictionary<(int x, int y), char> positions) grid = ParseInput(TestData);
         Tilt(grid, Direction.North);
 
         string trim = GridToString(grid);
@@ -116,7 +116,7 @@ public class Day14Tests : IClassFixture<Day14>
     [InlineData(AfterCycle2, AfterCycle3)]
     public void CycleTest(string input, string expected)
     {
-        var grid = ParseInput(input);
+        (int xLength, int yLength, Dictionary<(int x, int y), char> positions) grid = ParseInput(input);
         Cycle(grid);
 
         string trim = GridToString(grid);
@@ -126,13 +126,14 @@ public class Day14Tests : IClassFixture<Day14>
 
     private static string GridToString((int xLength, int yLength, Dictionary<(int x, int y), char> positions) grid)
     {
-        var sb = new StringBuilder();
+        StringBuilder? sb = new();
         for (int y = 0; y < grid.yLength; y++)
         {
             for (int x = 0; x < grid.xLength; x++)
             {
                 sb.Append(grid.positions.GetValueOrDefault((x, y), '.'));
             }
+
             sb.AppendLine();
         }
 

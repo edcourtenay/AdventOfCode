@@ -1,17 +1,17 @@
-using AdventOfCode.Year2023;
+using AdventOfCode.Solutions.Year2023;
 
 namespace AdventOfCode.Tests.Year2023;
 
 public class Day09Tests : IClassFixture<Day09>
 {
-    private readonly Day09 _sut;
-
     private const string TestData =
         """
         0 3 6 9 12 15
         1 3 6 10 15 21
         10 13 16 21 30 45
         """;
+
+    private readonly Day09 _sut;
 
     public Day09Tests(Day09 sut)
     {
@@ -33,8 +33,8 @@ public class Day09Tests : IClassFixture<Day09>
     }
 
     [Theory(DisplayName = "GenerateSequence should return expected results from puzzle input")]
-    [InlineData(new long[] { 0, 3, 6, 9, 12, 15}, new long[] { 3, 3, 3, 3, 3})]
-    [InlineData(new long[] { 3, 3, 3, 3, 3}, new long[] { 0, 0, 0, 0 })]
+    [InlineData(new long[] { 0, 3, 6, 9, 12, 15 }, new long[] { 3, 3, 3, 3, 3 })]
+    [InlineData(new long[] { 3, 3, 3, 3, 3 }, new long[] { 0, 0, 0, 0 })]
     public void GenerateExamples(long[] input, long[] expected)
     {
         Day09.GenerateSequence(input).Should().BeEquivalentTo(expected);

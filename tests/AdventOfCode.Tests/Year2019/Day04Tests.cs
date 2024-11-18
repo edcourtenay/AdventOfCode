@@ -1,4 +1,4 @@
-﻿using AdventOfCode.Year2019;
+﻿using AdventOfCode.Solutions.Year2019;
 
 namespace AdventOfCode.Tests.Year2019;
 

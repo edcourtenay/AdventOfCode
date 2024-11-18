@@ -1,11 +1,9 @@
-﻿using AdventOfCode.Year2021;
+﻿using AdventOfCode.Solutions.Year2021;
 
 namespace AdventOfCode.Tests.Year2021;
 
 public class Day10Tests : IClassFixture<Day10>
 {
-    private readonly Day10 _sut;
-
     private const string TestData =
         """
         [({(<(())[]>[[{[]{<()<>>
@@ -19,6 +17,8 @@ public class Day10Tests : IClassFixture<Day10>
         <{([([[(<>()){}]>(<<{{
         <{([{{}}[<[[[<>{}]]]>[]]
         """;
+
+    private readonly Day10 _sut;
 
     public Day10Tests(Day10 sut)
     {

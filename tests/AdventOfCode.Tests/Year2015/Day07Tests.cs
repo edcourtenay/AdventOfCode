@@ -1,21 +1,21 @@
-﻿using AdventOfCode.Year2015;
+﻿using AdventOfCode.Solutions.Year2015;
 
 namespace AdventOfCode.Tests.Year2015;
 
 public class Day07Tests
 {
     private const string Data = """
-    123 -> x
-    456 -> y
-    x AND y -> d
-    x OR y -> e
-    x LSHIFT 2 -> f
-    y RSHIFT 2 -> g
-    NOT x -> h
-    NOT y -> i
-    x -> aa
-    """;
-    
+                                123 -> x
+                                456 -> y
+                                x AND y -> d
+                                x OR y -> e
+                                x LSHIFT 2 -> f
+                                y RSHIFT 2 -> g
+                                NOT x -> h
+                                NOT y -> i
+                                x -> aa
+                                """;
+
     private static readonly Dictionary<string, string> ParsedDictionary = new()
     {
         { "x", "123" },
@@ -38,7 +38,8 @@ public class Day07Tests
 
         dictionary.Should().Equal(ParsedDictionary);
 
-        var d = dictionary.Keys.ToDictionary(k=> k, k => (ushort)sut.EvaluateKey(dictionary, k));
+        Dictionary<string, ushort>
+            d = dictionary.Keys.ToDictionary(k => k, k => (ushort)sut.EvaluateKey(dictionary, k));
         d.Should().NotBeNull();
     }
 }

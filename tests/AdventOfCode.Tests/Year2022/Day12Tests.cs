@@ -1,18 +1,18 @@
-﻿using AdventOfCode.Year2022;
+﻿using AdventOfCode.Solutions.Year2022;
 
 namespace AdventOfCode.Tests.Year2022;
 
 public class Day12Tests : IClassFixture<Day12>
 {
-    private readonly Day12 _sut;
-
     private const string TestData = """
-    Sabqponm
-    abcryxxl
-    accszExk
-    acctuvwj
-    abdefghi
-    """;
+                                    Sabqponm
+                                    abcryxxl
+                                    accszExk
+                                    acctuvwj
+                                    abdefghi
+                                    """;
+
+    private readonly Day12 _sut;
 
     public Day12Tests(Day12 sut)
     {
