@@ -1,0 +1,25 @@
+﻿namespace AdventOfCode.Solutions.Year2018;
+
+[Description("Chronal Calibration")]
+public class Day01 : IPuzzle
+{
+    public object Part1(string input) =>
+        Enumerable.Sum((IEnumerable<int>)input.ToLines(int.Parse));
+
+    public object Part2(string input)
+    {
+        var linkedList = new LinkedList<int>(input.ToLines(int.Parse));
+        var set = new HashSet<int>();
+        var sum = 0;
+
+        var node = linkedList.First;
+        while (true)
+        {
+            sum += node!.Value;
+            if (!set.Add(sum))
+                return sum;
+
+            node = node.NextOrFirst();
+        }
+    }
+}

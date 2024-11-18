@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 
 using AdventOfCode;
+using AdventOfCode.Solutions;
 
 using Spectre.Console;
 

@@ -1,11 +1,9 @@
-using AdventOfCode.Year2023;
+using AdventOfCode.Solutions.Year2023;
 
 namespace AdventOfCode.Tests.Year2023;
 
 public class Day13Tests : IClassFixture<Day13>
 {
-    private readonly Day13 _sut;
-
     private const string Board1 =
         """
         #.##..##.
@@ -30,10 +28,12 @@ public class Day13Tests : IClassFixture<Day13>
 
     private const string TestData =
         $"""
-        {Board1}
-        
-        {Board2}
-        """;
+         {Board1}
+
+         {Board2}
+         """;
+
+    private readonly Day13 _sut;
 
     public Day13Tests(Day13 sut)
     {

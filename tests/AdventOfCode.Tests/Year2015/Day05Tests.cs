@@ -1,4 +1,4 @@
-﻿using AdventOfCode.Year2015;
+﻿using AdventOfCode.Solutions.Year2015;
 
 namespace AdventOfCode.Tests.Year2015;
 
@@ -12,7 +12,7 @@ public class Day05Tests
     [InlineData("xyz", false)]
     public void HasThreeVowelsTest(string text, bool expected)
     {
-        var result = Day05.HasThreeVowels(text);
+        bool result = Day05.HasThreeVowels(text);
 
         result.Should().Be(expected);
     }
@@ -22,7 +22,7 @@ public class Day05Tests
     [InlineData("xyz", false)]
     public void HasRepeatedLetterTest(string text, bool expected)
     {
-        var result = Day05.HasRepeatedLetter(text);
+        bool result = Day05.HasRepeatedLetter(text);
 
         result.Should().Be(expected);
     }
@@ -32,7 +32,7 @@ public class Day05Tests
     [InlineData("aaa", false)]
     public void HasDisallowedSubstringTest(string text, bool expected)
     {
-        var result = Day05.HasDisallowedSubstring(text);
+        bool result = Day05.HasDisallowedSubstring(text);
 
         result.Should().Be(expected);
     }
@@ -45,7 +45,7 @@ public class Day05Tests
     [InlineData("dvszwmarrgswjxmb", false)]
     public void NiceTests(string text, bool expected)
     {
-        var result = Day05.NiceTest(text);
+        bool result = Day05.NiceTest(text);
 
         result.Should().Be(expected);
     }

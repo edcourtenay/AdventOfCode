@@ -1,11 +1,9 @@
-using AdventOfCode.Year2023;
+using AdventOfCode.Solutions.Year2023;
 
 namespace AdventOfCode.Tests.Year2023;
 
 public class Day03Tests : IClassFixture<Day03>
 {
-    private readonly Day03 _sut;
-
     private const string TestData =
         """
         467..114..
@@ -19,6 +17,8 @@ public class Day03Tests : IClassFixture<Day03>
         ...$.*....
         .664.598..
         """;
+
+    private readonly Day03 _sut;
 
     public Day03Tests(Day03 sut)
     {

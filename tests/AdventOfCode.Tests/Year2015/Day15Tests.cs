@@ -1,4 +1,4 @@
-﻿using AdventOfCode.Year2015;
+﻿using AdventOfCode.Solutions.Year2015;
 
 namespace AdventOfCode.Tests.Year2015;
 
@@ -33,14 +33,13 @@ public class Day15Tests
         ];
     }
 
-    [Fact(Skip="Not implemented correctly")]
+    [Fact(Skip = "Not implemented correctly")]
     public void Test()
     {
-        var sut = new Day15();
+        Day15 sut = new();
 
         int result = sut.Calculate(_ingredients, [44, 56]);
 
         result.Should().Be(62842880);
     }
 }
-

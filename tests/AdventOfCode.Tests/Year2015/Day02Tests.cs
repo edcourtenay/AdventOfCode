@@ -1,4 +1,4 @@
-using AdventOfCode.Year2015;
+using AdventOfCode.Solutions.Year2015;
 
 namespace AdventOfCode.Tests.Year2015;
 
@@ -9,9 +9,9 @@ public class Day02Tests
     [InlineData(1, 1, 10, 43)]
     public void Test1(int width, int length, int height, int expected)
     {
-        var sut = new Day02();
+        Day02 sut = new();
 
-        var result = sut.CalculatePaper(new Day02.Box(width, length, height));
+        int result = sut.CalculatePaper(new Day02.Box(width, length, height));
 
         result.Should().Be(expected);
     }
@@ -20,9 +20,9 @@ public class Day02Tests
     [InlineData("2x3x4", 2, 3, 4)]
     public void TestParseLine(string input, int expectedWidth, int expectedHeight, int expectedLength)
     {
-        var expectedBox = new Day02.Box(expectedWidth, expectedHeight, expectedLength);
+        Day02.Box expectedBox = new(expectedWidth, expectedHeight, expectedLength);
 
-        var sut = new Day02();
+        Day02 sut = new();
 
         Day02.Box result = sut.ParseLine(input);
 
@@ -34,7 +34,7 @@ public class Day02Tests
     [InlineData(1, 1, 10, 14)]
     public void TestCalculateRibbon(int width, int height, int length, int expected)
     {
-        var sut = new Day02();
+        Day02 sut = new();
 
         int result = sut.CalculateRibbon(new Day02.Box(width, height, length));
 

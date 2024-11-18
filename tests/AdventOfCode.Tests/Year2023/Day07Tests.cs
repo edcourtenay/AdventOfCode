@@ -1,14 +1,12 @@
-using AdventOfCode.Year2023;
+using AdventOfCode.Solutions.Year2023;
 
-using Hand = AdventOfCode.Year2023.Day07.Hand;
-using HandTypes = AdventOfCode.Year2023.Day07.HandTypes;
+using Hand = AdventOfCode.Solutions.Year2023.Day07.Hand;
+using HandTypes = AdventOfCode.Solutions.Year2023.Day07.HandTypes;
 
 namespace AdventOfCode.Tests.Year2023;
 
 public class Day07Tests : IClassFixture<Day07>
 {
-    private readonly Day07 _sut;
-
     private const string TestData =
         """
         32T3K 765
@@ -17,6 +15,8 @@ public class Day07Tests : IClassFixture<Day07>
         KTJJT 220
         QQQJA 483
         """;
+
+    private readonly Day07 _sut;
 
     public Day07Tests(Day07 sut)
     {
@@ -46,6 +46,7 @@ public class Day07Tests : IClassFixture<Day07>
     [InlineData("JJJJJ", HandTypes.FiveOfAKind, HandTypes.FiveOfAKind)]
     public void JokerTests(string input, HandTypes expectedWithoutJokers, HandTypes expectedWithJokers)
     {
-        (new Hand(input, 0).HandType, new Hand(input, 0, true).HandType).Should().Be((expectedWithoutJokers, expectedWithJokers));
+        (new Hand(input, 0).HandType, new Hand(input, 0, true).HandType).Should()
+            .Be((expectedWithoutJokers, expectedWithJokers));
     }
 }

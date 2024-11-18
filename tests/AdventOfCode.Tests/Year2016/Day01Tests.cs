@@ -1,4 +1,4 @@
-﻿using AdventOfCode.Year2016;
+﻿using AdventOfCode.Solutions.Year2016;
 
 namespace AdventOfCode.Tests.Year2016;
 
@@ -10,20 +10,20 @@ public class Day01Tests
     [InlineData("R5, L5, R5, R3", 12)]
     public void Part1Examples(string input, int expectedResult)
     {
-        var sut = new Day01();
+        Day01? sut = new();
 
-        var result = (int)sut.Part1(input);
+        int result = (int)sut.Part1(input);
 
         result.Should().Be(expectedResult);
     }
-    
+
     [Theory(DisplayName = "Part2 should return expected results from example data")]
     [InlineData("R8, R4, R4, R8", 4)]
     public void Part2Examples(string input, int expectedResult)
     {
-        var sut = new Day01();
+        Day01? sut = new();
 
-        var result = (int)sut.Part2(input);
+        int result = (int)sut.Part2(input);
 
         result.Should().Be(expectedResult);
     }

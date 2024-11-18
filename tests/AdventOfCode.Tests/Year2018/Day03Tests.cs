@@ -1,16 +1,16 @@
-using AdventOfCode.Year2018;
+using AdventOfCode.Solutions.Year2018;
 
 namespace AdventOfCode.Tests.Year2018;
 
 public class Day03Tests : IClassFixture<Day03>
 {
-    private readonly Day03 _sut;
-
     private const string TestData = """
-    #1 @ 1,3: 4x4
-    #2 @ 3,1: 4x4
-    #3 @ 5,5: 2x2
-    """;
+                                    #1 @ 1,3: 4x4
+                                    #2 @ 3,1: 4x4
+                                    #3 @ 5,5: 2x2
+                                    """;
+
+    private readonly Day03 _sut;
 
     public Day03Tests(Day03 sut)
     {

@@ -1,11 +1,9 @@
-﻿using AdventOfCode.Year2022;
+﻿using AdventOfCode.Solutions.Year2022;
 
 namespace AdventOfCode.Tests.Year2022;
 
 public class Day16Tests : IClassFixture<Day16>
 {
-    private readonly Day16 _sut;
-
     private const string TestData =
         """
         Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
@@ -19,6 +17,8 @@ public class Day16Tests : IClassFixture<Day16>
         Valve II has flow rate=0; tunnels lead to valves AA, JJ
         Valve JJ has flow rate=21; tunnel leads to valve II
         """;
+
+    private readonly Day16 _sut;
 
     public Day16Tests(Day16 sut)
     {

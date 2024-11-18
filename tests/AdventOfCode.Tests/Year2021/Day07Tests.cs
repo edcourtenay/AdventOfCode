@@ -1,12 +1,11 @@
-﻿using AdventOfCode.Year2021;
+﻿using AdventOfCode.Solutions.Year2021;
 
 namespace AdventOfCode.Tests.Year2021;
 
 public class Day07Tests : IClassFixture<Day07>
 {
-    private readonly Day07 _sut;
-
     private const string TestData = "16,1,2,0,4,2,7,1,2,14";
+    private readonly Day07 _sut;
 
     public Day07Tests(Day07 sut)
     {

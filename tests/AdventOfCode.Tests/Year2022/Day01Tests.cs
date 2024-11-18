@@ -1,27 +1,27 @@
-﻿using AdventOfCode.Year2022;
+﻿using AdventOfCode.Solutions.Year2022;
 
 namespace AdventOfCode.Tests.Year2022;
 
 public class Day01Tests : IClassFixture<Day01>
 {
-    private readonly Day01 _sut;
-
     private const string TestData = """
-    1000
-    2000
-    3000
+                                    1000
+                                    2000
+                                    3000
 
-    4000
+                                    4000
 
-    5000
-    6000
+                                    5000
+                                    6000
 
-    7000
-    8000
-    9000
+                                    7000
+                                    8000
+                                    9000
 
-    10000
-    """;
+                                    10000
+                                    """;
+
+    private readonly Day01 _sut;
 
     public Day01Tests(Day01 sut)
     {

@@ -1,16 +1,16 @@
-using AdventOfCode.Year2023;
+using AdventOfCode.Solutions.Year2023;
 
 namespace AdventOfCode.Tests.Year2023;
 
 public class Day06Tests : IClassFixture<Day06>
 {
-    private readonly Day06 _sut;
-
     private const string TestData =
         """
         Time:      7  15   30
         Distance:  9  40  200
         """;
+
+    private readonly Day06 _sut;
 
     public Day06Tests(Day06 sut)
     {
@@ -34,9 +34,6 @@ public class Day06Tests : IClassFixture<Day06>
     [Fact(DisplayName = "Parse should return expected results from example data")]
     public void ParseInputExample()
     {
-        Day06.Parse(TestData).Should().BeEquivalentTo(new Day06.Race[]
-        {
-            new (9, 7), new (40, 15), new (200, 30)
-        });
+        Day06.Parse(TestData).Should().BeEquivalentTo(new Day06.Race[] { new(9, 7), new(40, 15), new(200, 30) });
     }
 }

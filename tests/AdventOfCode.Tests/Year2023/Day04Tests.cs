@@ -1,11 +1,9 @@
-using AdventOfCode.Year2023;
+using AdventOfCode.Solutions.Year2023;
 
 namespace AdventOfCode.Tests.Year2023;
 
 public class Day04Tests : IClassFixture<Day04>
 {
-    private readonly Day04 _sut;
-
     private const string TestData =
         """
         Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
@@ -15,6 +13,8 @@ public class Day04Tests : IClassFixture<Day04>
         Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
         Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
         """;
+
+    private readonly Day04 _sut;
 
     public Day04Tests(Day04 sut)
     {

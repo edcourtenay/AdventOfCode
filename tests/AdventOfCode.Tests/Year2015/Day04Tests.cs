@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-using AdventOfCode.Year2015;
+using AdventOfCode.Solutions.Year2015;
 
 namespace AdventOfCode.Tests.Year2015;
 
@@ -11,9 +11,9 @@ public class Day04Tests
     [InlineData("pqrstuv", 1048970)]
     public void FindSeedTest(string key, int expected)
     {
-        var sut = new Day04();
+        Day04 sut = new();
 
-        var seed = sut.FindSeed(key, Day04.Part1Test);
+        int seed = sut.FindSeed(key, Day04.Part1Test);
 
         seed.Should().Be(expected);
     }
@@ -23,9 +23,9 @@ public class Day04Tests
     [InlineData("pqrstuv1048970")]
     public void CheckMD5Test(string input)
     {
-        var sut = new Day04();
+        Day04 sut = new();
 
-        var result = sut.CheckMD5(Day04.Part1Test, Encoding.ASCII.GetBytes(input));
+        bool result = sut.CheckMD5(Day04.Part1Test, Encoding.ASCII.GetBytes(input));
 
         result.Should().BeTrue();
     }
