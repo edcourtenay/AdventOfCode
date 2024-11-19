@@ -24,14 +24,14 @@ public class Day08 : IPuzzle
     private static int CalculateScenicScore(int[,] grid, int x, int y)
     {
         return Directions
-            .Select(direction => Enumerable.Count<int>(ItemsInDirection(grid, direction, x, y).Skip(1).TakeUntil(i => i >= grid[x, y])))
+            .Select(direction => ItemsInDirection(grid, direction, x, y).Skip(1).TakeUntil(i => i >= grid[x, y]).Count())
             .Aggregate((c1, c2) => c1 * c2);
     }
 
     private static int[,] ToGrid(string input)
     {
         int[,] grid = { };
-        foreach ((string data, int y) in Enumerable.Select<string, (string data, int y)>(input.ToLines(), (s, i) => (data: s, y: i )))
+        foreach ((string data, int y) in input.ToLines().Select<string, (string data, int y)>((s, i) => (data: s, y: i )))
         {
             if (y == 0)
             {

@@ -19,8 +19,8 @@ public class Day06 : IPuzzle
 
     private static string Solve(string input, Func<IEnumerable<char>, char> selector)
     {
-        var t = Enumerable.Select(input.ToLines()
-                .Pivot(), selector);
+        var t = input.ToLines()
+            .Pivot().Select(selector);
         return new string(t.ToArray());
     }
 }

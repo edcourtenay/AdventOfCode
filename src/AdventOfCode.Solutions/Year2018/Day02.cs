@@ -5,17 +5,17 @@ public class Day02 : IPuzzle
 {
     public object Part1(string input)
     {
-        var results = Enumerable.ToArray(input.ToLines(s => new { Two = ContainsRepeatedChars(s, 2), Three = ContainsRepeatedChars(s, 3) }));
+        var results = input.ToLines(s => new { Two = ContainsRepeatedChars(s, 2), Three = ContainsRepeatedChars(s, 3) }).ToArray();
 
-        var count2 = Enumerable.Count(results, arg => arg.Two);
-        var count3 = Enumerable.Count(results, arg => arg.Three);
+        var count2 = results.Count(arg => arg.Two);
+        var count3 = results.Count(arg => arg.Three);
 
         return count2 * count3;
     }
 
     public object Part2(string input)
     {
-        List<string> boxIds = Enumerable.ToList<string>(input.ToLines());
+        List<string> boxIds = input.ToLines().ToList();
         for (int i = 0; i < boxIds.Count; i++) {
             for (int j = i + 1; j < boxIds.Count; j++) {
                 int diffCount = 0;

@@ -35,11 +35,11 @@ public partial class Day09 : IPuzzle
 
         var places = enumerable.Keys.Select(k => k.s).Distinct().ToArray();
 
-        return Enumerable.Select<string[], int>(places.Permutations(), route =>
-            Enumerable.Zip<string, string, int>(route, Enumerable.Skip<string>(route, 1), (a, b) => enumerable[(a, b)]).Sum());
+        return places.Permutations().Select(route =>
+            route.Zip<string, string, int>(route.Skip<string>(1), (a, b) => enumerable[(a, b)]).Sum());
     }
-    
-    public IEnumerable<string> Data(string input)
+
+    private static IEnumerable<string> Data(string input)
     {
         using var r = new StringReader(input);
 

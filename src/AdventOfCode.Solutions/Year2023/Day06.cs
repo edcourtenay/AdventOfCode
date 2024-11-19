@@ -19,7 +19,7 @@ public class Day06 : IPuzzle
 
     public static IEnumerable<Race> Parse(string input, bool badKerning = false)
     {
-        var lines =Enumerable.ToArray<string>(input.ToLines());
+        var lines =input.ToLines().ToArray();
         var times = FixKerning(lines[0][6..]).Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(double.Parse);
         var distances = FixKerning(lines[1][10..]).Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(double.Parse);
 

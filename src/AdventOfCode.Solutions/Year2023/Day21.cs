@@ -84,7 +84,7 @@ public class Day21 : IPuzzle
     {
         Point start = (0, 0);
 
-        var grid = Enumerable.ToArray<string>(input.ToLines());
+        var grid = input.ToLines().ToArray();
 
         for (int y = 0; y < grid.Length; y++)
         {

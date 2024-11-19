@@ -101,11 +101,6 @@ public class Day18 : IPuzzle
             _grid[buffer ? _buffer : _current][Index(x, y)] = value;
         }
 
-        public bool GetAt(int x, int y, bool buffer)
-        {
-            return _grid[buffer ? _buffer : _current][Index(x, y)];
-        }
-
         public void PartTick()
         {
             for (int y = 0; y < _height; y++)

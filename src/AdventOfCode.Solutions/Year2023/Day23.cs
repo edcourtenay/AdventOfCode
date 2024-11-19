@@ -65,8 +65,10 @@ public class Day23 : IPuzzle
         var directions = new[] { (0, -1), (-1, 0) };
 
         Edges edges = new();
-        var points = Enumerable.SelectMany<string, (char c, int x, int y)>(input.ToLines(), (s, y) =>
-                Enumerable.Select<char, (char c, int x, int y)>(s, ((c, x) => (c, x, y))))
+        var points = input
+            .ToLines()
+            .SelectMany((s, y) =>
+                s.Select(((c, x) => (c, x, y))))
             .Where(t => t.c != '#');
 
         var queue = new Queue<(char c, int x, int y)>();
@@ -105,7 +107,7 @@ public class Day23 : IPuzzle
                 '<' => [((current.x - 1, current.y), 1)],
                 '^' => [((current.x, current.y - 1), 1)],
                 'v' => [((current.x, current.y + 1), 1)],
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(current.c))
             };
         }
 

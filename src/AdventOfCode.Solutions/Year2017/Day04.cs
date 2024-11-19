@@ -8,16 +8,16 @@ public class Day04 : IPuzzle
 
     public object Part1(string input)
     {
-        return Enumerable
-            .Count<string>(input
-                .ToLines(), s => ValidateLine(s, word => word));
+        return input
+            .ToLines()
+            .Count(s => ValidateLine(s, word => word));
     }
 
     public object Part2(string input)
     {
-        return Enumerable
-            .Count<string>(input
-                .ToLines(), s => ValidateLine(s, SortWord));
+        return input
+            .ToLines()
+            .Count(s => ValidateLine(s, SortWord));
     }
 
     public bool ValidateLine(string input, Func<string, string> selector)

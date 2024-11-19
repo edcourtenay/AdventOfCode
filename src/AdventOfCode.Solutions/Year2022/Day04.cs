@@ -13,8 +13,8 @@ public class Day04 : IPuzzle
 
     private static int Solve(string input, Func<Range[], bool> countFunc)
     {
-        return Enumerable.Count(input
-                .ToLines(s => Enumerable.Select<string, Range>(s.Split(','), Range.Parse).ToArray()), countFunc);
+        return input
+            .ToLines(s => s.Split(',').Select(Range.Parse).ToArray()).Count(countFunc);
     }
 
     private static IEnumerable<int> IntersectAll(IEnumerable<Range> r) =>

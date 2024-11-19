@@ -92,7 +92,7 @@ public partial class Day07 : IPuzzle
                         return Expression.Constant(value);
                     }
                 default:
-                    throw new Exception($@"Cannot evaluate '{key}'");
+                    throw new Exception($"Cannot evaluate '{key}'");
             }
         }
 

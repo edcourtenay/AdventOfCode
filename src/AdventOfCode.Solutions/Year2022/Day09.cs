@@ -14,8 +14,8 @@ public class Day09 : IPuzzle
 
     private static object Solve(string input, int segments)
     {
-        return Follow(Positions(Enumerable
-            .SelectMany<string, (int x, int y)>(input.ToLines(), Directions)), segments).ToHashSet().Count;
+        return Follow(Positions(input.ToLines()
+            .SelectMany(Directions)), segments).ToHashSet().Count;
     }
 
     private static IEnumerable<(int x, int y)> Directions(string line)

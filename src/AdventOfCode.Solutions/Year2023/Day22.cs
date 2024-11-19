@@ -98,9 +98,9 @@ public class Day22 : IPuzzle
 
     private static Block[] ParseBlocks(string input)
     {
-        return Enumerable
-            .Select<string, int[]>(input.ToLines(), line => Enumerable
-                .Select<string, int>(line.Split(',', '~'), int.Parse).ToArray())
+        return input.ToLines()
+            .Select<string, int[]>(line => line.Split(',', '~')
+                .Select(int.Parse).ToArray())
             .Select(numbers => new Block(
                 new Range(numbers[0], numbers[3]),
                 new Range(numbers[1], numbers[4]),

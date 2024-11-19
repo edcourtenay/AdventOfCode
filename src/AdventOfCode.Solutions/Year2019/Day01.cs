@@ -5,15 +5,15 @@ public class Day01 : IPuzzle
 {
     public object Part1(string input)
     {
-        return Enumerable
-            .SelectMany<int, int>(input.ToLines(int.Parse), i => FuelWeights(i, false))
+        return input.ToLines(int.Parse)
+            .SelectMany(i => FuelWeights(i, false))
             .Sum();
     }
 
     public object Part2(string input)
     {
-        return Enumerable
-            .SelectMany<int, int>(input.ToLines(int.Parse), i => FuelWeights(i, true))
+        return input.ToLines(int.Parse)
+            .SelectMany(i => FuelWeights(i, true))
             .Sum();
     }
 

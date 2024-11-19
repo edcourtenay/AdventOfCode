@@ -7,16 +7,16 @@ public class Day12 : IPuzzle
 {
     public object Part1(string input)
     {
-        return ParallelEnumerable
-            .Sum<(string input, int[] springLengths)>(input.ToLines(Parse)
-                .AsParallel(), data => CalculateLegalPositions(data.input, data.springLengths));
+        return input.ToLines(Parse)
+            .AsParallel()
+            .Sum(data => CalculateLegalPositions(data.input, data.springLengths));
     }
 
     public object Part2(string input)
     {
-        return ParallelEnumerable
-            .Select<(string input, int[] springLengths), (string input, int[] springLengths)>(input.ToLines(Parse)
-                .AsParallel(), Unfold)
+        return input.ToLines(Parse)
+            .AsParallel()
+            .Select(Unfold)
             .Sum(data => CalculateLegalPositions(data.input, data.springLengths));
     }
 

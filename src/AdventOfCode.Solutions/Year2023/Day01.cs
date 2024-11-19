@@ -12,12 +12,12 @@ public partial class Day01 : IPuzzle
 
     public object Part1(string input)
     {
-        return Enumerable.Sum((IEnumerable<int>)input.ToLines(ParseLine1));
+        return input.ToLines(ParseLine1).Sum();
     }
 
     public object Part2(string input)
     {
-        return Enumerable.Sum((IEnumerable<int>)input.ToLines(ParseLine2));
+        return input.ToLines(ParseLine2).Sum();
     }
 
     private static int ParseLine1(string line)

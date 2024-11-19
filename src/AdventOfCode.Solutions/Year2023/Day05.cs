@@ -14,8 +14,8 @@ public class Day05 : IPuzzle
     public object Part2(string input)
     {
         (IEnumerable<SeedRange> seeds, IEnumerable<IEnumerable<ValueRange>> categoryMaps) = Parse(input,
-            longs => Enumerable
-                .Select<IEnumerable<long>, long[]>(longs.Window(2), w => Enumerable.ToArray<long>(w))
+            longs => longs.Window(2)
+                .Select(w => w.ToArray())
                 .Select(w => new SeedRange(w[0], w[1])));
 
         return Solve(seeds, categoryMaps);
@@ -81,7 +81,7 @@ public class Day05 : IPuzzle
         bool inMap = false;
         var ranges = new List<ValueRange>();
 
-        foreach (var line in Enumerable.Append(input.ToLines((l, i) => (l, i)), ("", -1)))
+        foreach (var line in input.ToLines((l, i) => (l, i)).Append(("", -1)))
         {
             switch (line)
             {

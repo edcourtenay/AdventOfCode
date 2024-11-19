@@ -10,7 +10,7 @@ public class RangeExtensionsTest
     public void MergeOverlappingTests()
     {
         Range[] ranges = [(1, 3), (2, 4), (5, 7), (6, 8), (9, 11), (10, 12)];
-        (int from, int to)[]? merged = ranges.MergeOverlapping().ToArray();
+        Range[] merged = ranges.MergeOverlapping().ToArray();
         merged.Should().BeEquivalentTo([(1, 4), (5, 8), (9, 12)]);
     }
 
@@ -19,7 +19,7 @@ public class RangeExtensionsTest
     {
         Range source = (1, 4000);
         Range exclude = (1000, 2000);
-        IEnumerable<(int from, int to)>? excluded = source.ExcludeRange(exclude);
+        IEnumerable<Range> excluded = source.ExcludeRange(exclude);
         excluded.Should().BeEquivalentTo([(1, 999), (2001, 4000)]);
     }
 
@@ -28,7 +28,7 @@ public class RangeExtensionsTest
     {
         Range[] source = [(1, 3), (5, 7), (9, 11)];
         Range[] exclude = [(2, 4), (6, 8), (10, 12)];
-        (int from, int to)[]? excluded = source.ExcludeRanges(exclude).ToArray();
+        Range[] excluded = source.ExcludeRanges(exclude).ToArray();
         excluded.Should().BeEquivalentTo([(1, 1), (5, 5), (9, 9)]);
     }
 }

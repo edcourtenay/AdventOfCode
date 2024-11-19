@@ -109,7 +109,7 @@ public class Day14 : IPuzzle
     public static GridData ParseInput(string input)
     {
         var lines = input.ToLines();
-        var positions = Enumerable.SelectMany<string, (char c, int x, int y)>(lines, (s, y) => Enumerable.Select<char, (char c, int x, int y)>(s, (c, x) => (c, x, y)))
+        var positions = lines.SelectMany((s, y) => s.Select((c, x) => (c, x, y)))
             .Where(t => t.c != '.')
             .ToHashSet();
 

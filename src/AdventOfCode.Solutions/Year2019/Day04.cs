@@ -22,8 +22,8 @@ public class Day04 : IPuzzle
 
     private static bool IsValid(string input)
     {
-        bool allAscending = Enumerable.All<(char First, char Second)>(input.Pairwise(), tuple => tuple.First <= tuple.Second);
-        return allAscending && Enumerable.Any<(char First, char Second)>(input.Pairwise(), tuple => tuple.First == tuple.Second);
+        bool allAscending = input.Pairwise().All(tuple => tuple.First <= tuple.Second);
+        return allAscending && input.Pairwise().Any(tuple => tuple.First == tuple.Second);
     }
 
     public static bool IsValid2(string input)

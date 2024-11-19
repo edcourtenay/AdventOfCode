@@ -15,8 +15,8 @@ public class Day01 : IPuzzle
 
     private static int Solve(string input, int topCount)
     {
-        return Enumerable
-            .Select<IEnumerable<string>, int>(input.ToLines().ToSequences(string.IsNullOrEmpty), set => Enumerable.Select<string, int>(set, int.Parse).Sum())
+        return input.ToLines().ToSequences(string.IsNullOrEmpty)
+            .Select(set => set.Select(int.Parse).Sum())
             .OrderDescending().Take(topCount).Sum();
     }
 }

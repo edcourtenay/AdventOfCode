@@ -40,8 +40,8 @@ public partial class Day04 : IPuzzle
 
     private IEnumerable<(string room, int sectorid, string checksum)> GetValidRooms(string input)
     {
-        return Enumerable
-            .Select<string, Match>(input.ToLines(), s => _lineRegex.Match(s))
+        return input.ToLines()
+            .Select<string, Match>(s => _lineRegex.Match(s))
             .Where(m => m.Success)
             .Select(m => (room: m.Groups["room"].Value, sectorid: int.Parse(m.Groups["sectorid"].Value),
                 checksum: m.Groups["checksum"].Value))

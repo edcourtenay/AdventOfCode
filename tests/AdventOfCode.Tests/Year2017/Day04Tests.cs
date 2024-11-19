@@ -17,7 +17,7 @@ public class Day04Tests : IClassFixture<Day04>
     [InlineData("aa bb cc dd aaa", true)]
     public void ValidateLineExample(string input, bool expected)
     {
-        _sut.ValidateLine(input, word => new string(Enumerable.OrderBy(word.ToCharArray(), c => c).ToArray())).Should()
+        _sut.ValidateLine(input, word => new string(word.ToCharArray().OrderBy(c => c).ToArray())).Should()
             .Be(expected);
     }
 

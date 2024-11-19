@@ -11,8 +11,8 @@ public partial class Day14 : IPuzzle
 
     private static object Solve(string input, (int, int) start, bool useFloor)
     {
-        var set = Enumerable
-            .SelectMany<string, (int X, int Y)>(input.ToLines(), ParseLine)
+        var set = input.ToLines()
+            .SelectMany(ParseLine)
             .ToHashSet();
 
         return Drop(start, set, useFloor)

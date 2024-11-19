@@ -5,24 +5,24 @@ public class Day03 : IPuzzle
 {
     public object Part1(string input)
     {
-        return Enumerable
-            .Select<string, string[]>(input
-                .ToLines(), line => line.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+        return input
+            .ToLines()
+            .Select<string, string[]>(line => line.Split(' ', StringSplitOptions.RemoveEmptyEntries))
             .Select(sides => sides.Select(int.Parse).ToArray())
             .Count(sides => IsValidTriangle(sides[0], sides[1], sides[2]));
     }
 
     public object Part2(string input)
     {
-        var t = Enumerable
-            .SelectMany<IEnumerable<int>, int>(Enumerable
-                .Select<string, string[]>(input
-                    .ToLines(), line => line.Split(' ', StringSplitOptions.RemoveEmptyEntries))
-                .Select(sides => sides.Select(int.Parse).ToArray())
-                .Pivot(), ints => ints)
+        var t = input
+            .ToLines()
+            .Select<string, string[]>(line => line.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+            .Select(sides => sides.Select(int.Parse).ToArray())
+            .Pivot()
+            .SelectMany(ints => ints)
             .Window(3);
 
-        return Enumerable.Select<IEnumerable<int>, int[]>(t, ints => Enumerable.ToArray<int>(ints))
+        return t.Select<IEnumerable<int>, int[]>(ints => ints.ToArray())
             .Count(ints => IsValidTriangle(ints[0], ints[1], ints[2]));
     }
 

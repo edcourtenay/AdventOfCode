@@ -5,8 +5,8 @@ public class Day02 : IPuzzle
 {
     public object Part1(string input)
     {
-        var parsed = Enumerable.Select(input
-                .ToLines(line => Enumerable.ToArray<string>(line.Split(' '))), seg => new { Command = seg[0], Unit = Convert.ToInt32((string?)seg[1]) });
+        var parsed = input
+            .ToLines(line => line.Split(' ').ToArray()).Select(seg => new { Command = seg[0], Unit = Convert.ToInt32((string?)seg[1]) });
 
         var pos = (horizontal: 0, depth: 0);
         pos = parsed.Aggregate(pos, (current, command) => command.Command switch
@@ -22,8 +22,8 @@ public class Day02 : IPuzzle
 
     public object Part2(string input)
     {
-        var parsed = Enumerable.Select(input
-                .ToLines(line => Enumerable.ToArray<string>(line.Split(' '))), seg => new { Command = seg[0], Unit = Convert.ToInt32((string?)seg[1]) });
+        var parsed = input
+            .ToLines(line => line.Split(' ').ToArray()).Select(seg => new { Command = seg[0], Unit = Convert.ToInt32((string?)seg[1]) });
 
         var pos = (horizontal: 0, depth: 0, aim: 0);
         pos = parsed.Aggregate(pos, (current, command) => command.Command switch

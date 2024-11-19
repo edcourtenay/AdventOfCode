@@ -9,8 +9,8 @@ public class Day06 : IPuzzle
 
     private static object FindMarker(string input, int size)
     {
-        var first = Enumerable.Select(input.SlidingWindow(size), (chars, index) => new { chars, index })
-            .First(arg => Enumerable.Distinct<char>(arg.chars).Count() == size);
+        var first = input.SlidingWindow(size).Select((chars, index) => new { chars, index })
+            .First(arg => arg.chars.Distinct().Count() == size);
 
         return first.index + size;
     }

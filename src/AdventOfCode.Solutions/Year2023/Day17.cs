@@ -119,7 +119,7 @@ public class Day17 : IPuzzle
     {
         var grid = new Dictionary<Point, int>();
 
-        foreach ((string data, int y) in Enumerable.Select<string, (string data, int y)>(input.ToLines(), (s, i) => (data: s, y: i )))
+        foreach ((string data, int y) in input.ToLines().Select<string, (string data, int y)>((s, i) => (data: s, y: i )))
         {
             foreach ((char ch, int x) in data.Select((c, i) => (c, x: i)))
             {

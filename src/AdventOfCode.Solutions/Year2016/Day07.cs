@@ -5,14 +5,14 @@ public class Day07 : IPuzzle
 {
     public object Part1(string input)
     {
-        return Enumerable
-            .Count<string>(input.ToLines(), SupportsTls);
+        return input.ToLines()
+            .Count(SupportsTls);
     }
 
     public object Part2(string input)
     {
-        return Enumerable
-            .Count<string>(input.ToLines(), SupportsSsl);
+        return input.ToLines()
+            .Count(SupportsSsl);
     }
 
     public static bool SupportsTls(string line)
@@ -25,8 +25,8 @@ public class Day07 : IPuzzle
 
     private static bool HasAbba(string text)
     {
-        return Enumerable
-            .Select<IEnumerable<char>, char[]>(text.SlidingWindow(4), chars => Enumerable.ToArray<char>(chars))
+        return text.SlidingWindow(4)
+            .Select<IEnumerable<char>, char[]>(chars => chars.ToArray())
             .Any(chars => chars[0] == chars[3] && chars[1] == chars[2]
                 && chars[0] != chars[1]);
     }
@@ -51,8 +51,8 @@ public class Day07 : IPuzzle
 
     private static IEnumerable<char[]> FindAba(string input)
     {
-        return Enumerable
-            .Select<IEnumerable<char>, char[]>(input.SlidingWindow(3), chars => Enumerable.ToArray<char>(chars))
+        return input.SlidingWindow(3)
+            .Select<IEnumerable<char>, char[]>(chars => chars.ToArray())
             .Where(chars => chars[0] == chars[2] && chars[0] != chars[1]);
     }
 

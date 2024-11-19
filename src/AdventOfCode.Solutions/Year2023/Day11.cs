@@ -19,16 +19,16 @@ public class Day11 : IPuzzle
 
     public static long Solve(string input, long expansionFactor)
     {
-        return Enumerable
-            .Select<IEnumerable<(long X, long Y)>, (long X, long Y)[]>(Expand(Parse(input), expansionFactor).ToArray()
-                .Combinations(2), tuples => Enumerable.ToArray<(long X, long Y)>(tuples))
+        return Expand(Parse(input), expansionFactor).ToArray()
+            .Combinations(2)
+            .Select<IEnumerable<Point>, Point[]>(tuples => tuples.ToArray())
             .Sum(tuples => GetManhattanDistance(tuples[0], tuples[1]));
     }
 
     public static IEnumerable<Point> Parse(string input)
     {
-        return Enumerable
-            .Select<string, (string line, int y)>(input.ToLines(), (line, y) => (line, y))
+        return input.ToLines()
+            .Select<string, (string line, int y)>((line, y) => (line, y))
             .SelectMany(t => t.line.Select((c, x) => (c, x, t.y)).Where(u => u.c == '#'))
             .Select(t => ((long)t.x, (long)t.y));
     }

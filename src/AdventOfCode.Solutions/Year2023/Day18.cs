@@ -42,8 +42,8 @@ public sealed partial class Day18 : IPuzzle
 
     private static long Solve(string input, Func<Match, Instruction> matchToInstruction)
     {
-        (long perimeter, long area) = GetEdges(Enumerable
-                .Where<Match>(input.ToLines(line => LineRegex().Match(line)), match => match.Success)
+        (long perimeter, long area) = GetEdges(input.ToLines(line => LineRegex().Match(line))
+                .Where(match => match.Success)
                 .Select(matchToInstruction))
             .Aggregate((p: 0L, a: 0L),
                 (acc, edge) => (acc.p + Math.Abs(edge.to.x - edge.from.x) + Math.Abs(edge.to.y - edge.from.y),

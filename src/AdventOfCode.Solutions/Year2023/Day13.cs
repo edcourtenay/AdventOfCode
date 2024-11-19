@@ -22,7 +22,7 @@ public class Day13 : IPuzzle
 
     private static int SolveAxis(Pattern pattern, Func<Point, int> axisFunc, Func<Point, int, Point> pointSelector, int smudge) =>
         Enumerable.Range(1, pattern.Max(axisFunc))
-            .Where(i => Enumerable.Range(0, Math.Min(i, (int)(pattern.Max(axisFunc) + 1 - i)))
+            .Where(i => Enumerable.Range(0, Math.Min(i, pattern.Max(axisFunc) + 1 - i))
                 .Sum(j =>  CountNonMatchingMirroredPoints(pattern, i, j, axisFunc, pointSelector)) == smudge)
             .Sum();
 
@@ -36,9 +36,9 @@ public class Day13 : IPuzzle
             .Count(p => !pattern.Contains(pointSelector(p, axisPointMirror)));
 
     private static Patterns ParsePatterns(string input) =>
-        Enumerable
-            .Select<IEnumerable<string>, Pattern>(input.ToLines()
-                .ChunkBy(string.IsNullOrEmpty), ParsePattern);
+        input.ToLines()
+            .ChunkBy(string.IsNullOrEmpty)
+            .Select(ParsePattern);
 
     private static Pattern ParsePattern(IEnumerable<string> block) =>
         block.Select(ParseLine)

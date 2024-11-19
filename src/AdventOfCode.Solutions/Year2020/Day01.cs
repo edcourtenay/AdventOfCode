@@ -15,11 +15,11 @@ public class Day01 : IPuzzle
 
     private static object Solve(string input, int width)
     {
-        var lines = Enumerable.ToArray<int>(input.ToLines(int.Parse));
+        var lines = input.ToLines(int.Parse).ToArray();
 
-        return Enumerable
-            .First<IEnumerable<int>>(lines
-                .Combinations(width), ints => Enumerable.Sum((IEnumerable<int>)ints) == 2020)
+        return lines
+            .Combinations(width)
+            .First(ints => ((IEnumerable<int>)ints).Sum() == 2020)
             .Aggregate((i, j) => i * j);
     }
 }

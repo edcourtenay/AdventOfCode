@@ -10,15 +10,15 @@ public partial class Day04 : IPuzzle
 
     public object Part1(string input)
     {
-        return Enumerable
-            .Select<string, Card>(input.ToLines(), ParseLine)
+        return input.ToLines()
+            .Select(ParseLine)
             .Sum(card => card.Points);
     }
 
     public object Part2(string input)
     {
-        var cards = Enumerable
-            .Select<string, Card>(input.ToLines(), ParseLine)
+        var cards = input.ToLines()
+            .Select(ParseLine)
             .ToArray();
 
         var piles = Enumerable.Range(0, cards.Length).Select(_ => 1).ToArray();

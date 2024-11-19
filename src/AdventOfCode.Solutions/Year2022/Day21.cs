@@ -40,8 +40,8 @@ public class Day21 : IPuzzle
 
     private static Dictionary<string, (string val, Expression? exp)> ParseInput(string input)
     {
-        return Enumerable
-            .ToDictionary<string, string, (string, Expression?)>(input.ToLines(), line => line[..4], line => (line[6..], null));
+        return input.ToLines()
+            .ToDictionary<string, string, (string, Expression?)>(line => line[..4], line => (line[6..], null));
     }
 
     private Expression GetExpression(string key, Dictionary<string, (string val, Expression? exp)> dict, ParameterExpression? human = null)

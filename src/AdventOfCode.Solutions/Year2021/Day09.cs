@@ -51,8 +51,8 @@ public class Day09 : IPuzzle
 
     private static int[,] ParseGrid(string input)
     {
-        var lines = Enumerable
-            .ToArray<string>(input.ToLines());
+        var lines = input.ToLines()
+            .ToArray();
 
         var grid = new int[lines[0].Length, lines.Length];
 

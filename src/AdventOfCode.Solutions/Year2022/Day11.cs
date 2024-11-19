@@ -24,9 +24,9 @@ public partial class Day11 : IPuzzle
 
     private static Dictionary<int, Monkey> ParseMonkeys(string input)
     {
-        return Enumerable
-            .Select<IEnumerable<string>, Monkey>(input.ToLines()
-                .ToSequences(string.IsNullOrEmpty), ParseMonkey)
+        return input.ToLines()
+            .ToSequences(string.IsNullOrEmpty)
+            .Select(ParseMonkey)
             .ToDictionary(m => m.Id, m => m);
     }
 

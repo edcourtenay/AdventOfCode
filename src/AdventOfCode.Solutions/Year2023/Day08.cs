@@ -42,7 +42,7 @@ public class Day08 : IPuzzle
 
         public static Map Parse(string input)
         {
-            var lines = Enumerable.ToArray<string>(input.ToLines());
+            var lines = input.ToLines().ToArray();
             var map = new Dictionary<string, (string Left, string Right)>();
             var directionList = new LinkedList<char>(lines[0]);
             foreach (var line in lines[2..])

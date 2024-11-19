@@ -38,16 +38,16 @@ public class Day10Tests : IClassFixture<Day10>
     }
 
     [Theory(DisplayName = "IsCorrupted should return expected results from example data")]
-    [InlineData(@"[({(<(())[]>[[{[]{<()<>>", false, '\0', "}}]])})]")]
-    [InlineData(@"[(()[<>])]({[<{<<[]>>(", false, '\0', ")}>]})")]
-    [InlineData(@"{([(<{}[<>[]}>{[]{[(<()>", true, '}', "")]
-    [InlineData(@"(((({<>}<{<{<>}{[]{[]{}", false, '\0', "}}>}>))))")]
-    [InlineData(@"[[<[([]))<([[{}[[()]]]", true, ')', "")]
-    [InlineData(@"[{[{({}]{}}([{[{{{}}([]", true, ']', "")]
-    [InlineData(@"{<[[]]>}<{[{[{[]{()[[[]", false, '\0', "]]}}]}]}>")]
-    [InlineData(@"[<(<(<(<{}))><([]([]()", true, ')', "")]
-    [InlineData(@"<{([([[(<>()){}]>(<<{{", true, '>', "")]
-    [InlineData(@"<{([{{}}[<[[[<>{}]]]>[]]", false, '\0', "])}>")]
+    [InlineData("[({(<(())[]>[[{[]{<()<>>", false, '\0', "}}]])})]")]
+    [InlineData("[(()[<>])]({[<{<<[]>>(", false, '\0', ")}>]})")]
+    [InlineData("{([(<{}[<>[]}>{[]{[(<()>", true, '}', "")]
+    [InlineData("(((({<>}<{<{<>}{[]{[]{}", false, '\0', "}}>}>))))")]
+    [InlineData("[[<[([]))<([[{}[[()]]]", true, ')', "")]
+    [InlineData("[{[{({}]{}}([{[{{{}}([]", true, ']', "")]
+    [InlineData("{<[[]]>}<{[{[{[]{()[[[]", false, '\0', "]]}}]}]}>")]
+    [InlineData("[<(<(<(<{}))><([]([]()", true, ')', "")]
+    [InlineData("<{([([[(<>()){}]>(<<{{", true, '>', "")]
+    [InlineData("<{([{{}}[<[[[<>{}]]]>[]]", false, '\0', "])}>")]
     public void IsCorruptedExample(string input, bool isCorrupted, char corrupt, string remainder)
     {
         _sut.Validate(input).Should().Be((isCorrupted, corrupt, remainder));

@@ -17,7 +17,7 @@ public partial class Day02 : IPuzzle
 
     private static object Solve(string input, Func<Item, bool> validation)
     {
-        return Enumerable.Count(input.ToLines(Item.Parse), validation);
+        return input.ToLines(Item.Parse).Count(validation);
     }
 
     private static bool IsValidForPart1(Item item)

@@ -7,18 +7,18 @@ public partial class Day04 : IPuzzle
 {
     public object Part1(string input)
     {
-        IEnumerable<string> passports = Enumerable
-            .Select<IEnumerable<string>, string>(input.ToLines()
-                .ToSequences(string.IsNullOrEmpty), s => Enumerable.Aggregate<string, string>(s, "", (s1, s2) => $"{s1} {s2}"));
+        IEnumerable<string> passports = input.ToLines()
+            .ToSequences(string.IsNullOrEmpty)
+            .Select<IEnumerable<string>, string>(s => s.Aggregate<string, string>("", (s1, s2) => $"{s1} {s2}"));
 
         return passports.Count(IsValid);
     }
 
     public object Part2(string input)
     {
-        IEnumerable<string> passports = Enumerable
-            .Select<IEnumerable<string>, string>(input.ToLines()
-                .ToSequences(string.IsNullOrEmpty), s => Enumerable.Aggregate<string, string>(s, "", (s1, s2) => $"{s1} {s2}"));
+        IEnumerable<string> passports = input.ToLines()
+            .ToSequences(string.IsNullOrEmpty)
+            .Select<IEnumerable<string>, string>(s => s.Aggregate<string, string>("", (s1, s2) => $"{s1} {s2}"));
 
         return passports.Count(IsValid2);
     }
@@ -43,8 +43,8 @@ public partial class Day04 : IPuzzle
             ("iyr", @"(\d{4})", m => int.Parse(m.Groups[0].Value) is >= 2010 and <= 2020),
             ("eyr", @"(\d{4})", m => int.Parse(m.Groups[0].Value) is >= 2020 and <= 2030),
             ("hgt", @"(\d+)(cm|in)", m => (m.Groups[2].Value == "cm" && (int.Parse(m.Groups[1].Value) is >= 150 and <= 193)) || (m.Groups[2].Value == "in" && (int.Parse(m.Groups[1].Value) is >= 59 and <= 76))),
-            ("hcl", @"#([0-9a-f]{6})", _ => true),
-            ("ecl", @"(amb|blu|brn|gry|grn|hzl|oth)", _ => true),
+            ("hcl", "#([0-9a-f]{6})", _ => true),
+            ("ecl", "(amb|blu|brn|gry|grn|hzl|oth)", _ => true),
             ("pid", @"(\d{9})", _ => true)
         };
         string[] keys = ops.Select(tuple => tuple.Key).Distinct().ToArray();

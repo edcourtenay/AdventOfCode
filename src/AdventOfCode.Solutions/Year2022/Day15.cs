@@ -14,8 +14,8 @@ public partial class Day15 : IPuzzle
 
     public int SolvePart1(string input, int row)
     {
-        var inputs = Enumerable
-            .Select<string, SensorBeaconPair>(input.ToLines(), SensorBeaconPair.ParseLine).ToArray();
+        var inputs = input.ToLines()
+            .Select(SensorBeaconPair.ParseLine).ToArray();
 
         var list = inputs
             .Select(pair => pair.RangeForRow(row))
@@ -37,8 +37,8 @@ public partial class Day15 : IPuzzle
 
     public long SolvePart2(string input, (int x, int y) max)
     {
-        var inputs = Enumerable
-            .Select<string, SensorBeaconPair>(input.ToLines(), SensorBeaconPair.ParseLine).ToArray();
+        var inputs = input.ToLines()
+            .Select(SensorBeaconPair.ParseLine).ToArray();
 
         for (int row = 0; row <= max.y; row++)
         {

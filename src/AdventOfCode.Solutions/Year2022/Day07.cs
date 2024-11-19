@@ -6,7 +6,7 @@ public class Day07 : IPuzzle
     public object Part1(string input)
     {
         Directory root = Parse(input.ToLines());
-        return Enumerable.Concat(root.Directories.Flatten(directory => directory.Directories), [root])
+        return root.Directories.Flatten(directory => directory.Directories).Concat([root])
             .Select(directory => directory.Size())
             .Where(size => size <= 100000)
             .Sum();
@@ -19,7 +19,7 @@ public class Day07 : IPuzzle
         Directory root = Parse(input.ToLines());
         int freeSpace = totalDiskSize - root.Size();
 
-        return Enumerable.Concat(root.Directories.Flatten(directory => directory.Directories), [root])
+        return root.Directories.Flatten(directory => directory.Directories).Concat([root])
             .Select(directory => directory.Size())
             .Where(size => freeSpace + size >= 30000000)
             .Min();
@@ -94,8 +94,8 @@ public class Day07 : IPuzzle
 
         public int Size()
         {
-            return Enumerable.Concat(Directories
-                    .Flatten(d => d.Directories), [this])
+            return Directories
+                .Flatten(d => d.Directories).Concat([this])
                 .SelectMany(d => d.Files)
                 .Sum(file => file.Size);
         }

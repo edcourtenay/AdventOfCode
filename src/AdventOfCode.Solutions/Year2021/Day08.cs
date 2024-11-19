@@ -7,31 +7,17 @@ public class Day08 : IPuzzle
     {
         var lengths = new[] { 2, 4, 3, 7 };
 
-        return Enumerable.Select<string, (string[] observation, string[] digit)>(input.ToLines(), ParseLine)
+        return input.ToLines().Select(ParseLine)
             .SelectMany(tuple => tuple.digit)
             .Count(s => lengths.Contains(s.Length));
     }
 
     public object Part2(string input)
     {
-        return Enumerable
-            .Select<string, int>(input.ToLines(), DecodeLine)
+        return input.ToLines()
+            .Select(DecodeLine)
             .Sum();
     }
-
-    private readonly string[] Digits =
-    [
-        "abcefg", //0
-        "cf", //1
-        "acdeg", //2
-        "acdfg", //3
-        "bcdf", //4
-        "abdfg", //5
-        "abdefg", //6
-        "acf", //7
-        "abcdefg", //8
-        "abcdfg"  //9
-    ];
 
     private static int DecodeLine(string line)
     {

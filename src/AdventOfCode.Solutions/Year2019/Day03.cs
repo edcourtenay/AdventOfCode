@@ -7,8 +7,8 @@ public partial class Day03 : IPuzzle
 {
     public object Part1(string input)
     {
-        var lists = Enumerable
-            .Select<string, List<(int X, int Y)>>(input.ToLines(), ParseLine)
+        var lists = input.ToLines()
+            .Select(ParseLine)
             .ToArray();
 
         return lists[0].Intersect(lists[1])
@@ -17,8 +17,8 @@ public partial class Day03 : IPuzzle
 
     public object Part2(string input)
     {
-        var lists = Enumerable
-            .Select<string, List<(int X, int Y)>>(input.ToLines(), ParseLine)
+        var lists = input.ToLines()
+            .Select(ParseLine)
             .ToArray();
 
         return lists[0].Intersect(lists[1])

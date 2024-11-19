@@ -5,15 +5,15 @@ public class Day05 : IPuzzle
 {
     public object Part1(string input)
     {
-        return Enumerable.Max((IEnumerable<int>)input.ToLines(Parse));
+        return ((IEnumerable<int>)input.ToLines(Parse)).Max();
     }
 
     public object Part2(string input)
     {
-        return Enumerable
-            .First<(int First, int Second)>(Enumerable
-                .Order<int>(input.ToLines(Parse))
-                .Pairwise(), tuple => tuple.First + 1 == tuple.Second - 1)
+        return input.ToLines(Parse)
+            .Order()
+            .Pairwise()
+            .First(tuple => tuple.First + 1 == tuple.Second - 1)
             .First + 1;
     }
 

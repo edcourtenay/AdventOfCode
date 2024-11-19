@@ -19,8 +19,8 @@ public class Day07 : IPuzzle
     {
         var comparer = new HandComparer(joker);
 
-        return Enumerable
-            .Select<string, Hand>(input.ToLines(), line => ParseLine(line, joker)).OrderBy(x => x, comparer)
+        return input.ToLines()
+            .Select<string, Hand>(line => ParseLine(line, joker)).OrderBy(x => x, comparer)
             .Select((hand, i) => (Hand: hand, Rank: i + 1))
             .Sum(tuple => tuple.Hand.Bid * tuple.Rank);
     }

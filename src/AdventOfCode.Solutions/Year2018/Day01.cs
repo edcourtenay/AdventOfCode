@@ -4,7 +4,7 @@
 public class Day01 : IPuzzle
 {
     public object Part1(string input) =>
-        Enumerable.Sum((IEnumerable<int>)input.ToLines(int.Parse));
+        ((IEnumerable<int>)input.ToLines(int.Parse)).Sum();
 
     public object Part2(string input)
     {

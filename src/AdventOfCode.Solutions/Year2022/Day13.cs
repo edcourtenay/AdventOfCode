@@ -7,9 +7,9 @@ public class Day13 : IPuzzle
 {
     public object Part1(string input)
     {
-        return Enumerable
-            .Select<IEnumerable<JsonNode>, JsonNode[]>(ToPackets(input)
-                .Window(2), nodes => Enumerable.ToArray<JsonNode>(nodes))
+        return ToPackets(input)
+            .Window(2)
+            .Select<IEnumerable<JsonNode>, JsonNode[]>(nodes => nodes.ToArray())
             .Select((pair, index) => CompareNodes(pair[0], pair[1]) < 0 ? index + 1 : 0)
             .Sum();
     }
@@ -27,8 +27,8 @@ public class Day13 : IPuzzle
 
     static IEnumerable<JsonNode> ToPackets(string input)
     {
-        return Enumerable
-            .Where<string>(input.ToLines(), line => !string.IsNullOrEmpty(line)).Select(line => JsonNode.Parse(line)!);
+        return input.ToLines()
+            .Where(line => !string.IsNullOrEmpty(line)).Select(line => JsonNode.Parse(line)!);
     }
 
     static int CompareNodes(JsonNode? left, JsonNode? right)

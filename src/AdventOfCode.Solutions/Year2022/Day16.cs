@@ -25,8 +25,8 @@ public partial class Day16 : IPuzzle
 
     private static long Solve(string input, Func<Dictionary<string, int>, Dictionary<string, Dictionary<string, long>>, Dictionary<string, int>, long> func)
     {
-        var lines = Enumerable
-            .Select<string, string[]>(input.ToLines(), x => LineSplitRegex().Split(x)).ToList();
+        var lines = input.ToLines()
+            .Select<string, string[]>(x => LineSplitRegex().Split(x)).ToList();
 
         var neighbours = lines
             .ToDictionary(x => x[1], x => new HashSet<string>(x.Skip(10)));

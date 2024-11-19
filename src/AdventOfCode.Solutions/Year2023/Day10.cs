@@ -128,7 +128,7 @@ public class Day10 : IPuzzle
     private static (Point, int[][]) Parse(string input)
     {
         Point startPosition = (0, 0);
-        var map =input.ToLines((line, y) => Enumerable.Select<char, int>(line, (c, x) =>
+        var map =input.ToLines((line, y) => line.Select((c, x) =>
         {
             if (c == 'S')
             {
@@ -147,7 +147,7 @@ public class Day10 : IPuzzle
                 _ => throw new Exception($"Unknown direction: {c}")
             };
         }));
-        int[][] array = Enumerable.Select<IEnumerable<int>, int[]>(map.Pivot(), ints => Enumerable.ToArray<int>(ints)).ToArray();
+        int[][] array = map.Pivot().Select<IEnumerable<int>, int[]>(ints => ints.ToArray()).ToArray();
         return (startPosition, array);
     }
 

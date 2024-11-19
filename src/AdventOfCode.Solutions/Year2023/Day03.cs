@@ -18,15 +18,15 @@ public partial class Day03 : IPuzzle
         return Solve(input, FindGearRatios);
     }
 
-    private static object Solve(string input, Func<IList<ValueCapture>, IList<SymbolCapture>, IEnumerable<int>> func)
+    private static int Solve(string input, Func<IList<ValueCapture>, IList<SymbolCapture>, IEnumerable<int>> func)
     {
-        var lines = Enumerable
-            .Select<string, (string s, int i)>(input.ToLines(), (s, i) => (s, i));
+        var lines = input.ToLines()
+            .Index();
 
         List<ValueCapture> values = [];
         List<SymbolCapture> symbols = [];
 
-        foreach ((string? line, int y) in lines)
+        foreach ((int y, string? line) in lines)
         {
             foreach (Match match in Regex().Matches(line))
             {

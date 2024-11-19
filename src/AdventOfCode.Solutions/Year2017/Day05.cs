@@ -17,7 +17,7 @@ public class Day05 : IPuzzle
 
     private static int ExecuteSteps(string input, Func<int, int> offsetFunc)
     {
-        var array = Enumerable.ToArray<int>(input.ToLines(int.Parse));
+        var array = input.ToLines(int.Parse).ToArray();
         var index = 0;
         var steps = 0;
 

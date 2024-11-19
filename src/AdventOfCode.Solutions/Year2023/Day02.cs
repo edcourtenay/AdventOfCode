@@ -5,17 +5,17 @@ public class Day02 : IPuzzle
 {
     public object Part1(string input)
     {
-        return Enumerable
-            .Select<string, Game>(input.ToLines(), ParseGame)
+        return input.ToLines()
+            .Select(ParseGame)
             .Where(FilterImpossible)
             .Sum(game => game.Id);
     }
 
     public object Part2(string input)
     {
-        return Enumerable
-            .Select<string, Game>(input.ToLines(), ParseGame)
-            .Sum(game => Enumerable.Max(game.Sets, set => set.Red) * game.Sets.Max(set => set.Green) *
+        return input.ToLines()
+            .Select(ParseGame)
+            .Sum(game => game.Sets.Max(set => set.Red) * game.Sets.Max(set => set.Green) *
                          game.Sets.Max(set => set.Blue));
     }
 

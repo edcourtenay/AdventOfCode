@@ -17,9 +17,9 @@ public class Day02 : IPuzzle
 
     private static int Execute(string input, Func<string, (Choice Player, Choice Opponent)> convert)
     {
-        return Enumerable
-            .Select<(Choice Player, Choice Opponent), int>(input
-                .ToLines(convert), r => Score(r.Player, r.Opponent))
+        return input
+            .ToLines(convert)
+            .Select(r => Score(r.Player, r.Opponent))
             .Sum();
     }
 

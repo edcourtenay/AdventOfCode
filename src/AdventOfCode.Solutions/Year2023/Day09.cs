@@ -17,13 +17,13 @@ public class Day09 : IPuzzle
 
     private static long Solve(string input, Func<(long left, long right), long> selector)
     {
-        return Enumerable
-            .Select<long[], (long left, long right)>(input.ToLines(line => Enumerable.Select<string, long>(line.Split(' '), long.Parse).ToArray()), Extrapolate<long>)
+        return input.ToLines(line => line.Split(' ').Select(long.Parse).ToArray())
+            .Select(Extrapolate)
             .Sum(selector);
     }
 
     public static T[] GenerateSequence<T>(IEnumerable<T> input) where T : INumber<T> =>
-        Enumerable.Select<IEnumerable<T>, T[]>(input.SlidingWindow(2), window => Enumerable.ToArray<T>(window)).Select(w => w[1] - w[0]).ToArray();
+        input.SlidingWindow(2).Select<IEnumerable<T>, T[]>(window => window.ToArray()).Select(w => w[1] - w[0]).ToArray();
 
     public static (T left, T right) Extrapolate<T>(T[] input) where T : INumber<T>
     {

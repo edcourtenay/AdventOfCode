@@ -42,8 +42,8 @@ public class Day02 : IPuzzle {
 
     private static IEnumerable<int[]> ParseInput(string input)
     {
-        return Enumerable
-            .Select<string, int[]>(input.ToLines(), line => Enumerable
-                .Select<string, int>(line.Split('\t'), int.Parse).ToArray());
+        return input.ToLines()
+            .Select<string, int[]>(line => line.Split('\t')
+                .Select(int.Parse).ToArray());
     }
 }

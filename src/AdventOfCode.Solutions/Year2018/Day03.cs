@@ -16,7 +16,7 @@ public partial class Day03 : IPuzzle
 
     public object Part2(string input)
     {
-        var claims = Enumerable.ToArray<Claim>(input.ToLines(Claim.Parse));
+        var claims = input.ToLines(Claim.Parse).ToArray();
 
         Dictionary<(int x, int y), List<int>> dict = ParseClaims(claims);
 

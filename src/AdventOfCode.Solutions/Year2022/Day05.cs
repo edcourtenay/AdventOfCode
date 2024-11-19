@@ -28,8 +28,8 @@ public partial class Day05 : IPuzzle
         var arr = strings.ToArray();
         var maxLength = arr.Max(s => s.Length);
 
-        return Enumerable.Select<IEnumerable<char>, string>(arr.Select(s => s.PadRight(maxLength, ' '))
-                .Pivot(), chars => new string(Enumerable.Reverse<char>(chars).ToArray())).Where(s1 => s1.Length != 0 && char.IsDigit(s1[0]))
+        return arr.Select(s => s.PadRight(maxLength, ' '))
+            .Pivot().Select<IEnumerable<char>, string>(chars => new string(chars.Reverse().ToArray())).Where(s1 => s1.Length != 0 && char.IsDigit(s1[0]))
             .Select(s2 => new Stack<char>(s2.Trim()[1..])).ToArray();
     }
 
