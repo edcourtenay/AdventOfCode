@@ -62,8 +62,7 @@ static string Run(PuzzleContainer puzzle, string part, string input, Func<IPuzzl
         {
             var start = Stopwatch.GetTimestamp();
             obj = func(puzzle.Puzzle, input);
-            var end = Stopwatch.GetTimestamp();
-            times.Add(Stopwatch.GetElapsedTime(start, end));
+            times.Add(Stopwatch.GetElapsedTime(start));
         }
     }
     catch (NotImplementedException)
@@ -113,22 +112,21 @@ static Dictionary<int, DayResult> Results(int year)
     return results ?? new Dictionary<int, DayResult>();
 }
 
-static string FormatTimeSpan(TimeSpan elapsed)
-{
-    string timeColour = elapsed.TotalMilliseconds switch
+static string FormatTimeSpan(TimeSpan elapsed) => 
+    $"[{TimeColour(elapsed)}]{TimeDisplay(elapsed),12}[/]";
+
+static string TimeColour(TimeSpan elapsed) =>
+    elapsed.TotalMilliseconds switch
     {
         > 1000 => "red",
         > 500 => "yellow",
         _ => "green"
     };
 
-    string timeDisplay = elapsed switch
+static string TimeDisplay(TimeSpan elapsed) =>
+    elapsed switch
     {
         { TotalSeconds: >= 1 } => $"{elapsed.TotalSeconds:#,##0.00}s ",
         { TotalMilliseconds: >= 1 } => $"{elapsed.TotalMilliseconds:#,##0.00}ms",
-        _ => $"{elapsed.TotalMicroseconds:#,##0.00}μs"
+        _ => $"{elapsed.TotalMicroseconds:N0}μs"
     };
-
-    var timeString = $"[{timeColour}]{timeDisplay,12}[/]";
-    return timeString;
-}
