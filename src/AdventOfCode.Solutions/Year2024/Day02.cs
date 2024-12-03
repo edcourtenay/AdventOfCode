@@ -13,7 +13,7 @@ public class Day02 : IPuzzle
         return Process(input, true);
     }
 
-    private static object Process(string input, bool useDampener = false)
+    private static int Process(string input, bool useDampener = false)
     {
         var data = input.ToLines()
             .Select(i => i.Split(" ", StringSplitOptions.RemoveEmptyEntries)
@@ -21,19 +21,20 @@ public class Day02 : IPuzzle
                 .ToArray());
 
         return data.Select(line => Variants(line, useDampener)
-                .Any(ints => ProcessLine(ref ints)))
+                .Any(ints => ProcessLine(ints)))
             .Count(result => result);
     }
 
-    private static bool ProcessLine(ref int[] line)
+    private static bool ProcessLine(ReadOnlySpan<int> line)
     {
         var first = true;
         int slope = 0;
         bool safe = true;
-        foreach (var window in line.SlidingWindow(2))
+        for (int i = 0; i < line.Length - 1; i++)
         {
-            var pair = window.ToArray();
-            var direction = pair[1].CompareTo(pair[0]);
+            var a = line[i];
+            var b = line[i + 1];
+            var direction = b.CompareTo(a);
 
             if (first)
             {
@@ -41,11 +42,13 @@ public class Day02 : IPuzzle
                 first = false;
             }
 
-            if (Math.Abs(pair[1] - pair[0]) is < 1 or > 3 || slope != direction)
+            if (Math.Abs(b - a) is >= 1 and <= 3 && slope == direction)
             {
-                safe = false;
-                break;
+                continue;
             }
+
+            safe = false;
+            break;
         }
 
         return safe;
