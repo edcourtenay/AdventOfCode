@@ -6,7 +6,19 @@ public class Day06Tests : IClassFixture<Day06>
 {
     private readonly Day06 _sut;
 
-    private const string TestData = "";
+    private const string TestData = 
+        """
+        ....#.....
+        .........#
+        ..........
+        ..#.......
+        .......#..
+        ..........
+        .#..^.....
+        ........#.
+        #.........
+        ......#...
+        """;
 
     public Day06Tests(Day06 sut)
     {
@@ -16,7 +28,7 @@ public class Day06Tests : IClassFixture<Day06>
     [Fact]
     public void Part1Example()
     {
-        _sut.Part1(TestData).Should().Be("");
+        _sut.Part1(TestData).As<int>().Should().Be(41);
     }
     
     [Fact]
