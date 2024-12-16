@@ -182,10 +182,12 @@ public static class EnumerableExtensions
         }
     }
 
-    public static IEnumerable<IEnumerable<T>> Combinations<T>(this T[] source, int width)
+    public static IEnumerable<IEnumerable<T>> Combinations<T>(this IEnumerable<T> source, int width)
     {
-        return GetCombinations(n: source.Length, k: width)
-            .Select(indexes => indexes.Select(i => source[i - 1]));
+        var arr = source as T[] ?? source.ToArray();
+
+        return GetCombinations(n: arr.Length, k: width)
+            .Select(indexes => indexes.Select(i => arr[i - 1]));
 
         static IEnumerable<int[]> GetCombinations(int k, int n)
         {
