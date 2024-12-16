@@ -27,7 +27,7 @@ public class Day07Tests : IClassFixture<Day07>
     [Fact]
     public void Part1Example()
     {
-        _sut.Part1(TestData).As<int>().Should().Be(3749);
+        _sut.Part1(TestData).As<long>().Should().Be(3749);
     }
     
     [Fact]

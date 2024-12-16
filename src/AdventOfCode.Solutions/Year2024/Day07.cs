@@ -24,7 +24,7 @@ public class Day07 : IPuzzle
 
     public bool EvaluateLine((long target, long[] numbers) line)
     {
-        int combinations = (line.numbers.Length - 1) * 2;
+        int combinations = 0x1 << (line.numbers.Length - 1);
         for (int i = 0; i < combinations; i++)
         {
             int x = i;

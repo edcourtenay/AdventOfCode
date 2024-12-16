@@ -28,4 +28,5 @@ public static class Maths
             b = temp % b;
         }
     }
+
 }
