@@ -1,6 +1,5 @@
-using Point = (int x, int y);
-using Edge = ((int x, int y) point, int cost);
-using Edges = System.Collections.Generic.Dictionary<(int x, int y), System.Collections.Generic.HashSet<((int x, int y), int cost)>>;
+//using Edge = (AdventOfCode.Solutions.Point point, int cost);
+using Edges = System.Collections.Generic.Dictionary<AdventOfCode.Solutions.Point<int>, System.Collections.Generic.HashSet<AdventOfCode.Solutions.Year2023.Day23.Edge>>;
 namespace AdventOfCode.Solutions.Year2023;
 
 [Description("A Long Walk")]
@@ -23,16 +22,16 @@ public class Day23 : IPuzzle
     private static int CalculateLongestPath(Edges edges)
     {
         var list = edges.Where(kvp => kvp.Value.Count == 1)
-            .OrderBy(kvp => kvp.Key.y)
-            .ThenBy(kvp => kvp.Key.x)
+            .OrderBy(kvp => kvp.Key.X)
+            .ThenBy(kvp => kvp.Key.Y)
             .ToArray();
 
         var start = list[0].Key;
         var end = list[^1].Key;
 
         Stack<Edge> q = new();
-        q.Push((start, 0));
-        HashSet<(int, int)> visited = [];
+        q.Push(new Edge(start, 0));
+        HashSet<Point> visited = [];
 
         int best = 0;
         while (q.TryPop(out var current)) {
@@ -50,10 +49,10 @@ public class Day23 : IPuzzle
                 continue;
             }
 
-            q.Push((current.point, -1));
+            q.Push(current with { cost = -1 });
             foreach ((Point next, int cost) in edges[current.point])
             {
-                q.Push((next, cost + current.cost));
+                q.Push(new Edge(next, cost + current.cost));
             }
         }
 
@@ -62,31 +61,31 @@ public class Day23 : IPuzzle
 
     private static Edges ParseInput(string input, bool ignoreSlopes = false)
     {
-        var directions = new[] { (0, -1), (-1, 0) };
+        Direction[] directions = [(0, -1), (-1, 0)];
 
         Edges edges = new();
         var points = input
             .ToLines()
             .SelectMany((s, y) =>
-                s.Select(((c, x) => (c, x, y))))
+                s.Select(((c, x) => (c, new Point(x, y)))))
             .Where(t => t.c != '#');
 
-        var queue = new Queue<(char c, int x, int y)>();
+        var queue = new Queue<(char c, Point p)>();
 
-        foreach ((char c, int x, int y) current in points)
+        foreach ((char c, Point p) current in points)
         {
             HashSet<Edge> targets = [];
 
-            foreach (Point direction in directions)
+            foreach (Direction direction in directions)
             {
-                Point next = (current.x + direction.x, current.y + direction.y);
+                Point next = current.p + direction;
                 if (!edges.ContainsKey(next))
                 {
                     continue;
                 }
 
-                targets.Add((next, 1));
-                edges[next].Add(((current.x, current.y), 1));
+                targets.Add(new Edge(next, 1));
+                edges[next].Add(new Edge(current.p, 1));
 
                 if (ignoreSlopes || current.c == '.')
                 {
@@ -96,17 +95,17 @@ public class Day23 : IPuzzle
                 queue.Enqueue(current);
             }
 
-            edges[(current.x, current.y)] = targets;
+            edges[current.p] = targets;
         }
 
         while(queue.TryDequeue(out var current))
         {
-            edges[(current.x, current.y)] = current.c switch
+            edges[current.p] = current.c switch
             {
-                '>' => [((current.x + 1, current.y), 1)],
-                '<' => [((current.x - 1, current.y), 1)],
-                '^' => [((current.x, current.y - 1), 1)],
-                'v' => [((current.x, current.y + 1), 1)],
+                '>' => [new Edge(current.p + Direction.East, 1)],
+                '<' => [new Edge(current.p + Direction.West, 1)],
+                '^' => [new Edge(current.p + Direction.North, 1)],
+                'v' => [new Edge(current.p + Direction.South, 1)],
                 _ => throw new ArgumentOutOfRangeException(nameof(current.c))
             };
         }
@@ -119,7 +118,7 @@ public class Day23 : IPuzzle
     private static void CollapseEdges(Edges edges)
     {
         var remove = new List<Point>();
-        foreach (KeyValuePair<Point, HashSet<(Point, int cost)>> kvp in edges)
+        foreach (KeyValuePair<Point, HashSet<Edge>> kvp in edges)
         {
             if (kvp.Value.Count != 2)
             {
@@ -132,11 +131,11 @@ public class Day23 : IPuzzle
 
             remove.Add(kvp.Key);
 
-            edges[first.point].Remove((kvp.Key, first.cost));
-            edges[last.point].Remove((kvp.Key, last.cost));
+            edges[first.point].Remove(first with { point = kvp.Key });
+            edges[last.point].Remove(last with { point = kvp.Key });
 
-            edges[first.point].Add((last.point, costDelta));
-            edges[last.point].Add((first.point, costDelta));
+            edges[first.point].Add(last with { cost = costDelta });
+            edges[last.point].Add(first with { cost = costDelta });
         }
 
         foreach (Point point in remove)
@@ -144,4 +143,6 @@ public class Day23 : IPuzzle
             edges.Remove(point);
         }
     }
+
+    public readonly record struct Edge(Point<int> point, int cost);
 }

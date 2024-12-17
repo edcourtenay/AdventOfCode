@@ -1,7 +1,3 @@
-using System.Numerics;
-
-using Point = (long X, long Y);
-
 namespace AdventOfCode.Solutions.Year2023;
 
 [Description("Cosmic Expansion")]
@@ -21,28 +17,28 @@ public class Day11 : IPuzzle
     {
         return Expand(Parse(input), expansionFactor).ToArray()
             .Combinations(2)
-            .Select<IEnumerable<Point>, Point[]>(tuples => tuples.ToArray())
-            .Sum(tuples => GetManhattanDistance(tuples[0], tuples[1]));
+            .Select(tuples => tuples.ToArray())
+            .Sum(points => Point<long>.ManhattanDistance(points[0], points[1]));
     }
 
-    public static IEnumerable<Point> Parse(string input)
+    public static IEnumerable<Point<long>> Parse(string input)
     {
         return input.ToLines()
             .Select<string, (string line, int y)>((line, y) => (line, y))
             .SelectMany(t => t.line.Select((c, x) => (c, x, t.y)).Where(u => u.c == '#'))
-            .Select(t => ((long)t.x, (long)t.y));
+            .Select(t => new Point<long>(t.x, t.y));
     }
 
-    public static IEnumerable<Point> Expand(IEnumerable<Point> source, long expansionFactor)
+    public static IEnumerable<Point<long>> Expand(IEnumerable<Point<long>> source, long expansionFactor)
     {
-        List<Point> points = source.ToList();
+        List<Point<long>> points = source.ToList();
         return ExpandAxis(
             ExpandAxis(points, points.MinMaxBy(p => p.X), (point, i) => point.X == i,
                 (point, i) => (point.X + i, point.Y), expansionFactor), points.MinMaxBy(p => p.Y),
             (point, i) => point.Y == i, (point, i) => (point.X, point.Y + i), expansionFactor);
     }
 
-    private static IEnumerable<Point> ExpandAxis(IEnumerable<Point> source, (long min, long max) extents, Func<Point, long, bool> predicate, Func<Point, long, Point> generator, long expansionFactor)
+    private static IEnumerable<Point<long>> ExpandAxis(IEnumerable<Point<long>> source, (long min, long max) extents, Func<Point<long>, long, bool> predicate, Func<Point<long>, long, Point<long>> generator, long expansionFactor)
     {
         var points = source.ToList();
 
@@ -58,15 +54,10 @@ public class Day11 : IPuzzle
                 continue;
             }
 
-            foreach (Point point in set)
+            foreach (Point<long> point in set)
             {
                 yield return generator(point, expansion);
             }
         }
-    }
-
-    private static T GetManhattanDistance<T>((T x, T y) p1, (T x, T y) p2) where T : INumber<T>
-    {
-        return T.Abs(p1.x - p2.x) + T.Abs(p1.y - p2.y);
     }
 }

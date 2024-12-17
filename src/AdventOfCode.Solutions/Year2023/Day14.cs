@@ -1,6 +1,3 @@
-using Point = (int x, int y);
-using GridData = (int xLength, int yLength, System.Collections.Generic.Dictionary<(int x, int y), char> positions);
-
 namespace AdventOfCode.Solutions.Year2023;
 
 [Description("Parabolic Reflector Dish")]
@@ -25,7 +22,7 @@ public class Day14 : IPuzzle
     private static int CalculateNorthLoad(GridData grid) =>
         grid.positions
             .Where(kvp => kvp.Value == 'O')
-            .Select(kvp => grid.yLength - kvp.Key.y)
+            .Select(kvp => grid.yLength - kvp.Key.Y)
             .Sum();
 
     public static void Cycle(GridData grid)
@@ -40,10 +37,10 @@ public class Day14 : IPuzzle
     {
         (int dx, int dy, Func<GridData, IEnumerable<Point>> f) tuple = direction switch
             {
-                Direction.North => (0, -1, data => data.positions.Keys.Where(p => p.y > 0).OrderBy(p => p.y)),
-                Direction.South => (0, 1, data => data.positions.Keys.Where(p => p.y < grid.yLength - 1).OrderByDescending(p => p.y)),
-                Direction.West => (-1, 0, data => data.positions.Keys.Where(p => p.x > 0).OrderBy(p => p.x)),
-                Direction.East => (1, 0, data => data.positions.Keys.Where(p => p.x < grid.xLength - 1).OrderByDescending(p => p.x)),
+                Direction.North => (0, -1, data => data.positions.Keys.Where(p => p.Y > 0).OrderBy(p => p.Y)),
+                Direction.South => (0, 1, data => data.positions.Keys.Where(p => p.Y < grid.yLength - 1).OrderByDescending(p => p.Y)),
+                Direction.West => (-1, 0, data => data.positions.Keys.Where(p => p.X > 0).OrderBy(p => p.X)),
+                Direction.East => (1, 0, data => data.positions.Keys.Where(p => p.X < grid.xLength - 1).OrderByDescending(p => p.X)),
                 _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
             };
 
@@ -60,7 +57,7 @@ public class Day14 : IPuzzle
 
     private static void AttemptMove(GridData grid, int dX, int dY, Point position)
     {
-        Point testPosition = (position.x + dX, position.y + dY);
+        Point testPosition = (position.X + dX, position.Y + dY);
 
         if (!grid.positions.TryGetValue(position, out var c) || c != 'O' || grid.positions.ContainsKey(testPosition))
         {
@@ -71,10 +68,10 @@ public class Day14 : IPuzzle
         do
         {
             lastLegal = testPosition;
-            testPosition = (testPosition.x + dX, testPosition.y + dY);
-        } while (testPosition is { x: >= 0, y: >= 0 }
-                 && testPosition.x < grid.xLength
-                 && testPosition.y < grid.yLength
+            testPosition = (testPosition.X + dX, testPosition.Y + dY);
+        } while (testPosition is { X: >= 0, Y: >= 0 }
+                 && testPosition.X < grid.xLength
+                 && testPosition.Y < grid.yLength
                  && !grid.positions.ContainsKey(testPosition));
 
         grid.positions[lastLegal] = 'O';
@@ -114,19 +111,21 @@ public class Day14 : IPuzzle
             .ToHashSet();
 
         var dictionary = positions
-            .ToDictionary(t => (t.x, t.y), t => t.c);
+            .ToDictionary(t => new Point(t.x, t.y), t => t.c);
 
-        return (positions.Max(t => t.x + 1), positions.Max(t => t.y + 1), dictionary);
+        return new GridData(positions.Max(t => t.x + 1), positions.Max(t => t.y + 1), dictionary);
     }
 
     private static long GenerateHashCode(GridData grid) =>
         grid.positions
             .Where(pair => pair.Value == 'O')
-            .Select(kvp => (long)HashCode.Combine(kvp.Key.x, kvp.Key.y))
+            .Select(kvp => (long)HashCode.Combine(kvp.Key.X, kvp.Key.Y))
             .Sum();
 
     public enum  Direction
     {
         North, South, East, West
     }
+
+    public readonly record struct GridData(int xLength, int yLength, Dictionary<Point, char> positions);
 }

@@ -1,9 +1,3 @@
-using System.Numerics;
-
-using Point = (int x, int y);
-using Direction = (int dX, int dY);
-using Path = ((int x, int y) point, (int dX, int dY) direction, int length);
-
 namespace AdventOfCode.Solutions.Year2023;
 
 [Description("Clumsy Crucible")]
@@ -13,14 +7,14 @@ public class Day17 : IPuzzle
     {
         var grid = ToGrid(input);
 
-        return Solve(grid, GetDirections, (target, path) => path.point == target);
+        return Solve(grid, GetDirections, (target, path) => path.Point == target);
     }
 
     public object Part2(string input)
     {
         var grid = ToGrid(input);
 
-        return Solve(grid, GetDirections2, (target, path) => path.point == target && path.length > 3);
+        return Solve(grid, GetDirections2, (target, path) => path.Point == target && path.Length > 3);
     }
 
     private static int Solve(Dictionary<Point, int> grid, Func<Direction, int, IEnumerable<Direction>> directionsFunc,
@@ -30,11 +24,11 @@ public class Day17 : IPuzzle
 
         var queue = new PriorityQueue<Path, int>();
 
-        var startEast = ((0, 0), (0, 1), 0);
-        var startSouth = ((0, 0), (1, 0), 0);
+        var startEast = new Path((0, 0), (0, 1), 0);
+        var startSouth = new Path((0, 0), (1, 0), 0);
 
-        int maxX = grid.Keys.Max(p => p.x);
-        int maxY = grid.Keys.Max(p => p.y);
+        int maxX = grid.Keys.Max(p => p.X);
+        int maxY = grid.Keys.Max(p => p.Y);
 
         Point target = (maxX, maxY);
 
@@ -50,15 +44,15 @@ public class Day17 : IPuzzle
                 return cost;
             }
 
-            foreach (var direction in directionsFunc(path.direction, path.length))
+            foreach (var direction in directionsFunc(path.Direction, path.Length))
             {
-                Point next = (path.point.x + direction.dX, path.point.y + direction.dY);
-                if (next.x < 0 || next.x > maxX || next.y < 0 || next.y > maxY)
+                Point next = (path.Point.X + direction.X, path.Point.Y + direction.Y);
+                if (next.X < 0 || next.X > maxX || next.Y < 0 || next.Y > maxY)
                 {
                     continue;
                 }
 
-                Path nextPath = (next, direction, direction == path.direction ? path.length + 1 : 1);
+                Path nextPath = new (next, direction, direction == path.Direction ? path.Length + 1 : 1);
                 int nextCost = distances[path] + grid[next];
 
                 if (nextCost >= distances.GetValueOrDefault(nextPath, int.MaxValue))
@@ -67,7 +61,7 @@ public class Day17 : IPuzzle
                 }
 
                 distances[nextPath] = nextCost;
-                queue.Enqueue(nextPath, nextCost + ManhattanDistance(next, target));
+                queue.Enqueue(nextPath, nextCost + Point.ManhattanDistance(next, target));
             }
         }
 
@@ -81,8 +75,8 @@ public class Day17 : IPuzzle
             yield return direction;
         }
 
-        yield return RotateLeft(direction);
-        yield return RotateRight(direction);
+        yield return direction.RotateLeft;
+        yield return direction.RotateRight;
     }
 
     private static IEnumerable<Direction> GetDirections2(Direction direction, int length)
@@ -98,21 +92,10 @@ public class Day17 : IPuzzle
                     yield return direction;
                 }
 
-                yield return RotateLeft(direction);
-                yield return RotateRight(direction);
+                yield return direction.RotateLeft;
+                yield return direction.RotateRight;
                 break;
         }
-    }
-
-    private static Direction RotateLeft(Direction direction) =>
-        (-direction.dY, direction.dX);
-
-    private static Direction RotateRight(Direction direction) =>
-        (direction.dY, -direction.dX);
-
-    private static T ManhattanDistance<T>((T x, T y) p1, (T x, T y) p2) where T : INumber<T>
-    {
-        return T.Abs(p1.x - p2.x) + T.Abs(p1.y - p2.y);
     }
 
     private static Dictionary<Point, int> ToGrid(string input)
@@ -129,4 +112,6 @@ public class Day17 : IPuzzle
 
         return grid;
     }
+
+    private readonly record struct Path(Point Point, Direction Direction, int Length);
 }

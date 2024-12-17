@@ -1,5 +1,4 @@
-using Point = (int x, int y);
-using Garden = (string[] map, (int x, int y) start, int size);
+using Garden = (string[] map, AdventOfCode.Solutions.Point<int> start, int size);
 
 namespace AdventOfCode.Solutions.Year2023;
 
@@ -53,8 +52,8 @@ public class Day21 : IPuzzle
 
             foreach(var direction in directions)
             {
-                var newX = location.point.x + direction.x;
-                var newY = location.point.y + direction.y;
+                var newX = location.point.X + direction.X;
+                var newY = location.point.Y + direction.Y;
 
                 int wrapX = ((newX % garden.size) + garden.size) % garden.size;
                 int wrapY = ((newY % garden.size) + garden.size) % garden.size;

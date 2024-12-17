@@ -1,6 +1,5 @@
-using Point = (int X, int Y);
-using Pattern = System.Collections.Generic.IReadOnlySet<(int X, int Y)>;
-using Patterns = System.Collections.Generic.IEnumerable<System.Collections.Generic.IReadOnlySet<(int X, int Y)>>;
+using Pattern = System.Collections.Generic.IReadOnlySet<AdventOfCode.Solutions.Point<int>>;
+using Patterns = System.Collections.Generic.IEnumerable<System.Collections.Generic.IReadOnlySet<AdventOfCode.Solutions.Point<int>>>;
 
 namespace AdventOfCode.Solutions.Year2023;
 
@@ -46,5 +45,5 @@ public class Day13 : IPuzzle
             .ToHashSet();
 
     private static IEnumerable<Point> ParseLine(string line, int y) =>
-        line.Select((c, x) => (c, x)).Where(t => t.c == '#').Select(t => (t.x, y));
+        line.Select((c, x) => (c, x)).Where(t => t.c == '#').Select(t => new Point(t.x, y));
 }

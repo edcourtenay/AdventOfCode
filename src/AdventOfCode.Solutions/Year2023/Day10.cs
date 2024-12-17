@@ -1,5 +1,3 @@
-using Point = (int X, int Y);
-
 namespace AdventOfCode.Solutions.Year2023;
 
 [Description("Pipe Maze")]

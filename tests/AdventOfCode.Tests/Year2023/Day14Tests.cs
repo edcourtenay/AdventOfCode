@@ -102,7 +102,7 @@ public class Day14Tests : IClassFixture<Day14>
     [Fact]
     public void TiltNorthTest()
     {
-        (int xLength, int yLength, Dictionary<(int x, int y), char> positions) grid = ParseInput(TestData);
+        var grid = ParseInput(TestData);
         Tilt(grid, Direction.North);
 
         string trim = GridToString(grid);
@@ -116,7 +116,7 @@ public class Day14Tests : IClassFixture<Day14>
     [InlineData(AfterCycle2, AfterCycle3)]
     public void CycleTest(string input, string expected)
     {
-        (int xLength, int yLength, Dictionary<(int x, int y), char> positions) grid = ParseInput(input);
+        var grid = ParseInput(input);
         Cycle(grid);
 
         string trim = GridToString(grid);
@@ -124,7 +124,7 @@ public class Day14Tests : IClassFixture<Day14>
         trim.Should().BeEquivalentTo(expected);
     }
 
-    private static string GridToString((int xLength, int yLength, Dictionary<(int x, int y), char> positions) grid)
+    private static string GridToString(GridData grid)
     {
         StringBuilder? sb = new();
         for (int y = 0; y < grid.yLength; y++)
