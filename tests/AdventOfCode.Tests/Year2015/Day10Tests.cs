@@ -2,8 +2,15 @@
 
 namespace AdventOfCode.Tests.Year2015;
 
-public class Day10Tests
+public class Day10Tests : IClassFixture<Day10>
 {
+    private readonly Day10 _sut;
+
+    public Day10Tests(Day10 sut)
+    {
+        _sut = sut;
+    }
+
     [Theory(DisplayName = "LookAndSay should produce expected results")]
     [InlineData("1", "11")]
     [InlineData("11", "21")]
@@ -12,20 +19,12 @@ public class Day10Tests
     [InlineData("111221", "312211")]
     public void LookAndSayTests(string input, string expected)
     {
-        Day10 sut = new();
-
-        string result = sut.LookAndSay(input);
-
-        result.Should().Be(expected);
+        _sut.LookAndSay(input).Should().Be(expected);
     }
 
     [Fact(DisplayName = "Iterate should produce expected result")]
     public void IterateTest()
     {
-        Day10 sut = new();
-
-        string result = sut.Iterate(5, "1");
-
-        result.Should().Be("312211");
+        _sut.Iterate(5, "1").Should().Be("312211");
     }
 }

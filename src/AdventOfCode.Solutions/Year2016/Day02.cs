@@ -15,11 +15,11 @@ public class Day02 : IPuzzle
         return FindCombination(input, (0, 2), IsKeyValid2, DiamondPad);
     }
 
-    private static string FindCombination(string input, (int, int) startKey, Func<(int col, int row), bool> validFunc,
-        Func<(int col, int row), char> charFunc)
+    private static string FindCombination(string input, Point startKey, Func<Point, bool> validFunc,
+        Func<Point, char> charFunc)
     {
         StringBuilder sb = new();
-        (int col, int row) key = startKey;
+        Point key = startKey;
         foreach (var line in input.ToLines())
         {
             key = IterateKeys(line, key, validFunc).Last();
@@ -29,43 +29,37 @@ public class Day02 : IPuzzle
         return sb.ToString();
     }
 
-    private static IEnumerable<(int, int)> IterateKeys(string instructions, (int, int) position,
-        Func<(int col, int row), bool> isKeyValid)
+    private static IEnumerable<Point> IterateKeys(string instructions, Point position,
+        Func<Point, bool> isKeyValid)
     {
         yield return position;
-        
-        (int col, int row) = position;
-        foreach (char instruction in instructions)
-        {
-            (int newCol, int newRow) = instruction switch
-            {
-                'U' => (col, row - 1),
-                'D' => (col, row + 1),
-                'L' => (col - 1, row),
-                'R' => (col + 1, row),
-                _ => throw new ArgumentOutOfRangeException()
-            };
 
-            if (isKeyValid((newCol, newRow)))
-            {
-                yield return (newCol, newRow);
-                (col, row) = (newCol, newRow);
-            }
+        foreach (var newPos in instructions.Select(instruction => position + instruction switch
+                 {
+                     'U' => Direction.North,
+                     'D' => Direction.South,
+                     'L' => Direction.West,
+                     'R' => Direction.East,
+                     _ => throw new ArgumentOutOfRangeException()
+                 }).Where(isKeyValid))
+        {
+            yield return newPos;
+            position = newPos;
         }
     }
 
-    private static bool IsKeyValid1((int col, int row) position) 
-        => !(position.col is < 0 or > 2 || position.row is < 0 or > 2);
+    private static bool IsKeyValid1(Point position) 
+        => !(position.X is < 0 or > 2 || position.Y is < 0 or > 2);
 
-    private static bool IsKeyValid2((int col, int row) position) 
-        => !(position.col is < 0 or > 4 || position.row is < 0 or > 4) && DiamondPad(position) != '.';
+    private static bool IsKeyValid2(Point position) 
+        => !(position.X is < 0 or > 4 || position.Y is < 0 or > 4) && DiamondPad(position) != '.';
 
-    private static char SquarePad((int col, int row) position) 
-        => (char)('1' + position.col + position.row * 3);
+    private static char SquarePad(Point position) 
+        => (char)('1' + position.X + position.Y * 3);
 
-    private static char DiamondPad((int col, int row) position)
+    private static char DiamondPad(Point position)
     {
         const string pad = "..1...234.56789.ABC...D..";
-        return pad[position.row * 5 + position.col];
+        return pad[position.Y * 5 + position.X];
     }
 }

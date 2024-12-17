@@ -9,7 +9,7 @@ public partial class Day14 : IPuzzle
 
     public object Part2(string input) => Solve(input, (500, 0), true);
 
-    private static object Solve(string input, (int, int) start, bool useFloor)
+    private static object Solve(string input, Point start, bool useFloor)
     {
         var set = input.ToLines()
             .SelectMany(ParseLine)
@@ -19,39 +19,38 @@ public partial class Day14 : IPuzzle
             .Count();
     }
 
-    private static IEnumerable<(int X, int Y)> ParseLine(string line)
+    private static IEnumerable<Point> ParseLine(string line)
     {
         var list = PointsRegex().Matches(line)
             .Where(match => match.Success)
             .Select(match => (int.Parse(match.Groups["x"].Value), int.Parse(match.Groups["y"].Value)));
 
-        foreach (((int X, int Y) first, (int X, int Y) second) in list.Pairwise())
+        foreach ((Point first, Point second) in list.Pairwise())
         {
             var current = first;
-            int dx = second.X.CompareTo(first.X);
-            int dy = second.Y.CompareTo(first.Y);
+            Direction d = new(second.X.CompareTo(first.X), second.Y.CompareTo(first.Y));
 
             do
             {
                 yield return current;
-            } while (((current = (current.X + dx, current.Y + dy)) != second));
+            } while (((current += d) != second));
 
             yield return second;
         }
     }
 
-    private static IEnumerable<(int X, int Y)> Drop((int X, int Y) start, HashSet<(int X, int Y)> set, bool useFloor)
+    private static IEnumerable<Point> Drop(Point start, HashSet<Point> set, bool useFloor)
     {
-        var stack = new Stack<(int X, int Y)>([start]);
+        var stack = new Stack<Point>([start]);
 
-        foreach ((int X, int Y) position in Drop(stack, set, set.Max(p => p.Y), useFloor))
+        foreach (Point position in Drop(stack, set, set.Max(p => p.Y), useFloor))
         {
             set.Add(position);
             yield return position;
         }
     }
 
-    private static IEnumerable<(int X, int Y)> Drop(Stack<(int X, int Y)> stack, IReadOnlySet<(int X, int Y)> set, int bottom, bool useFloor)
+    private static IEnumerable<Point> Drop(Stack<Point> stack, IReadOnlySet<Point> set, int bottom, bool useFloor)
     {
         if (useFloor)
         {
@@ -67,9 +66,9 @@ public partial class Day14 : IPuzzle
                     yield break;
                 }
 
-                (int X, int Y) down = (current.X, current.Y + 1);
-                (int X, int Y) downLeft = (current.X - 1, current.Y + 1);
-                (int X, int Y) downRight = (current.X + 1, current.Y + 1);
+                Point down = current + Direction.South;
+                Point downLeft = current + Direction.SouthWest;
+                Point downRight = current + Direction.SouthEast;
 
                 var moveTo = (CheckEmpty(downLeft), CheckEmpty(down), CheckEmpty(downRight)) switch
                 {
@@ -93,7 +92,7 @@ public partial class Day14 : IPuzzle
 
         yield break;
 
-        bool CheckEmpty((int X, int Y) p) => (!useFloor || p.Y < bottom) && !set.Contains(p);
+        bool CheckEmpty(Point p) => (!useFloor || p.Y < bottom) && !set.Contains(p);
     }
 
     [GeneratedRegex(@"(?<x>\d+),(?<y>\d+)", RegexOptions.Compiled)]

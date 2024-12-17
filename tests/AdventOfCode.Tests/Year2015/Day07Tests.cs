@@ -2,8 +2,10 @@
 
 namespace AdventOfCode.Tests.Year2015;
 
-public class Day07Tests
+public class Day07Tests : IClassFixture<Day07>
 {
+    private readonly Day07 _sut;
+
     private const string Data = """
                                 123 -> x
                                 456 -> y
@@ -29,17 +31,20 @@ public class Day07Tests
         { "aa", "x" }
     };
 
+    public Day07Tests(Day07 sut)
+    {
+        _sut = sut;
+    }
+
     [Fact(DisplayName = "Data should produce a known dictionary")]
     public void TestData()
     {
-        Day07 sut = new();
-
-        IDictionary<string, string> dictionary = sut.Data(Data);
+        IDictionary<string, string> dictionary = _sut.Data(Data);
 
         dictionary.Should().Equal(ParsedDictionary);
 
         Dictionary<string, ushort>
-            d = dictionary.Keys.ToDictionary(k => k, k => (ushort)sut.EvaluateKey(dictionary, k));
+            d = dictionary.Keys.ToDictionary(k => k, k => (ushort)_sut.EvaluateKey(dictionary, k));
         d.Should().NotBeNull();
     }
 }

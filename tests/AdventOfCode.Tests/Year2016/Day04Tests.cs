@@ -2,8 +2,10 @@
 
 namespace AdventOfCode.Tests.Year2016;
 
-public class Day04Tests
+public class Day04Tests : IClassFixture<Day04>
 {
+    private readonly Day04 _sut;
+
     private const string TestData = """
                                     aaaaa-bbb-z-y-x-123[abxyz]
                                     a-b-c-d-e-f-g-h-987[abcde]
@@ -11,12 +13,15 @@ public class Day04Tests
                                     totally-real-room-200[decoy]
                                     """;
 
+    public Day04Tests(Day04 sut)
+    {
+        _sut = sut;
+    }
+
     [Fact(DisplayName = "Part1 should return expected results from example data")]
     public void Part1Example()
     {
-        Day04? sut = new();
-
-        sut.Part1(TestData).As<int>().Should().Be(1514);
+        _sut.Part1(TestData).As<int>().Should().Be(1514);
     }
 
     [Fact(DisplayName = "Part2 should return expected results from example data")]

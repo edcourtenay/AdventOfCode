@@ -10,21 +10,21 @@ public partial class Day01 : IPuzzle
     
     public object Part1(string input)
     {
-        (int x, int y) position = Walk(input).Last();
+        Point position = Walk(input).Last();
 
-        return Math.Abs(position.x) + Math.Abs(position.y);
+        return Math.Abs(position.X) + Math.Abs(position.Y);
     }
 
     public object Part2(string input)
     {
-        (int x, int y) position = Find();
+        Point position = Find();
 
-        return Math.Abs(position.x) + Math.Abs(position.y);
+        return Math.Abs(position.X) + Math.Abs(position.Y);
 
-        (int, int) Find()
+        Point Find()
         {
-            HashSet<(int, int)> set = [];
-            IEnumerable<(int, int)> valueTuples = Walk(input);
+            HashSet<Point> set = [];
+            IEnumerable<Point> valueTuples = Walk(input);
             foreach (var pos in valueTuples)
             {
                 if (!set.Add(pos))
@@ -37,25 +37,25 @@ public partial class Day01 : IPuzzle
         }
     }
 
-    private IEnumerable<(int, int)> Walk(string input)
+    private IEnumerable<Point> Walk(string input)
     {
-        var direction = (x: 0, y: 1);
-        var position = (x: 0, y: 0);
+        Direction direction = new(0, 1);
+        Point position = new(0, 0);
 
         yield return position;
         foreach (Match match in InstructionRegex().Matches(input))
         {
             direction = match.Groups["turn"].Value switch
             {
-                "L" => (-direction.y, direction.x), 
-                "R" => (direction.y, -direction.x),
+                "L" => direction.RotateLeft,
+                "R" => direction.RotateRight,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
             int distance = int.Parse(match.Groups["distance"].Value);
             for (int i = 0; i < distance; i++)
             {
-                position = (position.x + direction.x, position.y + direction.y);
+                position += direction;
                 yield return position;
             }
         }

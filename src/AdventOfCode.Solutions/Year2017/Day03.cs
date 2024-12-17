@@ -46,36 +46,36 @@ public class Day03 : IPuzzle
 
     class SpiralMemory
     {
-        private readonly Dictionary<(int, int), int> _memory = new()
+        private readonly Dictionary<Point, int> _memory = new()
         {
-            { (0, 0), 1 }
+            { Point.Zero, 1 }
         };
 
-        public (int x, int y) AccessPort => (0, 0);
+        public Point AccessPort => Point.Zero;
 
         public int Get(int x, int y) => Get((x, y));
 
-        public int Get((int, int) position)
+        public int Get(Point position)
         {
             return _memory.GetValueOrDefault(position, 0);
         }
 
-        public void Set((int, int) position, int value)
+        public void Set(Point position, int value)
         {
             _memory[position] = value;
         }
 
-        public int GetSumOfAdjacent((int, int) position)
+        public int GetSumOfAdjacent(Point position)
         {
             return Adjacent(position).Select(Get).Sum();
 
-            IEnumerable<(int x, int y)> Adjacent((int x, int y) p)
+            IEnumerable<Point> Adjacent(Point p)
             {
-                foreach (var x in Enumerable.Range(p.x - 1, 3))
+                foreach (var x in Enumerable.Range(p.X - 1, 3))
                 {
-                    foreach (int y in Enumerable.Range(p.y - 1, 3))
+                    foreach (int y in Enumerable.Range(p.Y - 1, 3))
                     {
-                        if (x == p.x && y == p.y)
+                        if (x == p.X && y == p.Y)
                         {
                             continue;
                         }
@@ -86,7 +86,7 @@ public class Day03 : IPuzzle
             }
         }
 
-        public (int x, int y) GetNext((int, int) position)
+        public Point GetNext(Point position)
         {
             var (x, y) = position;
             if (Get(x-1, y) > 0 && Get(x, y+1) == 0) return (x, y+1);
