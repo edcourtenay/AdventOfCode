@@ -8,8 +8,8 @@ public class Day03 : IPuzzle
 {
     public object Part1(string input)
     {
-        var santa = new Position(0, 0);
-        var positions = new HashSet<Position> { santa };
+        var santa = Point.Zero;
+        HashSet<Point> positions = [santa];
         foreach (var direction in input.Select(ParseChar))
         {
             santa += direction;
@@ -21,9 +21,9 @@ public class Day03 : IPuzzle
 
     public object Part2(string input)
     {
-        var santa = new Position(0, 0);
-        var robot = new Position(0, 0);
-        var positions = new HashSet<Position> { santa, robot };
+        var santa = Point.Zero;
+        var robot = Point.Zero;
+        var positions = new HashSet<Point> { santa, robot };
         
         using var enumerator = input.Select(ParseChar).GetEnumerator();
         while (enumerator.MoveNext())
@@ -42,27 +42,11 @@ public class Day03 : IPuzzle
     {
         return c switch
         {
-            '^' => Direction.Up,
-            'v' => Direction.Down,
-            '<' => Direction.Left,
-            '>' => Direction.Right,
+            '^' => Direction.North,
+            'v' => Direction.South,
+            '<' => Direction.West,
+            '>' => Direction.East,
             _ => throw new ArgumentOutOfRangeException(nameof(c), c, null)
         };
-    }
-
-    public record struct Position(int X, int Y)
-    {
-        public static Position operator +(Position position, Direction direction)
-        {
-            return new Position(position.X + direction.X, position.Y + direction.Y);
-        }
-    }
-
-    public record struct Direction(int X, int Y)
-    {
-        public static Direction Up => new(1, 0);
-        public static Direction Down => new(-1, 0);
-        public static Direction Left => new(0, -1);
-        public static Direction Right => new(0, 1);
     }
 }

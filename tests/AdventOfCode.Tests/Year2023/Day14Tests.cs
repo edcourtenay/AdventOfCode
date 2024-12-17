@@ -127,11 +127,11 @@ public class Day14Tests : IClassFixture<Day14>
     private static string GridToString(GridData grid)
     {
         StringBuilder? sb = new();
-        for (int y = 0; y < grid.yLength; y++)
+        for (int y = 0; y < grid.Height; y++)
         {
-            for (int x = 0; x < grid.xLength; x++)
+            for (int x = 0; x < grid.Width; x++)
             {
-                sb.Append(grid.positions.GetValueOrDefault((x, y), '.'));
+                sb.Append(grid.Positions.GetValueOrDefault((x, y), '.'));
             }
 
             sb.AppendLine();

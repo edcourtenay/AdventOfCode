@@ -20,9 +20,9 @@ public class Day14 : IPuzzle
     }
 
     private static int CalculateNorthLoad(GridData grid) =>
-        grid.positions
+        grid.Positions
             .Where(kvp => kvp.Value == 'O')
-            .Select(kvp => grid.yLength - kvp.Key.Y)
+            .Select(kvp => grid.Height - kvp.Key.Y)
             .Sum();
 
     public static void Cycle(GridData grid)
@@ -37,10 +37,10 @@ public class Day14 : IPuzzle
     {
         (int dx, int dy, Func<GridData, IEnumerable<Point>> f) tuple = direction switch
             {
-                Direction.North => (0, -1, data => data.positions.Keys.Where(p => p.Y > 0).OrderBy(p => p.Y)),
-                Direction.South => (0, 1, data => data.positions.Keys.Where(p => p.Y < grid.yLength - 1).OrderByDescending(p => p.Y)),
-                Direction.West => (-1, 0, data => data.positions.Keys.Where(p => p.X > 0).OrderBy(p => p.X)),
-                Direction.East => (1, 0, data => data.positions.Keys.Where(p => p.X < grid.xLength - 1).OrderByDescending(p => p.X)),
+                Direction.North => (0, -1, data => data.Positions.Keys.Where(p => p.Y > 0).OrderBy(p => p.Y)),
+                Direction.South => (0, 1, data => data.Positions.Keys.Where(p => p.Y < grid.Height - 1).OrderByDescending(p => p.Y)),
+                Direction.West => (-1, 0, data => data.Positions.Keys.Where(p => p.X > 0).OrderBy(p => p.X)),
+                Direction.East => (1, 0, data => data.Positions.Keys.Where(p => p.X < grid.Width - 1).OrderByDescending(p => p.X)),
                 _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
             };
 
@@ -59,7 +59,7 @@ public class Day14 : IPuzzle
     {
         Point testPosition = (position.X + dX, position.Y + dY);
 
-        if (!grid.positions.TryGetValue(position, out var c) || c != 'O' || grid.positions.ContainsKey(testPosition))
+        if (!grid.Positions.TryGetValue(position, out var c) || c != 'O' || grid.Positions.ContainsKey(testPosition))
         {
             return;
         }
@@ -70,12 +70,12 @@ public class Day14 : IPuzzle
             lastLegal = testPosition;
             testPosition = (testPosition.X + dX, testPosition.Y + dY);
         } while (testPosition is { X: >= 0, Y: >= 0 }
-                 && testPosition.X < grid.xLength
-                 && testPosition.Y < grid.yLength
-                 && !grid.positions.ContainsKey(testPosition));
+                 && testPosition.X < grid.Width
+                 && testPosition.Y < grid.Height
+                 && !grid.Positions.ContainsKey(testPosition));
 
-        grid.positions[lastLegal] = 'O';
-        grid.positions.Remove(position);
+        grid.Positions[lastLegal] = 'O';
+        grid.Positions.Remove(position);
     }
 
     static void TiltCycles(int totalCycles, GridData platform)
@@ -117,15 +117,15 @@ public class Day14 : IPuzzle
     }
 
     private static long GenerateHashCode(GridData grid) =>
-        grid.positions
+        grid.Positions
             .Where(pair => pair.Value == 'O')
             .Select(kvp => (long)HashCode.Combine(kvp.Key.X, kvp.Key.Y))
             .Sum();
 
-    public enum  Direction
+    public enum Direction
     {
         North, South, East, West
     }
 
-    public readonly record struct GridData(int xLength, int yLength, Dictionary<Point, char> positions);
+    public readonly record struct GridData(int Width, int Height, Dictionary<Point, char> Positions);
 }
