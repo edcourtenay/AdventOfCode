@@ -2,271 +2,298 @@
 
 public static class EnumerableExtensions
 {
-    public static IEnumerable<T[]> Permutations<T>(this T[] source) {
-        return PermutationsRec(0);
+    extension<T>(T[] source)
+    {
+        public IEnumerable<T[]> Permutations() {
+            return PermutationsRec(0);
 
-        IEnumerable<T[]> PermutationsRec(int i) {
-            if (i == source.Length) {
-                yield return source.ToArray();
-            }
-
-            for (var j = i; j < source.Length; j++) {
-                (source[i], source[j]) = (source[j], source[i]);
-                foreach (var perm in PermutationsRec(i + 1)) {
-                    yield return perm;
+            IEnumerable<T[]> PermutationsRec(int i) {
+                if (i == source.Length) {
+                    yield return source.ToArray();
                 }
-                (source[i], source[j]) = (source[j], source[i]);
+
+                for (var j = i; j < source.Length; j++) {
+                    (source[i], source[j]) = (source[j], source[i]);
+                    foreach (var perm in PermutationsRec(i + 1)) {
+                        yield return perm;
+                    }
+                    (source[i], source[j]) = (source[j], source[i]);
+                }
             }
         }
     }
 
-    public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunkSize)
+    extension<T>(IEnumerable<T> source)
     {
-        using var enumerator = source.GetEnumerator();
-        do
+        public IEnumerable<IEnumerable<T>> Chunk(int chunkSize)
         {
-            if (!enumerator.MoveNext())
-                yield break;
-
-            yield return ChunkSequence(enumerator);
-        } while (true);
-
-        IEnumerable<T> ChunkSequence(IEnumerator<T> sourceEnumerator)
-        {
-            var count = 0;
-
+            using var enumerator = source.GetEnumerator();
             do
             {
-                yield return sourceEnumerator.Current;
-            } while (++count < chunkSize && sourceEnumerator.MoveNext());
-        }
-    }
+                if (!enumerator.MoveNext())
+                    yield break;
 
-    public static IEnumerable<IEnumerable<T>> ChunkBy<T>(this IEnumerable<T> source, Func<T, bool> predicate, bool dropChunkSeparator = true)
-    {
-        using var enumerator = source.GetEnumerator();
-        do
-        {
-            if (!enumerator.MoveNext())
-                yield break;
+                yield return ChunkSequence(enumerator);
+            } while (true);
 
-            yield return ChunkSequence(enumerator);
-        } while (true);
-
-        IEnumerable<T> ChunkSequence(IEnumerator<T> sourceEnumerator)
-        {
-            bool predicateMatched;
-            do
+            IEnumerable<T> ChunkSequence(IEnumerator<T> sourceEnumerator)
             {
-                predicateMatched = predicate(sourceEnumerator.Current);
+                var count = 0;
 
-                if (!predicateMatched || !dropChunkSeparator)
+                do
                 {
                     yield return sourceEnumerator.Current;
-                }
-            } while (!predicateMatched && sourceEnumerator.MoveNext());
-        }
-    }
-
-    public static IEnumerable<IEnumerable<T>> Window<T>(this IEnumerable<T> source, int size, bool allowPartialWindow = false)
-    {
-        using var enumerator = source.GetEnumerator();
-        var queue = new Queue<T>();
-
-        while (enumerator.MoveNext())
-        {
-            queue.Enqueue(enumerator.Current);
-
-            if (queue.Count != size)
-                continue;
-
-            yield return queue;
-            queue = new Queue<T>();
-        }
-
-        if (allowPartialWindow && queue.Count > 0)
-            yield return queue;
-    }
-
-    public static IEnumerable<IEnumerable<T>> SlidingWindow<T>(this IEnumerable<T> source, int size)
-    {
-        using var enumerator = source.GetEnumerator();
-        var queue = new Queue<T>();
-
-        while (enumerator.MoveNext())
-        {
-            queue.Enqueue(enumerator.Current);
-            if (queue.Count < size)
-                continue;
-
-            if (queue.Count > size)
-                queue.Dequeue();
-
-            yield return queue.ToArray();
-        }
-    }
-
-    public static IEnumerable<string> ToLines(this string input)
-    {
-        using var reader = new StringReader(input);
-        while (reader.ReadLine() is { } line)
-        {
-            yield return line;
-        }
-    }
-
-    public static IEnumerable<T> ToLines<T>(this string input, Func<string, T> selector)
-    {
-        return input.ToLines().Select(selector);
-    }
-
-    public static IEnumerable<TResult> ToLines<TResult>(this string input, Func<string, int, TResult> selector)
-    {
-        int index = -1;
-        foreach (string line in input.ToLines())
-        {
-            index++;
-            yield return selector(line, index);
-        }
-    }
-
-    public static IEnumerable<IEnumerable<T>> Pivot<T>(this IEnumerable<IEnumerable<T>> source)
-    {
-        var enumerators = source.Select(e => e.GetEnumerator()).ToArray();
-        try
-        {
-            while (enumerators.All(e => e.MoveNext()))
-            {
-                yield return enumerators.Select(e => e.Current).ToArray();
+                } while (++count < chunkSize && sourceEnumerator.MoveNext());
             }
         }
-        finally
+
+        public IEnumerable<IEnumerable<T>> ChunkBy(Func<T, bool> predicate, bool dropChunkSeparator = true)
         {
-            Array.ForEach(enumerators, e => e.Dispose());
-        }
-    }
-
-    public static IEnumerable<(T First, T Second)> Pairwise<T>(this IEnumerable<T> source)
-    {
-        var previous = default(T);
-        using var enumerator = source.GetEnumerator();
-
-        if (enumerator.MoveNext())
-        {
-            previous = enumerator.Current;
-        }
-
-        while (enumerator.MoveNext())
-        {
-            yield return (previous, previous = enumerator.Current)!;
-        }
-    }
-
-    public static IEnumerable<IEnumerable<string>> ToSequences(this IEnumerable<string> source, Func<string, bool> predicate)
-    {
-        using IEnumerator<string> enumerator = source.GetEnumerator();
-        do
-        {
-            if (!enumerator.MoveNext())
-                yield break;
-
-            yield return GroupSequence(enumerator, predicate);
-        } while (true);
-
-        IEnumerable<string> GroupSequence(IEnumerator<string> enumerator, Func<string, bool> func)
-        {
+            using var enumerator = source.GetEnumerator();
             do
             {
-                yield return enumerator.Current;
-            } while (enumerator.MoveNext() && !func(enumerator.Current));
+                if (!enumerator.MoveNext())
+                    yield break;
+
+                yield return ChunkSequence(enumerator);
+            } while (true);
+
+            IEnumerable<T> ChunkSequence(IEnumerator<T> sourceEnumerator)
+            {
+                bool predicateMatched;
+                do
+                {
+                    predicateMatched = predicate(sourceEnumerator.Current);
+
+                    if (!predicateMatched || !dropChunkSeparator)
+                    {
+                        yield return sourceEnumerator.Current;
+                    }
+                } while (!predicateMatched && sourceEnumerator.MoveNext());
+            }
+        }
+
+        public IEnumerable<IEnumerable<T>> Window(int size, bool allowPartialWindow = false)
+        {
+            using var enumerator = source.GetEnumerator();
+            var queue = new Queue<T>();
+
+            while (enumerator.MoveNext())
+            {
+                queue.Enqueue(enumerator.Current);
+
+                if (queue.Count != size)
+                    continue;
+
+                yield return queue;
+                queue = new Queue<T>();
+            }
+
+            if (allowPartialWindow && queue.Count > 0)
+                yield return queue;
+        }
+
+        public IEnumerable<IEnumerable<T>> SlidingWindow(int size)
+        {
+            using var enumerator = source.GetEnumerator();
+            var queue = new Queue<T>();
+
+            while (enumerator.MoveNext())
+            {
+                queue.Enqueue(enumerator.Current);
+                if (queue.Count < size)
+                    continue;
+
+                if (queue.Count > size)
+                    queue.Dequeue();
+
+                yield return queue.ToArray();
+            }
         }
     }
 
-    public static IEnumerable<IEnumerable<T>> Combinations<T>(this IEnumerable<T> source, int width)
+    extension(string input)
     {
-        var arr = source as T[] ?? source.ToArray();
-
-        return GetCombinations(n: arr.Length, k: width)
-            .Select(indexes => indexes.Select(i => arr[i - 1]));
-
-        static IEnumerable<int[]> GetCombinations(int k, int n)
+        public IEnumerable<string> ToLines()
         {
-            var result = new int[k];
-            var stack = new Stack<int>();
-            stack.Push(1);
-
-            while (stack.Count > 0)
+            using var reader = new StringReader(input);
+            while (reader.ReadLine() is { } line)
             {
-                var index = stack.Count - 1;
-                var value = stack.Pop();
+                yield return line;
+            }
+        }
 
-                while (value <= n)
+        public IEnumerable<T> ToLines<T>(Func<string, T> selector)
+        {
+            return input.ToLines().Select(selector);
+        }
+
+        public IEnumerable<TResult> ToLines<TResult>(Func<string, int, TResult> selector)
+        {
+            int index = -1;
+            foreach (string line in input.ToLines())
+            {
+                index++;
+                yield return selector(line, index);
+            }
+        }
+    }
+
+    extension<T>(IEnumerable<IEnumerable<T>> source)
+    {
+        public IEnumerable<IEnumerable<T>> Pivot()
+        {
+            var enumerators = source.Select(e => e.GetEnumerator()).ToArray();
+            try
+            {
+                while (enumerators.All(e => e.MoveNext()))
                 {
-                    result[index++] = value++;
-                    stack.Push(value);
-                    if (index == k)
+                    yield return enumerators.Select(e => e.Current).ToArray();
+                }
+            }
+            finally
+            {
+                Array.ForEach(enumerators, e => e.Dispose());
+            }
+        }
+    }
+
+    extension<T>(IEnumerable<T> source)
+    {
+        public IEnumerable<(T First, T Second)> Pairwise()
+        {
+            var previous = default(T);
+            using var enumerator = source.GetEnumerator();
+
+            if (enumerator.MoveNext())
+            {
+                previous = enumerator.Current;
+            }
+
+            while (enumerator.MoveNext())
+            {
+                yield return (previous, previous = enumerator.Current)!;
+            }
+        }
+    }
+
+    extension(IEnumerable<string> source)
+    {
+        public IEnumerable<IEnumerable<string>> ToSequences(Func<string, bool> predicate)
+        {
+            using IEnumerator<string> enumerator = source.GetEnumerator();
+            do
+            {
+                if (!enumerator.MoveNext())
+                    yield break;
+
+                yield return GroupSequence(enumerator, predicate);
+            } while (true);
+
+            IEnumerable<string> GroupSequence(IEnumerator<string> groupEnumerator, Func<string, bool> func)
+            {
+                do
+                {
+                    yield return groupEnumerator.Current;
+                } while (groupEnumerator.MoveNext() && !func(groupEnumerator.Current));
+            }
+        }
+    }
+
+    extension<T>(IEnumerable<T> source)
+    {
+        public IEnumerable<IEnumerable<T>> Combinations(int width)
+        {
+            var arr = source as T[] ?? source.ToArray();
+
+            return GetCombinations(n: arr.Length, k: width)
+                .Select(indexes => indexes.Select(i => arr[i - 1]));
+
+            static IEnumerable<int[]> GetCombinations(int k, int n)
+            {
+                var result = new int[k];
+                var stack = new Stack<int>();
+                stack.Push(1);
+
+                while (stack.Count > 0)
+                {
+                    var index = stack.Count - 1;
+                    var value = stack.Pop();
+
+                    while (value <= n)
                     {
-                        yield return result.ToArray();
-                        break;
+                        result[index++] = value++;
+                        stack.Push(value);
+                        if (index == k)
+                        {
+                            yield return result.ToArray();
+                            break;
+                        }
                     }
                 }
             }
         }
-    }
 
-    public static IEnumerable<T> Flatten<T>(this IEnumerable<T> e, Func<T, IEnumerable<T>> f)
-    {
-        IEnumerable<T> enumerable = e as T[] ?? e.ToArray();
-        return enumerable.SelectMany(c => f(c).Flatten(f)).Concat(enumerable);
-    }
-
-    public static IEnumerable<T> TakeUntil<T>(this IEnumerable<T> source, Func<T, bool> predicate)
-    {
-        foreach (T item in source)
+        public IEnumerable<T> Flatten(Func<T, IEnumerable<T>> f)
         {
-            yield return item;
-            if (predicate(item))
+            IEnumerable<T> enumerable = source as T[] ?? source.ToArray();
+            return enumerable.SelectMany(c => f(c).Flatten(f)).Concat(enumerable);
+        }
+
+        public IEnumerable<T> TakeUntil(Func<T, bool> predicate)
+        {
+            foreach (T item in source)
             {
-                yield break;
+                yield return item;
+                if (predicate(item))
+                {
+                    yield break;
+                }
             }
         }
     }
 
-    public static (T Min, T Max) MinMax<T>(this IEnumerable<T> source) where T : IComparable<T>
+    extension<T>(IEnumerable<T> source) where T : IComparable<T>
     {
-        return MinMax(source, Comparer<T>.Default);
+        public (T Min, T Max) MinMax()
+        {
+            return MinMax(source, Comparer<T>.Default);
+        }
     }
 
-    public static (T Min, T Max) MinMax<T>(this IEnumerable<T> source, IComparer<T> comparer)
+    extension<T>(IEnumerable<T> source)
     {
-        using var enumerator = source.GetEnumerator();
-
-        if (!enumerator.MoveNext())
+        public (T Min, T Max) MinMax(IComparer<T> comparer)
         {
-            throw new InvalidOperationException("Sequence contains no elements.");
-        }
+            using var enumerator = source.GetEnumerator();
 
-        var min = enumerator.Current;
-        var max = enumerator.Current;
-        while (enumerator.MoveNext())
-        {
-            if (comparer.Compare(enumerator.Current, min) < 0)
+            if (!enumerator.MoveNext())
             {
-                min = enumerator.Current;
+                throw new InvalidOperationException("Sequence contains no elements.");
             }
 
-            if (comparer.Compare(enumerator.Current, max) > 0)
+            var min = enumerator.Current;
+            var max = enumerator.Current;
+            while (enumerator.MoveNext())
             {
-                max = enumerator.Current;
+                if (comparer.Compare(enumerator.Current, min) < 0)
+                {
+                    min = enumerator.Current;
+                }
+
+                if (comparer.Compare(enumerator.Current, max) > 0)
+                {
+                    max = enumerator.Current;
+                }
             }
+
+            return (min, max);
         }
 
-        return (min, max);
-    }
-
-    public static (TValue Min, TValue Max) MinMaxBy<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, TValue> selector) where TValue : IComparable<TValue>
-    {
-        return MinMaxBy(source, selector, Comparer<TValue>.Default);
+        public (TValue Min, TValue Max) MinMaxBy<TValue>(Func<T, TValue> selector) where TValue : IComparable<TValue>
+        {
+            return MinMaxBy(source, selector, Comparer<TValue>.Default);
+        }
     }
 
     private static (TValue Min, TValue Max) MinMaxBy<TSource, TValue>(IEnumerable<TSource> source, Func<TSource, TValue> selector, Comparer<TValue> comparer) where TValue : IComparable<TValue>

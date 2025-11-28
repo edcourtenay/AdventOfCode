@@ -13,7 +13,7 @@ public class Day20 : IPuzzle
         return Solve(input, 10, (x, i) => (long.Parse(x) * 811589153, i));
     }
 
-    private static readonly int[] sourceArray = [1000, 2000, 3000];
+    private static readonly int[] SourceArray = [1000, 2000, 3000];
 
     private static long Solve(string input, int iterations, Func<string, int, (long value, int originalIndex)> selector)
     {
@@ -30,7 +30,7 @@ public class Day20 : IPuzzle
 
         int zeroIndex = mixedNumbers.IndexOf(numbers.Find(x => x.val == 0));
 
-        return sourceArray.Sum(i => mixedNumbers[(i + zeroIndex) % mixedNumbers.Count].value);
+        return SourceArray.Sum(i => mixedNumbers[(i + zeroIndex) % mixedNumbers.Count].value);
     }
 
     private static void Mix(List<(long value, int originalIndex)> startNumbers,

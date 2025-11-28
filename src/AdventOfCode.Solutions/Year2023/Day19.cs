@@ -69,7 +69,8 @@ public sealed class Day19 : IPuzzle
             return expression;
         }
 
-        var rules = workflows[key].ToArray().Reverse();
+        Rule[] array = workflows[key].ToArray();
+        IEnumerable<Rule> rules = ((IEnumerable<Rule>)array).Reverse();
         Expression chain = Expression.Constant(false);
         foreach (Rule rule in rules)
         {

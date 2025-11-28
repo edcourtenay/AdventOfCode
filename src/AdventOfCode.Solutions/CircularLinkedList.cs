@@ -1,13 +1,16 @@
 ﻿namespace AdventOfCode.Solutions;
 
 static class CircularLinkedList {
-    public static LinkedListNode<T> NextOrFirst<T>(this LinkedListNode<T> current)
+    extension<T>(LinkedListNode<T> current)
     {
-        return (current.Next ?? current.List!.First)!;
-    }
+        public LinkedListNode<T> NextOrFirst()
+        {
+            return (current.Next ?? current.List!.First)!;
+        }
 
-    public static LinkedListNode<T> PreviousOrLast<T>(this LinkedListNode<T> current)
-    {
-        return (current.Previous ?? current.List!.Last)!;
+        public LinkedListNode<T> PreviousOrLast()
+        {
+            return (current.Previous ?? current.List!.Last)!;
+        }
     }
 }

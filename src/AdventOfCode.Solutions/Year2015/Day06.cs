@@ -75,8 +75,8 @@ public partial class Day06 : IPuzzle
 
     readonly Action<int[], int> _turnOnV2 = (arr, index) => arr[index] += 1;
 
-    private readonly Action<int[], int> _turnOffV2 = (arr, index) => arr[index] = arr[index] >= 1 ? arr[index] - 1 : 0; 
-    
+    private readonly Action<int[], int> _turnOffV2 = (arr, index) => arr[index] = arr[index] >= 1 ? arr[index] - 1 : 0;
+
     readonly Action<int[], int> _toggleV2 = (arr, index) => arr[index] += 2;
 
     public readonly record struct Instruction(string Operation, int X1, int Y1, int X2, int Y2)
@@ -91,7 +91,7 @@ public partial class Day06 : IPuzzle
                 }
             }
         }
-    };
+    }
 
     [GeneratedRegex(@"(turn off|turn on|toggle)\s(\d+),(\d+)\sthrough\s(\d+),(\d+)", RegexOptions.Compiled)]
     private static partial Regex MyRegex();

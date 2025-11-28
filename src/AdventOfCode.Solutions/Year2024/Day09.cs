@@ -59,7 +59,9 @@ public class Day09 : IPuzzle
     {
         for (LinkedListNode<Block>? current = start; current != target; current = current.Next)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (current.Value.FileId != EmptyFileId)
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             {
                 continue;
             }

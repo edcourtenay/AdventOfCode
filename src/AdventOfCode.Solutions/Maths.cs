@@ -4,9 +4,12 @@ namespace AdventOfCode.Solutions;
 
 public static class Maths
 {
-    public static T LeastCommonMultiple<T>(this IEnumerable<T> numbers) where T : INumber<T>
+    extension<T>(IEnumerable<T> numbers) where T : INumber<T>
     {
-        return numbers.Aggregate(LeastCommonMultiple);
+        public T LeastCommonMultiple()
+        {
+            return numbers.Aggregate(LeastCommonMultiple);
+        }
     }
 
     public static T LeastCommonMultiple<T>(T a, T b) where T : INumber<T>

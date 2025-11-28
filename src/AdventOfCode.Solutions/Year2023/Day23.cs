@@ -35,24 +35,24 @@ public class Day23 : IPuzzle
 
         int best = 0;
         while (q.TryPop(out var current)) {
-            if (current.cost == -1) {
-                visited.Remove(current.point);
+            if (current.Cost == -1) {
+                visited.Remove(current.Point);
                 continue;
             }
 
-            if (current.point == end) {
-                best = Math.Max(best, current.cost);
+            if (current.Point == end) {
+                best = Math.Max(best, current.Cost);
                 continue;
             }
 
-            if (!visited.Add(current.point)) {
+            if (!visited.Add(current.Point)) {
                 continue;
             }
 
-            q.Push(current with { cost = -1 });
-            foreach ((Point next, int cost) in edges[current.point])
+            q.Push(current with { Cost = -1 });
+            foreach ((Point next, int cost) in edges[current.Point])
             {
-                q.Push(new Edge(next, cost + current.cost));
+                q.Push(new Edge(next, cost + current.Cost));
             }
         }
 
@@ -127,15 +127,15 @@ public class Day23 : IPuzzle
 
             Edge first = kvp.Value.First();
             Edge last = kvp.Value.Last();
-            int costDelta = first.cost + last.cost;
+            int costDelta = first.Cost + last.Cost;
 
             remove.Add(kvp.Key);
 
-            edges[first.point].Remove(first with { point = kvp.Key });
-            edges[last.point].Remove(last with { point = kvp.Key });
+            edges[first.Point].Remove(first with { Point = kvp.Key });
+            edges[last.Point].Remove(last with { Point = kvp.Key });
 
-            edges[first.point].Add(last with { cost = costDelta });
-            edges[last.point].Add(first with { cost = costDelta });
+            edges[first.Point].Add(last with { Cost = costDelta });
+            edges[last.Point].Add(first with { Cost = costDelta });
         }
 
         foreach (Point point in remove)
@@ -144,5 +144,5 @@ public class Day23 : IPuzzle
         }
     }
 
-    public readonly record struct Edge(Point<int> point, int cost);
+    public readonly record struct Edge(Point<int> Point, int Cost);
 }

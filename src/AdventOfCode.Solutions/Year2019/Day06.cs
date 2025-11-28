@@ -8,7 +8,7 @@ public class Day06 : IPuzzle
         var pairs = ParseInput(input);
         var root = BuildTree(pairs);
         var depths = GetNodeDepths(root);
-        
+
         return depths.Values.Sum(x => x.Depth);
     }
 
@@ -20,8 +20,10 @@ public class Day06 : IPuzzle
 
         var (youDepth, youNode) = depths["YOU"];
         var (sanDepth, sanNode) = depths["SAN"];
-        
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
         while (depths[youNode.Value].Depth > sanDepth)
+
         {
             youNode = youNode.Parent;
         }
@@ -40,6 +42,7 @@ public class Day06 : IPuzzle
         var commonDepth = depths[youNode.Value].Depth;
 
         return (sanDepth - commonDepth) + (youDepth - commonDepth) - 2;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
     }
 
     private List<(string Parent, string Child)> ParseInput(string input)
@@ -76,19 +79,19 @@ public class Day06 : IPuzzle
 
             TreeNode<T> parentNode = nodeDict[pair.Parent];
             TreeNode<T> childNode = nodeDict[pair.Child];
-            
+
             parentNode.Children.Add(nodeDict[pair.Child]);
             childNode.Parent = parentNode;
         }
-            
+
         List<T> rootCandidates = nodeDict.Keys
             .Except(pairs.Select(p => p.Item2))
             .ToList();
-            
+
         return rootCandidates.Count == 1 ? nodeDict[rootCandidates[0]] : null;
     }
 
-    
+
     public Dictionary<T, (int Depth, TreeNode<T> Node)> GetNodeDepths<T>(TreeNode<T>? root) where T : notnull
     {
         Dictionary<T, (int Depth, TreeNode<T> Node)> depths = new();

@@ -117,7 +117,7 @@ public partial class Day11 : IPuzzle
         public required int IfFalse { get; init; }
         public required List<long> Items { get; init; }
 
-        public long InspectionCount { get; set; } = 0;
+        public long InspectionCount { get; set; }
     }
 
     [GeneratedRegex(@"^Monkey (?<id>\d+):$", RegexOptions.Compiled)]

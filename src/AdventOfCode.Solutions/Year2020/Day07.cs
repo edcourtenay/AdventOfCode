@@ -39,6 +39,4 @@ public partial class Day07 : IPuzzle
             }
         }
     }
-
-    public record Bag(string BagStyle, List<(int Quantity, string BagStyle)> Contains);
 }
