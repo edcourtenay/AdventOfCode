@@ -9,15 +9,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Input\**\*.txt" />
     <None Remove="Input\**\*.json" />
-    <EmbeddedResource Include="Input\**\*.txt" />
     <EmbeddedResource Include="Input\**\results.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Cocona" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Spectre.Console" />
-    <PackageReference Include="System.CommandLine" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\.env" Condition="Exists('..\..\.env')">
+      <Link>.env</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
