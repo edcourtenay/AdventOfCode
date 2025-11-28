@@ -2,6 +2,8 @@
 using Microsoft.Extensions.FileProviders.Physical;
 using Microsoft.Extensions.Logging;
 
+namespace AdventOfCode;
+
 public partial class InputDownloader
 {
     private readonly HttpClient _client;

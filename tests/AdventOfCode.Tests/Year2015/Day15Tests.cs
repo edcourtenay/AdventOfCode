@@ -2,44 +2,33 @@
 
 namespace AdventOfCode.Tests.Year2015;
 
-public class Day15Tests
+public class Day15Tests : IClassFixture<Day15>
 {
-    private readonly Day15.Ingredient[] _ingredients;
+    private readonly Day15 _sut;
 
-    public Day15Tests()
+    const string part1Data = """
+                             Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8
+                             Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3
+                             """;
+
+    public Day15Tests(Day15 sut)
     {
-        _ingredients =
-        [
-            //Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8
-            //Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3
-            new Day15.Ingredient
-            {
-                Name = "Butterscotch",
-                Capacity = -1,
-                Durability = -2,
-                Flavour = 6,
-                Texture = 3,
-                Calories = 8
-            },
-            new Day15.Ingredient
-            {
-                Name = "Cinnamon",
-                Capacity = 2,
-                Durability = 3,
-                Flavour = -2,
-                Texture = -1,
-                Calories = 3
-            }
-        ];
+        _sut = sut;
     }
 
-    [Fact(Skip = "Not implemented correctly")]
-    public void Test()
+    [Fact]
+    public void Part1Test()
     {
-        Day15 sut = new();
+        long result = (long)_sut.Part1(part1Data);
 
-        int result = sut.Calculate(_ingredients, [44, 56]);
+        result.Should().Be(62842880L);
+    }
 
-        result.Should().Be(62842880);
+    [Fact]
+    public void Part2Test()
+    {
+        long result = (long)_sut.Part2(part1Data);
+
+        result.Should().Be(57600000L);
     }
 }

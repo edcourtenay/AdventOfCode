@@ -1,15 +1,18 @@
 ﻿using Cocona;
 
+using JetBrains.Annotations;
+
 namespace AdventOfCode;
 
+[UsedImplicitly]
 public record ApplicationParameters : ICommandParameterSet
 {
     [Option]
     [HasDefaultValue]
     public required int Year { get; init; } = DateTime.Today switch
     {
-        { Month: >= 1 and <= 11, Year: var y } => y - 1,
-        { Year: var y } => y
+        { Month: >= 1 and <= 11, Year: var currentYear } => currentYear - 1,
+        { Year: var currentYear } => currentYear
     };
 
     [Option]

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Cocona" />
+    <PackageReference Include="JetBrains.Annotations" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Spectre.Console" />
