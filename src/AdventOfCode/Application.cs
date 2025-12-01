@@ -35,13 +35,13 @@ public class Application
 
             AnsiConsole.MarkupLine(
                 $"[bold]{puzzle.Year:0000} Day {puzzle.Day:00}[/]: [link=https://adventofcode.com/{puzzle.Year}/day/{puzzle.Day}][dim]{puzzle.Name}[/][/]");
-            AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s), result.Part1, applicationParameters.Iterations));
-            AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s), result.Part2, applicationParameters.Iterations));
+            AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s), result.Part1, applicationParameters.Iterations, applicationParameters.HideResults));
+            AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s), result.Part2, applicationParameters.Iterations, applicationParameters.HideResults));
         }
     }
 
     string Run(PuzzleContainer puzzle, string part, string input, Func<IPuzzle, string, object> func,
-        string? expectedResult, int iterations)
+        string? expectedResult, int iterations, bool hideResults)
     {
         var times = new List<TimeSpan>();
         object obj = string.Empty;
@@ -77,7 +77,7 @@ public class Application
             _ => "[purple]:exclamation_question_mark:[/]"
         };
 
-        return $"\t[bold]{part}[/]: [[{timeString}]] [{resultColour}]{result}[/] {checkOrCross}";
+        return $"\t[bold]{part}[/]: [[{timeString}]] [{resultColour}]{(hideResults ? "" : result)}[/] {checkOrCross}";
     }
 
     async Task<string> GetInputStringAsync(PuzzleContainer puzzle, CancellationToken ct)

@@ -7,7 +7,7 @@ namespace AdventOfCode;
 [UsedImplicitly]
 public record ApplicationParameters : ICommandParameterSet
 {
-    [Option]
+    [Option(Description = "Year to run")]
     [HasDefaultValue]
     public required int Year { get; init; } = DateTime.Today switch
     {
@@ -15,11 +15,14 @@ public record ApplicationParameters : ICommandParameterSet
         { Year: var currentYear } => currentYear
     };
 
-    [Option]
+    [Option(Description = "Day to run, or blank for all available days for a year")]
     [HasDefaultValue]
     public int? Day { get; init; }
 
     [Option(Description = "Number of times to run each puzzle")]
     [HasDefaultValue]
     public int Iterations { get; init; } = 1;
+
+    [Option(Description = "Hide results from runs")]
+    public bool HideResults { get; init; } = false;
 }
