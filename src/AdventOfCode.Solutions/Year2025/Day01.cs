@@ -1,15 +1,43 @@
 namespace AdventOfCode.Solutions.Year2025;
 
+using System.Linq;
+
+[Description("Secret Entrance")]
 public class Day01 : IPuzzle
 {
+    private const int Start = 50;
+    private const int Size = 100;
+    
+    
     public object Part1(string input)
     {
-        return Execute(Parse(input), 50, 100);
+        return Parse(input)
+            .Aggregate(new {Pos = Start, Counter = 0}, (acc, item) =>
+            {
+                var newPos = (acc.Pos + item + Size) % Size;
+                return new { Pos = newPos, Counter = acc.Counter + (newPos == 0 ? 1 : 0) };
+            }).Counter;
     }
 
     public object Part2(string input)
     {
-        return Execute(Parse(input), 50, 100, true);
+        return Parse(input)
+            .Aggregate(new { Pos = Start, Counter = 0 }, (acc, item) =>
+            {
+                var clicks = Math.Abs(item);
+
+                var count = acc.Counter + (clicks / Size);
+                var position = acc.Pos + (item % Size);
+
+                if (position >= Size || (position <= 0 && acc.Pos != 0))
+                {
+                    count++;
+                }
+
+                position = (position + Size) % Size;
+                
+                return new { Pos = position, Counter = count };
+            }).Counter;
     }
 
     private static IEnumerable<int> Parse(string input)
@@ -24,56 +52,5 @@ public class Day01 : IPuzzle
                 _ => 0
             };
         });
-    }
-    
-    private static IEnumerable<int> Normalize(IEnumerable<int> data, int max)
-    {
-        foreach (var turn in data)
-        {
-            if (turn >= 0)
-            {
-                yield return turn;
-            }
-            else
-            {
-                var i = Math.Abs(turn);
-                var j = (((i / max) + 1) * max) + (max - i % max);
-
-                yield return j;
-            }
-        }
-    }
-
-    private static int Execute(IEnumerable<int> data, int start, int max, bool includeTransitions = false)
-    {
-        int zeroCount = 0;
-        
-        foreach (var turn in data)
-        {
-            int i = (start + turn);
-            start = i % max;
-            if (start < 0)
-            {
-                start += max;
-            }
-
-            if (includeTransitions)
-            {
-                if (i <= 0)
-                {
-                    zeroCount += ((Math.Abs(i) + max) / max);
-                }
-                else if (i >= max)
-                {
-                    zeroCount += ((i) / max);
-                }
-            }
-            else if (start == 0)
-            {
-                zeroCount++;
-            }
-        }
-
-        return zeroCount;
     }
 }
