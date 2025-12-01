@@ -12,31 +12,27 @@ public class Day01 : IPuzzle
     public object Part1(string input)
     {
         return Parse(input)
-            .Aggregate(new {Pos = Start, Counter = 0}, (acc, item) =>
+            .Aggregate((Pos: Start, Counter: 0), (acc, item) =>
             {
                 var newPos = (acc.Pos + item + Size) % Size;
-                return new { Pos = newPos, Counter = acc.Counter + (newPos == 0 ? 1 : 0) };
+                return (Pos: newPos, Counter: acc.Counter + (newPos == 0 ? 1 : 0));
             }).Counter;
     }
 
     public object Part2(string input)
     {
         return Parse(input)
-            .Aggregate(new { Pos = Start, Counter = 0 }, (acc, item) =>
+            .Aggregate((Pos: Start, Counter: 0), (acc, item) =>
             {
-                var clicks = Math.Abs(item);
-
-                var count = acc.Counter + (clicks / Size);
+                var count = acc.Counter + (Math.Abs(item) / Size);
                 var position = acc.Pos + (item % Size);
 
                 if (position >= Size || (position <= 0 && acc.Pos != 0))
                 {
                     count++;
                 }
-
-                position = (position + Size) % Size;
                 
-                return new { Pos = position, Counter = count };
+                return (Pos: (position + Size) % Size, Counter: count);
             }).Counter;
     }
 
@@ -44,11 +40,10 @@ public class Day01 : IPuzzle
     {
         return input.ToLines(f =>
         {
-            var i = Convert.ToInt32(f[1..]);
             return f switch
             {
-                ['L', ..] => -i,
-                ['R', ..] => i,
+                ['L', .. var xs] => -Convert.ToInt32(xs),
+                ['R', .. var xs] => Convert.ToInt32(xs),
                 _ => 0
             };
         });
