@@ -110,56 +110,7 @@ public static class EnumerableExtensions
                 yield return queue.ToArray();
             }
         }
-    }
 
-    extension(string input)
-    {
-        public IEnumerable<string> ToLines()
-        {
-            using var reader = new StringReader(input);
-            while (reader.ReadLine() is { } line)
-            {
-                yield return line;
-            }
-        }
-
-        public IEnumerable<T> ToLines<T>(Func<string, T> selector)
-        {
-            return input.ToLines().Select(selector);
-        }
-
-        public IEnumerable<TResult> ToLines<TResult>(Func<string, int, TResult> selector)
-        {
-            int index = -1;
-            foreach (string line in input.ToLines())
-            {
-                index++;
-                yield return selector(line, index);
-            }
-        }
-    }
-
-    extension<T>(IEnumerable<IEnumerable<T>> source)
-    {
-        public IEnumerable<IEnumerable<T>> Pivot()
-        {
-            var enumerators = source.Select(e => e.GetEnumerator()).ToArray();
-            try
-            {
-                while (enumerators.All(e => e.MoveNext()))
-                {
-                    yield return enumerators.Select(e => e.Current).ToArray();
-                }
-            }
-            finally
-            {
-                Array.ForEach(enumerators, e => e.Dispose());
-            }
-        }
-    }
-
-    extension<T>(IEnumerable<T> source)
-    {
         public IEnumerable<(T First, T Second)> Pairwise()
         {
             var previous = default(T);
@@ -175,33 +126,39 @@ public static class EnumerableExtensions
                 yield return (previous, previous = enumerator.Current)!;
             }
         }
-    }
 
-    extension(IEnumerable<string> source)
-    {
-        public IEnumerable<IEnumerable<string>> ToSequences(Func<string, bool> predicate)
+        public (T Min, T Max) MinMax(IComparer<T> comparer)
         {
-            using IEnumerator<string> enumerator = source.GetEnumerator();
-            do
-            {
-                if (!enumerator.MoveNext())
-                    yield break;
+            using var enumerator = source.GetEnumerator();
 
-                yield return GroupSequence(enumerator, predicate);
-            } while (true);
-
-            IEnumerable<string> GroupSequence(IEnumerator<string> groupEnumerator, Func<string, bool> func)
+            if (!enumerator.MoveNext())
             {
-                do
-                {
-                    yield return groupEnumerator.Current;
-                } while (groupEnumerator.MoveNext() && !func(groupEnumerator.Current));
+                throw new InvalidOperationException("Sequence contains no elements.");
             }
-        }
-    }
 
-    extension<T>(IEnumerable<T> source)
-    {
+            var min = enumerator.Current;
+            var max = enumerator.Current;
+            while (enumerator.MoveNext())
+            {
+                if (comparer.Compare(enumerator.Current, min) < 0)
+                {
+                    min = enumerator.Current;
+                }
+
+                if (comparer.Compare(enumerator.Current, max) > 0)
+                {
+                    max = enumerator.Current;
+                }
+            }
+
+            return (min, max);
+        }
+
+        public (TValue Min, TValue Max) MinMaxBy<TValue>(Func<T, TValue> selector) where TValue : IComparable<TValue>
+        {
+            return MinMaxBy(source, selector, Comparer<TValue>.Default);
+        }
+
         public IEnumerable<IEnumerable<T>> Combinations(int width)
         {
             var arr = source as T[] ?? source.ToArray();
@@ -251,6 +208,26 @@ public static class EnumerableExtensions
                 }
             }
         }
+
+        public IEnumerable<IEnumerable<T>> ToSequences(Func<T, bool> predicate)
+        {
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+            do
+            {
+                if (!enumerator.MoveNext())
+                    yield break;
+
+                yield return GroupSequence(enumerator, predicate);
+            } while (true);
+
+            IEnumerable<T> GroupSequence(IEnumerator<T> groupEnumerator, Func<T, bool> func)
+            {
+                do
+                {
+                    yield return groupEnumerator.Current;
+                } while (groupEnumerator.MoveNext() && !func(groupEnumerator.Current));
+            }
+        }
     }
 
     extension<T>(IEnumerable<T> source) where T : IComparable<T>
@@ -261,38 +238,49 @@ public static class EnumerableExtensions
         }
     }
 
-    extension<T>(IEnumerable<T> source)
+    extension(string input)
     {
-        public (T Min, T Max) MinMax(IComparer<T> comparer)
+        public IEnumerable<string> ToLines()
         {
-            using var enumerator = source.GetEnumerator();
-
-            if (!enumerator.MoveNext())
+            using var reader = new StringReader(input);
+            while (reader.ReadLine() is { } line)
             {
-                throw new InvalidOperationException("Sequence contains no elements.");
+                yield return line;
             }
-
-            var min = enumerator.Current;
-            var max = enumerator.Current;
-            while (enumerator.MoveNext())
-            {
-                if (comparer.Compare(enumerator.Current, min) < 0)
-                {
-                    min = enumerator.Current;
-                }
-
-                if (comparer.Compare(enumerator.Current, max) > 0)
-                {
-                    max = enumerator.Current;
-                }
-            }
-
-            return (min, max);
         }
 
-        public (TValue Min, TValue Max) MinMaxBy<TValue>(Func<T, TValue> selector) where TValue : IComparable<TValue>
+        public IEnumerable<T> ToLines<T>(Func<string, T> selector)
         {
-            return MinMaxBy(source, selector, Comparer<TValue>.Default);
+            return input.ToLines().Select(selector);
+        }
+
+        public IEnumerable<TResult> ToLines<TResult>(Func<string, int, TResult> selector)
+        {
+            int index = -1;
+            foreach (string line in input.ToLines())
+            {
+                index++;
+                yield return selector(line, index);
+            }
+        }
+    }
+
+    extension<T>(IEnumerable<IEnumerable<T>> source)
+    {
+        public IEnumerable<IEnumerable<T>> Pivot()
+        {
+            var enumerators = source.Select(e => e.GetEnumerator()).ToArray();
+            try
+            {
+                while (enumerators.All(e => e.MoveNext()))
+                {
+                    yield return enumerators.Select(e => e.Current).ToArray();
+                }
+            }
+            finally
+            {
+                Array.ForEach(enumerators, e => e.Dispose());
+            }
         }
     }
 
