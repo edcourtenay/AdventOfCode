@@ -19,7 +19,7 @@ public class Application
     {
         ConcurrentDictionary<int, Dictionary<int, DayResult>> yearResults = new();
 
-        foreach (var puzzle in PuzzleLocator.GetPuzzles(parameters.Year, parameters.Day))
+        foreach (var puzzle in PuzzleRegistry.GetPuzzles(parameters.Year, parameters.Day))
         {
             var input = await _downloader.ReadOrDownload(puzzle.Year, puzzle.Day, ct);
             var expected = GetExpectedResult(yearResults, puzzle);

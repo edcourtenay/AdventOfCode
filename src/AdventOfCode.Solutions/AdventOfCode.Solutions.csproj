@@ -7,4 +7,10 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\AdventOfCode.SourceGenerator\AdventOfCode.SourceGenerator.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
 </Project>

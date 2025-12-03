@@ -1,9 +1,7 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-using AdventOfCode.Solutions;
-
-namespace AdventOfCode;
+namespace AdventOfCode.Solutions;
 
 public partial record PuzzleContainer
 {
@@ -41,3 +39,4 @@ public partial record PuzzleContainer
     [GeneratedRegex(@"Year(?<year>\d+)\.Day(?<day>\d+)")]
     private static partial Regex YearDayRegex();
 }
+

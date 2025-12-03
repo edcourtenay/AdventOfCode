@@ -30,6 +30,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AdventOfCode.Solutions\AdventOfCode.Solutions.csproj" />
+    <ProjectReference Include="..\AdventOfCode.SourceGenerator\AdventOfCode.SourceGenerator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
   </ItemGroup>
-  
+
 </Project>
