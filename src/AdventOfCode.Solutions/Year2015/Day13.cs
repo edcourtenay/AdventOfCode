@@ -8,7 +8,7 @@ namespace AdventOfCode.Solutions.Year2015;
 public partial class Day13 : IPuzzle
 {
     private readonly Regex _regex = LineRegex();
-    
+
     public object Part1(string input)
     {
         var table = Table(input);
@@ -19,14 +19,14 @@ public partial class Day13 : IPuzzle
     public object Part2(string input)
     {
         var table = Table(input);
-        
+
         var participants = table.Keys.Select(tuple => tuple.Item1).Distinct().ToArray();
         foreach (string participant in participants)
         {
             table.Add(("You", participant), 0);
             table.Add((participant, "You"), 0);
         }
-        
+
         return CalculateHappiness(table);
     }
 
@@ -47,7 +47,7 @@ public partial class Day13 : IPuzzle
         int current = 0;
         int next = 1;
         int sum = 0;
-        
+
         do
         {
             sum += table[(permutation[current], permutation[previous])];
@@ -66,7 +66,7 @@ public partial class Day13 : IPuzzle
             return x > permutation.Length - 1 ? 0 : x;
         }
     }
-    
+
     public IDictionary<(string, string), int> Table(string input)
     {
         var dictionary = Data(input).Select(d => _regex.Match(d))

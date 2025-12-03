@@ -48,13 +48,13 @@ public class Day02 : IPuzzle
         }
     }
 
-    private static bool IsKeyValid1(Point position) 
+    private static bool IsKeyValid1(Point position)
         => !(position.X is < 0 or > 2 || position.Y is < 0 or > 2);
 
-    private static bool IsKeyValid2(Point position) 
+    private static bool IsKeyValid2(Point position)
         => !(position.X is < 0 or > 4 || position.Y is < 0 or > 4) && DiamondPad(position) != '.';
 
-    private static char SquarePad(Point position) 
+    private static char SquarePad(Point position)
         => (char)('1' + position.X + position.Y * 3);
 
     private static char DiamondPad(Point position)

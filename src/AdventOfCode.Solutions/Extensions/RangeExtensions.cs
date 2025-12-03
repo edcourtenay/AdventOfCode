@@ -1,6 +1,6 @@
-﻿using System.Numerics;
+using System.Numerics;
 
-namespace AdventOfCode.Solutions;
+namespace AdventOfCode.Solutions.Extensions;
 
 public static class RangeExtensions
 {

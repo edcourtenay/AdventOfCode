@@ -1,4 +1,4 @@
-﻿using AdventOfCode.Solutions;
+﻿using AdventOfCode.Solutions.Extensions;
 
 using Range = (int from, int to);
 

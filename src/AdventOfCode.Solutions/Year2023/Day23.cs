@@ -1,4 +1,5 @@
 //using Edge = (AdventOfCode.Solutions.Point point, int cost);
+
 using Edges = System.Collections.Generic.Dictionary<AdventOfCode.Solutions.Point<int>, System.Collections.Generic.HashSet<AdventOfCode.Solutions.Year2023.Day23.Edge>>;
 namespace AdventOfCode.Solutions.Year2023;
 

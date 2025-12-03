@@ -7,8 +7,8 @@ public class Day01 : IPuzzle
 {
     private const int Start = 50;
     private const int Size = 100;
-    
-    
+
+
     public object Part1(string input)
     {
         return Parse(input)
@@ -31,7 +31,7 @@ public class Day01 : IPuzzle
                 {
                     count++;
                 }
-                
+
                 return (Pos: (position + Size) % Size, Counter: count);
             }).Counter;
     }
