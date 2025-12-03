@@ -2,11 +2,8 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
-
 using AdventOfCode.Solutions;
-
 using Cocona;
-
 using Spectre.Console;
 
 namespace AdventOfCode;
@@ -15,89 +12,91 @@ public class Application
 {
     private readonly InputDownloader _downloader;
 
-    public Application(InputDownloader downloader)
-    {
-        _downloader = downloader;
-    }
+    public Application(InputDownloader downloader) => _downloader = downloader;
 
     [PrimaryCommand]
-    public async Task ExecutePuzzles(ApplicationParameters applicationParameters, [Ignore] CancellationToken ct = default)
+    public async Task ExecutePuzzles(ApplicationParameters parameters, [Ignore] CancellationToken ct = default)
     {
-        ConcurrentDictionary<int, Dictionary<int, DayResult>?> yearResults = new();
+        ConcurrentDictionary<int, Dictionary<int, DayResult>> yearResults = new();
 
-        foreach (var puzzle in PuzzleLocator.GetPuzzles(applicationParameters.Year, applicationParameters.Day))
+        foreach (var puzzle in PuzzleLocator.GetPuzzles(parameters.Year, parameters.Day))
         {
-            string input = await GetInputStringAsync(puzzle, ct);
-            var result = yearResults.GetOrAdd(puzzle.Year, Results)!
-                .TryGetValue(puzzle.Day, out var r)
-                ? r
-                : new DayResult();
+            var input = await _downloader.ReadOrDownload(puzzle.Year, puzzle.Day, ct);
+            var expected = GetExpectedResult(yearResults, puzzle);
 
-            AnsiConsole.MarkupLine(
-                $"[bold]{puzzle.Year:0000} Day {puzzle.Day:00}[/]: [link=https://adventofcode.com/{puzzle.Year}/day/{puzzle.Day}][dim]{puzzle.Name}[/][/]");
-            AnsiConsole.MarkupLine(Run(puzzle, "Part 1", input, (p, s) => p.Part1(s), result.Part1, applicationParameters.Iterations, applicationParameters.HideResults));
-            AnsiConsole.MarkupLine(Run(puzzle, "Part 2", input, (p, s) => p.Part2(s), result.Part2, applicationParameters.Iterations, applicationParameters.HideResults));
+            PrintHeader(puzzle);
+            AnsiConsole.MarkupLine(RunPart(puzzle, "Part 1", input, p => p.Part1(input), expected.Part1, parameters));
+            AnsiConsole.MarkupLine(RunPart(puzzle, "Part 2", input, p => p.Part2(input), expected.Part2, parameters));
         }
     }
 
-    string Run(PuzzleContainer puzzle, string part, string input, Func<IPuzzle, string, object> func,
-        string? expectedResult, int iterations, bool hideResults)
+    string RunPart(PuzzleContainer puzzle, string part, string input, Func<IPuzzle, object> func, string? expectedResult, ApplicationParameters parameters)
     {
-        var times = new List<TimeSpan>();
-        object obj = string.Empty;
-
         try
         {
-            for (int i = 0; i < iterations; i++)
-            {
-                var start = Stopwatch.GetTimestamp();
-                obj = func(puzzle.Puzzle, input);
-                times.Add(Stopwatch.GetElapsedTime(start));
-            }
+            var (times, result) = MeasureExecutionTimes(puzzle.Puzzle, func, parameters.Iterations);
+            var elapsed = TimeSpan.FromMicroseconds(times.Average(t => t.TotalMicroseconds));
+            var (color, resultText) = FormatResult(result);
+            var status = GetStatusIcon(expectedResult, resultText);
+            var display = parameters.HideResults ? "" : resultText;
+
+            return $"\t[bold]{part}[/]: [[{FormatTime(elapsed)}]] [{color}]{display}[/] {status}";
         }
         catch (NotImplementedException)
         {
             return $"\t[bold]{part}[/]: [purple]Not Implemented[/]";
         }
+    }
 
-        var elapsed = TimeSpan.FromMicroseconds(times.Average(timeSpan => timeSpan.TotalMicroseconds));
-        string timeString = FormatTimeSpan(elapsed);
+    (List<TimeSpan> Times, object Result) MeasureExecutionTimes(IPuzzle puzzle, Func<IPuzzle, object> func, int iterations)
+    {
+        var times = new List<TimeSpan>(iterations);
+        object result = string.Empty;
 
-        (string resultColour, string result) = obj switch
+        for (var i = 0; i < iterations; i++)
+        {
+            var start = Stopwatch.GetTimestamp();
+            result = func(puzzle);
+            times.Add(Stopwatch.GetElapsedTime(start));
+        }
+
+        return (times, result);
+    }
+
+    (string Color, string Text) FormatResult(object result) =>
+        result switch
         {
             string s when string.IsNullOrEmpty(s) => ("red", "Incomplete"),
-            _ => ("cyan", obj.ToString() ?? string.Empty)
+            _ => ("cyan", result.ToString() ?? string.Empty)
         };
 
-        string checkOrCross = expectedResult switch
+    string GetStatusIcon(string? expected, string actual) =>
+        expected switch
         {
-            not null when expectedResult == result => "[green]:check_mark:[/]",
-            not null when result == "Incomplete" => "",
-            not null => "[red]:multiply:[/]",
-            _ => "[purple]:exclamation_question_mark:[/]"
+            null => "[purple]:exclamation_question_mark:[/]",
+            _ when actual == "Incomplete" => "",
+            _ when expected == actual => "[green]:check_mark:[/]",
+            _ => "[red]:multiply:[/]"
         };
 
-        return $"\t[bold]{part}[/]: [[{timeString}]] [{resultColour}]{(hideResults ? "" : result)}[/] {checkOrCross}";
-    }
+    void PrintHeader(PuzzleContainer puzzle) =>
+        AnsiConsole.MarkupLine($"[bold]{puzzle.Year:0000} Day {puzzle.Day:00}[/]: [link=https://adventofcode.com/{puzzle.Year}/day/{puzzle.Day}][dim]{puzzle.Name}[/][/]");
 
-    async Task<string> GetInputStringAsync(PuzzleContainer puzzle, CancellationToken ct)
+    DayResult GetExpectedResult(ConcurrentDictionary<int, Dictionary<int, DayResult>> cache, PuzzleContainer puzzle)
     {
-        return await _downloader.ReadOrDownload(puzzle.Year, puzzle.Day, ct);
+        var yearResults = cache.GetOrAdd(puzzle.Year, LoadResults);
+        return yearResults.TryGetValue(puzzle.Day, out var result) ? result : new DayResult();
     }
 
-    Dictionary<int, DayResult> Results(int year)
+    Dictionary<int, DayResult> LoadResults(int year)
     {
-        var assembly = Assembly.GetExecutingAssembly();
-        using Stream manifestResourceStream =
-            assembly.GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.results.json")!;
-        Dictionary<int, DayResult>? results = JsonSerializer.Deserialize<Dictionary<int, DayResult>>(manifestResourceStream);
-        return results ?? new Dictionary<int, DayResult>();
+        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"AdventOfCode.Input.Year{year:0000}.results.json")!;
+        return JsonSerializer.Deserialize<Dictionary<int, DayResult>>(stream) ?? new Dictionary<int, DayResult>();
     }
 
-    string FormatTimeSpan(TimeSpan elapsed) =>
-        $"[{TimeColour(elapsed)}]{TimeDisplay(elapsed),12}[/]";
+    string FormatTime(TimeSpan elapsed) => $"[{GetTimeColor(elapsed)}]{GetTimeDisplay(elapsed),12}[/]";
 
-    string TimeColour(TimeSpan elapsed) =>
+    string GetTimeColor(TimeSpan elapsed) =>
         elapsed.TotalMilliseconds switch
         {
             > 1000 => "red",
@@ -105,7 +104,7 @@ public class Application
             _ => "green"
         };
 
-    string TimeDisplay(TimeSpan elapsed) =>
+    string GetTimeDisplay(TimeSpan elapsed) =>
         elapsed switch
         {
             { TotalSeconds: >= 1 } => $"{elapsed.TotalSeconds:#,##0.00}s ",
