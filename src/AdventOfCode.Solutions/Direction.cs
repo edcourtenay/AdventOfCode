@@ -14,6 +14,9 @@ public readonly record struct Direction<T>(T X, T Y) where T : ISignedNumber<T> 
     public static readonly Direction<T> SouthEast = new(T.One, T.One);
 
     public static readonly Direction<T>[] Orthogonal = [North, South, West, East];
+    public static readonly Direction<T>[] Cardinal = [North, South, West, East];
+    public static readonly Direction<T>[] Ordinal = [NorthEast, SouthEast, SouthWest, NorthWest];
+    public static readonly Direction<T>[] Compass = [..Cardinal, ..Ordinal];
 
     public Direction<T> RotateLeft => new(-Y, X);
     public Direction<T> RotateRight => new(Y, -X);

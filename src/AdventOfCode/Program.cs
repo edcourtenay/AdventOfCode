@@ -17,7 +17,10 @@ builder.Host
     .ConfigureLogging(logging =>
     {
         logging.ClearProviders();
-        logging.AddConsole();
+        logging.AddJsonConsole(options =>
+        {
+            options.IncludeScopes = true;
+        });
         logging.AddDebug();
     })
     .ConfigureAppConfiguration(config =>
