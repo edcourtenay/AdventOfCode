@@ -6,12 +6,12 @@ namespace AdventOfCode.Tests;
 
 public class RangeExtensionsTest
 {
-    [Fact(DisplayName = "MergeOverlapping should return expected results from example data")]
-    public void MergeOverlappingTests()
+    [Fact(DisplayName = "Merge should return expected results from example data")]
+    public void MergeTests()
     {
         Range[] ranges = [(1, 3), (2, 4), (5, 7), (6, 8), (9, 11), (10, 12)];
-        Range[] merged = ranges.MergeOverlapping().ToArray();
-        merged.Should().BeEquivalentTo([(1, 4), (5, 8), (9, 12)]);
+        Range[] merged = ranges.Merge().ToArray();
+        merged.Should().BeEquivalentTo([(1, 12)]);
     }
 
     [Fact(DisplayName = "ExcludeRange should return expected results from example data")]

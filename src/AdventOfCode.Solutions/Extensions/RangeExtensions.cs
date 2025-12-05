@@ -95,33 +95,33 @@ public static class RangeExtensions
             }
         }
 
-        public IEnumerable<(T from, T to)> MergeOverlapping()
+        public IEnumerable<(T from, T to)> Merge()
         {
-            source = source.OrderBy(r => r.from);
-
-            (T from, T to) current = default;
-            bool first = true;
-            foreach (var item in source)
+            var sorted = source.OrderBy(r => r.from);
+            (T from, T to)? current = null;
+    
+            foreach (var range in sorted)
             {
-                if (first)
+                if (current == null)
                 {
-                    current = item;
-                    first = false;
+                    current = range;
                 }
                 else
                 {
-                    if (current.Contains(item.from))
+                    // Check for overlap or adjacency
+                    if (current.Value.to + T.One >= range.from)
                     {
-                        current = (current.from, item.to)!;
+                        current = (current.Value.from, T.Max(current.Value.to, range.to));
                     }
                     else
                     {
-                        yield return current;
-                        current = item;
+                        yield return current.Value;
+                        current = range;
                     }
                 }
             }
-            if (!first) yield return current;
+            if (current != null)
+                yield return current.Value;
         }
     }
 }
