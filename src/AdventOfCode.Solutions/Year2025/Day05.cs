@@ -12,7 +12,7 @@ public class Day05 : IPuzzle
         var (ranges, ingredients) = ParseInput(input);
 
         var fresh = ingredients.Count(i => ranges.Any(r => r.Contains(i)));
-        
+
         return fresh;
     }
 
@@ -25,17 +25,17 @@ public class Day05 : IPuzzle
         {
             sum += range.RangeLength();
         }
-        
+
         return sum;
     }
-    
+
     public (List<Range> ranges, List<ulong> ingredients) ParseInput(string input)
     {
         using IEnumerator<string> enumerator = input.ToLines().GetEnumerator();
 
         List<Range> ranges = [];
         List<ulong> ingredients = [];
-        
+
         bool ingredientsSection = false;
         while (enumerator.MoveNext())
         {
@@ -59,7 +59,7 @@ public class Day05 : IPuzzle
         }
 
         ranges = ranges.Merge().ToList();
-        
+
         return (ranges, ingredients);
     }
 }
