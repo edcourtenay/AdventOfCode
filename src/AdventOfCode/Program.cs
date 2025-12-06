@@ -14,15 +14,15 @@ using Microsoft.Extensions.Options;
 var builder = CoconaApp.CreateBuilder();
 
 builder.Host
-    .ConfigureLogging(logging =>
-    {
-        logging.ClearProviders();
-        logging.AddJsonConsole(options =>
-        {
-            options.IncludeScopes = true;
-        });
-        logging.AddDebug();
-    })
+    // .ConfigureLogging(logging =>
+    // {
+    //     logging.ClearProviders();
+    //     logging.AddJsonConsole(options =>
+    //     {
+    //         options.IncludeScopes = true;
+    //     });
+    //     logging.AddDebug();
+    // })
     .ConfigureAppConfiguration(config =>
     {
         config.AddJsonFile("appsettings.json", optional: true);
