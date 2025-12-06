@@ -28,14 +28,20 @@ public partial class InputDownloader
         IFileInfo fileInfo = provider.GetFileInfo(inputFile);
         if (fileInfo.Exists)
         {
-            _logger.LogInformation("Input file {File} already exists", fileInfo.PhysicalPath);
+            LogInputFileFileAlreadyExists(fileInfo.PhysicalPath!);
             using StreamReader reader = new(fileInfo.CreateReadStream());
             return await reader.ReadToEndAsync(ct);
         }
 
-        _logger.LogInformation("Downloading input file {File}", fileInfo.PhysicalPath);
+        LogDownloadingInputFileFile(fileInfo.PhysicalPath!);
         string content = await _client.GetStringAsync($"/{year}/day/{day}/input", ct);
         await File.WriteAllTextAsync(fileInfo.PhysicalPath!, content, ct);
         return content;
     }
+
+    [LoggerMessage(LogLevel.Debug, "Input file {File} already exists")]
+    partial void LogInputFileFileAlreadyExists(string file);
+
+    [LoggerMessage(LogLevel.Debug, "Downloading input file {File}")]
+    partial void LogDownloadingInputFileFile(string file);
 }
