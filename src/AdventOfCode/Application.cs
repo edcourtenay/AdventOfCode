@@ -73,10 +73,10 @@ public class Application
     string GetStatusIcon(string? expected, string actual) =>
         expected switch
         {
-            null => "[purple]:exclamation_question_mark:[/]",
+            null => "[purple]‽[/]",
             _ when actual == "Incomplete" => "",
-            _ when expected == actual => "[green]:check_mark:[/]",
-            _ => "[red]:multiply:[/]"
+            _ when expected == actual => "[green]✓[/]",
+            _ => "[red]✕[/]"
         };
 
     void PrintHeader(PuzzleContainer puzzle) =>

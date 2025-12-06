@@ -17,15 +17,12 @@ public class Day06 : IPuzzle
         long sum = 0;
         foreach ((int i, IEnumerable<long> numbers) in columns.Index())
         {
-            var op = operators[i];
-            long columnSum = op switch
+            sum += operators[i] switch
             {
                 "+" => numbers.Sum(),
                 "*" => numbers.Aggregate(1L, (a, b) => a * b),
-                _ => throw new InvalidOperationException($"Unknown operator: {op}")
+                _ => throw new InvalidOperationException($"Unknown operator: {operators[i]}")
             };
-
-            sum += columnSum;
         }
 
         return sum;
@@ -33,13 +30,9 @@ public class Day06 : IPuzzle
 
     public object Part2(string input)
     {
-        var lines = input.ToLines().ToArray();
-
-        var p = lines.Pivot().Reverse();
-
         long result = 0;
         Stack<long> stack = new();
-        foreach (IEnumerable<char> chars in p)
+        foreach (IEnumerable<char> chars in input.ToLines().Pivot().Reverse())
         {
             char[] array = chars.ToArray();
 
@@ -49,7 +42,7 @@ public class Day06 : IPuzzle
                 continue;
             }
 
-            stack.Push(long.Parse(array[..^1]));
+            stack.Push(long.Parse(array.AsSpan()[..^1]));
 
             switch (array[^1])
             {
