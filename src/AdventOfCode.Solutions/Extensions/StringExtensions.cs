@@ -10,30 +10,39 @@ public static class StringExtensions
         {
             ArgumentNullException.ThrowIfNull(input);
 
-            int i = 0;
-            int len = input.Length;
-
-            while (i < len)
+            if (input.Length == 0)
             {
-                int start = i;
-                // Scan until line break
-                while (i < len)
+                yield break;
+            }
+
+            int start = 0;
+            int length = input.Length;
+
+            while (start < length)
+            {
+                // Find the next line break using optimized IndexOfAny on span
+                int lineBreakIndex = input.AsSpan(start).IndexOfAny('\r', '\n');
+
+                if (lineBreakIndex == -1)
                 {
-                    char ch = input[i];
-                    if (ch is '\n' or '\r')
-                        break;
-                    i++;
+                    // No more line breaks - yield the rest of the string
+                    yield return input[start..];
+                    yield break;
                 }
 
-                // Emit the line (may be empty)
-                yield return input.Substring(start, i - start);
+                // Calculate absolute position
+                int absoluteIndex = start + lineBreakIndex;
+
+                // Yield the line
+                yield return input.Substring(start, lineBreakIndex);
 
                 // Consume line break(s): \r\n or single \n or \r
-                if (i < len)
+                start = absoluteIndex + 1;
+                if (absoluteIndex < length - 1 &&
+                    input[absoluteIndex] == '\r' &&
+                    input[absoluteIndex + 1] == '\n')
                 {
-                    char br = input[i++];
-                    if (br == '\r' && i < len && input[i] == '\n')
-                        i++;
+                    start++; // Skip the \n in \r\n
                 }
             }
         }

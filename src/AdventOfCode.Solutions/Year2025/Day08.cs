@@ -7,12 +7,16 @@ public class Day08 : IPuzzle
     {
         var junctionBoxes = ParseInput(input);
         var unionFind = new UnionFind(junctionBoxes.Count);
-        var edges = BuildEdges(junctionBoxes);
 
-        for (var i = 0; i < Part1Iterations && i < edges.Length; i++)
+        var edgeCount = 0;
+        foreach (var (fromIdx, toIdx, _) in BuildEdges(junctionBoxes))
         {
-            var (fromIdx, toIdx, _) = edges[i];
             unionFind.Union(fromIdx, toIdx);
+
+            if (++edgeCount >= Part1Iterations)
+            {
+                break;
+            }
         }
 
         var componentSizes = unionFind.GetComponentSizes();
@@ -25,9 +29,8 @@ public class Day08 : IPuzzle
     {
         var junctionBoxes = ParseInput(input);
         var unionFind = new UnionFind(junctionBoxes.Count);
-        var edges = BuildEdges(junctionBoxes);
 
-        foreach ((int fromIdx, int toIdx, _) in edges)
+        foreach (var (fromIdx, toIdx, _) in BuildEdges(junctionBoxes))
         {
             unionFind.Union(fromIdx, toIdx);
 
@@ -51,9 +54,9 @@ public class Day08 : IPuzzle
             .ToList();
     }
 
-    private (int From, int To, long Distance)[] BuildEdges(List<JunctionBox> junctionBoxes)
+    private IEnumerable<(int From, int To, long Distance)> BuildEdges(List<JunctionBox> junctionBoxes)
     {
-        var edges = new List<(int From, int To, long Distance)>(junctionBoxes.Count * (junctionBoxes.Count - 1) / 2);
+        var pq = new PriorityQueue<(int From, int To), long>();
 
         for (var i = 0; i < junctionBoxes.Count - 1; i++)
         {
@@ -62,11 +65,17 @@ public class Day08 : IPuzzle
             for (var j = i + 1; j < junctionBoxes.Count; j++)
             {
                 var boxB = junctionBoxes[j];
-                edges.Add((i, j, boxA.SquaredDistanceTo(boxB)));
+                var distance = boxA.SquaredDistanceTo(boxB);
+                pq.Enqueue((i, j), distance);
             }
         }
 
-        return edges.OrderBy(e => e.Distance).ToArray();
+        while (pq.Count > 0)
+        {
+            var (from, to) = pq.Dequeue();
+            var distance = junctionBoxes[from].SquaredDistanceTo(junctionBoxes[to]);
+            yield return (from, to, distance);
+        }
     }
 
     public int Part1Iterations { get; set; } = 1000;
@@ -110,11 +119,23 @@ public class Day08 : IPuzzle
 
         public int Find(int x)
         {
-            if (_parent[x] != x)
+            // Iterative path compression with two-pass algorithm
+            // First pass: find root
+            var root = x;
+            while (_parent[root] != root)
             {
-                _parent[x] = Find(_parent[x]); // Path compression
+                root = _parent[root];
             }
-            return _parent[x];
+
+            // Second pass: compress path by pointing all nodes directly to root
+            while (x != root)
+            {
+                var next = _parent[x];
+                _parent[x] = root;
+                x = next;
+            }
+
+            return root;
         }
 
         public bool Union(int x, int y)
