@@ -6,7 +6,7 @@ public static class ChunkingExtensions
     {
         public IEnumerable<IEnumerable<T>> ChunkBy(Func<T, bool> predicate, bool dropChunkSeparator = true)
         {
-            var enumerator = source.GetEnumerator();
+            using var enumerator = source.GetEnumerator();
 
             while (enumerator.MoveNext())
                 yield return TakeUntilPredicate(enumerator, predicate, dropChunkSeparator).ToList();
