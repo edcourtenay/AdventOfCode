@@ -1,5 +1,3 @@
-using System.Text.Unicode;
-
 using Range = (ulong from, ulong to);
 
 namespace AdventOfCode.Solutions.Year2025;

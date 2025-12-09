@@ -1,5 +1,3 @@
-using System.Formats.Tar;
-
 namespace AdventOfCode.Solutions.Year2025;
 
 [Description("Playground")]
@@ -25,7 +23,7 @@ public class Day08 : IPuzzle
             .GetComponentSizes()
             .OrderByDescending(x => x)
             .Take(3)
-            .Aggregate(1L, (acc, x) => acc * x);
+            .Aggregate(1, (acc, x) => acc * x);
     }
 
     public object Part2(string input)
