@@ -1,4 +1,4 @@
-namespace AdventOfCode.Solutions;
+namespace AdventOfCode.Solutions.Extensions;
 
 public static class ChunkingExtensions
 {
@@ -6,10 +6,10 @@ public static class ChunkingExtensions
     {
         public IEnumerable<IEnumerable<T>> ChunkBy(Func<T, bool> predicate, bool dropChunkSeparator = true)
         {
-            using var enumerator = source.GetEnumerator();
+            var enumerator = source.GetEnumerator();
 
             while (enumerator.MoveNext())
-                yield return TakeUntilPredicate(enumerator, predicate, dropChunkSeparator);
+                yield return TakeUntilPredicate(enumerator, predicate, dropChunkSeparator).ToList();
         }
 
         public IEnumerable<IEnumerable<T>> ToSequences(Func<T, bool> predicate)
@@ -17,7 +17,7 @@ public static class ChunkingExtensions
             using var enumerator = source.GetEnumerator();
 
             while (enumerator.MoveNext())
-                yield return TakeUntilPredicate(enumerator, predicate, dropSeparator: true);
+                yield return TakeUntilPredicate(enumerator, predicate, dropSeparator: true).ToList();
         }
     }
 
