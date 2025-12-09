@@ -1,3 +1,5 @@
+using System.Formats.Tar;
+
 namespace AdventOfCode.Solutions.Year2025;
 
 [Description("Playground")]
@@ -9,7 +11,7 @@ public class Day08 : IPuzzle
         var unionFind = new UnionFind(junctionBoxes.Count);
 
         var edgeCount = 0;
-        foreach (var (fromIdx, toIdx, _) in BuildEdges(junctionBoxes))
+        foreach (var (fromIdx, toIdx) in BuildEdges(junctionBoxes))
         {
             unionFind.Union(fromIdx, toIdx);
 
@@ -19,10 +21,11 @@ public class Day08 : IPuzzle
             }
         }
 
-        var componentSizes = unionFind.GetComponentSizes();
-        var topThree = componentSizes.OrderByDescending(x => x).Take(3).ToArray();
-
-        return topThree[0] * topThree[1] * topThree[2];
+        return unionFind
+            .GetComponentSizes()
+            .OrderByDescending(x => x)
+            .Take(3)
+            .Aggregate(1L, (acc, x) => acc * x);
     }
 
     public object Part2(string input)
@@ -30,7 +33,7 @@ public class Day08 : IPuzzle
         var junctionBoxes = ParseInput(input);
         var unionFind = new UnionFind(junctionBoxes.Count);
 
-        foreach (var (fromIdx, toIdx, _) in BuildEdges(junctionBoxes))
+        foreach (var (fromIdx, toIdx) in BuildEdges(junctionBoxes))
         {
             unionFind.Union(fromIdx, toIdx);
 
@@ -54,7 +57,7 @@ public class Day08 : IPuzzle
             .ToList();
     }
 
-    private IEnumerable<(int From, int To, long Distance)> BuildEdges(List<JunctionBox> junctionBoxes)
+    private IEnumerable<(int From, int To)> BuildEdges(List<JunctionBox> junctionBoxes)
     {
         var pq = new PriorityQueue<(int From, int To), long>();
 
@@ -72,9 +75,7 @@ public class Day08 : IPuzzle
 
         while (pq.Count > 0)
         {
-            var (from, to) = pq.Dequeue();
-            var distance = junctionBoxes[from].SquaredDistanceTo(junctionBoxes[to]);
-            yield return (from, to, distance);
+            yield return pq.Dequeue();
         }
     }
 
