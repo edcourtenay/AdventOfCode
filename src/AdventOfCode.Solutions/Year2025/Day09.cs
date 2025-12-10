@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace AdventOfCode.Solutions.Year2025;
 
 [Description("Movie Theater")]
