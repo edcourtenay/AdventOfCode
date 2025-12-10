@@ -2,6 +2,7 @@ using Microsoft.Z3;
 
 namespace AdventOfCode.Solutions.Year2025;
 
+[Description("Factory")]
 public sealed class Day10 : IPuzzle
 {
     public object Part1(string input)
