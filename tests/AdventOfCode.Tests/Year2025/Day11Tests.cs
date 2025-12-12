@@ -123,4 +123,3 @@ public class Day11Tests : IClassFixture<Day11>
         _sut.Part2(Part2TestData).As<long>().Should().Be(2);
     }
 }
-
