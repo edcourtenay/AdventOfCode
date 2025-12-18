@@ -12,7 +12,7 @@ public static class EnvConfigurationExtensions
             bool optional = false,
             bool reloadOnChange = false)
         {
-            var fileProvider = new PhysicalFileProvider(AppContext.BaseDirectory, ExclusionFilters.Hidden | ExclusionFilters.System);
+            var fileProvider = new PhysicalFileProvider(AppContext.BaseDirectory, ExclusionFilters.System);
             return AddEnvFile(builder, path: path, optional: optional, reloadOnChange: reloadOnChange, provider: fileProvider);
         }
 
